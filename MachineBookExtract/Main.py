@@ -148,8 +148,8 @@ doc = nlp(text)
 
 #Delete posftfix, prefix form
 # str = open(r'Books/A Christmas Carol by Charles Dickens',  encoding="utf8").read()
-str = open(r'Books/Alices Adventures in Wonderland by Lewis Carroll',  encoding="utf8").read()
-# str = open(r'Books/Dracula by Bram Stoker',  encoding="utf8").read()
+# str = open(r'Books/Alices Adventures in Wonderland by Lewis Carroll',  encoding="utf8").read()
+str = open(r'Books/Dracula by Bram Stoker',  encoding="utf8").read()
 # str = open(r'Books/Moby Dick; Or, The Whale_Herman Melville',  encoding="utf8").read()
 # str = open(r'Books/Peter Pan by J. M. Barrie',  encoding="utf8").read()
 # str = open(r'Books/The Adventures of Sherlock Holmes by Arthur Conan Doyle',  encoding="utf8").read()
@@ -172,12 +172,19 @@ print(content.__len__())
 doc = nlp(content)
 
 blank = ' '
+sentencesSum = 0
+counter = 0
+averge = 0
 
 for sent in doc.sents:
-        print("================================================================")
+        #print("================================================================")
         if sent.__str__() != blank and "[Illustration]" not in sent.__str__() and '\n\n' not in sent.__str__():
-                print(sent)
-
+                sentencesSum += int(sent.__len__())
+                counter += 1
+                #print(sent.__len__())
+if counter != 0:
+        averge = sentencesSum / counter
+print("Averge of book: ", averge, " chars")
 
 # Analyze syntax
 # if content.__len__() > 999990:
