@@ -82,9 +82,12 @@
 
 ##SPACY
 # from collections import Counter
+import re
+
 import spacy
 import ebooklib
 from ebooklib import epub
+
 # Spicy version, python version, en_core_web_sm version
 # # Load English tokenizer, tagger, parser and NER
 from MachineBookExtract.venv.epub2txt import main_method
@@ -113,51 +116,80 @@ doc = nlp(text)
 
 #main_method(r'C:\Users\pa-wo\Desktop\Studia\Magisterka\MachineBookExtract\MobyDick.epub')
 
-str = open('test111.txt',  encoding="utf8").read()
+# str = open('test111.txt',  encoding="utf8").read()
+#
+# #print(str)
+#
+# # text = ("When Sebastian Thrun started working on self-driving cars at "
+# #         "Google in 2007, few people outside of the company took him "
+# #         "seriously. “I can tell you very senior CEOs of major American "
+# #         "car companies would shake my hand and turn away because I wasn’t "
+# #         "worth talking to,” said Thrun, in an interview with Recode earlier "
+# #         "this week.")
+#
+# info = (str[:999990] + '..') if len(str) > 999990 else str
+# # info = info.replace('\n', '')
+# # info = info.replace('        ## CHAPTER', '')
+# # info = info.replace('�', '')
+#
+# doc = nlp(info)
+#
+# # Analyze syntax
+# print("Noun phrases:", [chunk.text for chunk in doc.noun_chunks])
+# print("Verbs:", [token.lemma_ for token in doc if token.pos_ == "VERB"])
+#
+# # Find named entities, phrases and concepts
+#
+#
+# for entity in doc.ents:
+#         #if entity.label_ == 'PERSON':
+#         #print(entity.text)
+#         print(entity.text, entity.label_)
 
-#print(str)
-
-# text = ("When Sebastian Thrun started working on self-driving cars at "
-#         "Google in 2007, few people outside of the company took him "
-#         "seriously. “I can tell you very senior CEOs of major American "
-#         "car companies would shake my hand and turn away because I wasn’t "
-#         "worth talking to,” said Thrun, in an interview with Recode earlier "
-#         "this week.")
-
-info = (str[:999990] + '..') if len(str) > 999990 else str
-# info = info.replace('\n', '')
-# info = info.replace('        ## CHAPTER', '')
-# info = info.replace('�', '')
+#Delete posftfix, prefix form
+# str = open(r'Books/A Christmas Carol by Charles Dickens',  encoding="utf8").read()
+str = open(r'Books/Alices Adventures in Wonderland by Lewis Carroll',  encoding="utf8").read()
+# str = open(r'Books/Dracula by Bram Stoker',  encoding="utf8").read()
+# str = open(r'Books/Moby Dick; Or, The Whale_Herman Melville',  encoding="utf8").read()
+# str = open(r'Books/Peter Pan by J. M. Barrie',  encoding="utf8").read()
+# str = open(r'Books/The Adventures of Sherlock Holmes by Arthur Conan Doyle',  encoding="utf8").read()
+# str = open(r'Books/The Castle of Otranto by Horace Walpole',  encoding="utf8").read()
+# str = open(r'Books/The Moonstone by Wilkie Collins',  encoding="utf8").read()
+# str = open(r'Books/The Odyssey by Homer',  encoding="utf8").read()
+# str = open(r'Books/Wuthering Heights by Emily Bronte',  encoding="utf8").read()
 
 
 
-# info = '''Call me John. Some years ago never mind how long precisely having little or
-# no money in my purse, and nothing particular to interest me on shore, I
-# thought I would sail about a little and see the watery part of the world. It
-# is a way I have of driving off the spleen and regulating the circulation.
-# Whenever I find myself growing grim about the mouth; whenever it is a damp,
-# drizzly November in my soul; whenever I find myself involuntarily pausing
-# before coffin warehouses, and bringing up the rear of every funeral I meet;
-# and especially whenever my hypos get such an upper hand of me, that it
-# requires a strong moral principle to prevent me from deliberately stepping
-# into the street, and methodically knocking people's hats off then, I account
-# it high time to get to sea as soon as I can. This is my substitute for pistol
-# and ball. With a philosophical flourish Cato throws himself upon his sword; I
-# quietly take to the ship. There is nothing surprising in this. If they but
-# knew it, almost all men in their degree, some time or other, cherish very
-# nearly the same feelings towards the ocean with me.'''
 
-doc = nlp(info)
+
+str1 = str.split('PROJECT GUTENBERG EBOOK')
+str2 = str1[1].split('PROJECT GUTENBERG EBOOK')
+content = str2[0];
+
+print(content.__len__())
+
+#Averge of sentence length
+doc = nlp(content)
+
+blank = ' '
+
+for sent in doc.sents:
+        print("================================================================")
+        if sent.__str__() != blank and "[Illustration]" not in sent.__str__() and '\n\n' not in sent.__str__():
+                print(sent)
+
 
 # Analyze syntax
-print("Noun phrases:", [chunk.text for chunk in doc.noun_chunks])
-print("Verbs:", [token.lemma_ for token in doc if token.pos_ == "VERB"])
+# if content.__len__() > 999990:
+#         print("Too long")
+# else:
+#         doc = nlp(content)
+#         print("Noun phrases:", [chunk.text for chunk in doc.noun_chunks])
+#         print("Verbs:", [token.lemma_ for token in doc if token.pos_ == "VERB"])
+#         for entity in doc.ents:
+#                 if entity.label_ == 'PERSON':
+#                         print("Persons: [", end=" ")
+#                         print(entity.text, end= " ")
+#                         print("]")
 
-# Find named entities, phrases and concepts
-
-
-for entity in doc.ents:
-        #if entity.label_ == 'PERSON':
-        #print(entity.text)
-        print(entity.text, entity.label_)
 
