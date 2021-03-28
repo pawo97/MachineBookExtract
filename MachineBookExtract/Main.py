@@ -1,202 +1,167 @@
-
-# extract epub to text:
-# https://github.com/kevinxiong/epub2txt
-
-# import nltk
-# from nameparser.parser import HumanName
-#
-# def get_human_names(text):
-#     tokens = nltk.tokenize.word_tokenize(text)
-#     pos = nltk.pos_tag(tokens)
-#     sentt = nltk.ne_chunk(pos, binary = False)
-#     person_list = []
-#     person = []
-#     name = ""
-#     for subtree in sentt.subtrees(filter=lambda t: t.node == 'PERSON'):
-#         for leaf in subtree.leaves():
-#             person.append(leaf[0])
-#         if len(person) > 1: #avoid grabbing lone surnames
-#             for part in person:
-#                 name += part + ' '
-#             if name[:-1] not in person_list:
-#                 person_list.append(name[:-1])
-#             name = ''
-#         person = []
-#
-#     return (person_list)
-#
-# text = """
-# Some economists have responded positively to Bitcoin, including
-# Francois R. Velde, senior economist of the Federal Reserve in Chicago
-# who described it as "an elegant solution to the problem of creating a
-# digital currency." In November 2013 Richard Branson announced that
-# Virgin Galactic would accept Bitcoin as payment, saying that he had invested
-# in Bitcoin and found it "fascinating how a whole new global currency
-# has been created", encouraging others to also invest in Bitcoin.
-# Other economists commenting on Bitcoin have been critical.
-# Economist Paul Krugman has suggested that the structure of the currency
-# incentivizes hoarding and that its value derives from the expectation that
-# others will accept it as payment. Economist Larry Summers has expressed
-# a "wait and see" attitude when it comes to Bitcoin. Nick Colas, a market
-# strategist for ConvergEx Group, has remarked on the effect of increasing
-# use of Bitcoin and its restricted supply, noting, "When incremental
-# adoption meets relatively fixed supply, it should be no surprise that
-# prices go up. And that’s exactly what is happening to BTC prices."
-# """
-#
-# names = get_human_names(text)
-# print("LAST, FIRST")
-# for name in names:
-#         last_first = HumanName(name).last + ', ' + HumanName(name).first
-#         print(last_first)
-
-#
-# text = "Bed and chair are types of furniture"
-#
-# print(text)
-# #
-# # DT is the determinant
-# #
-# # VBP is the verb
-# #
-# # JJ is the adjective
-# #
-# # IN is the preposition
-# #
-# # NN is the noun
-#
-# import nltk
-# sentence = [("a", "DT"),("clever","JJ"),("fox","NN"),("was","VBP"),
-#    ("jumping","VBP"),("over","IN"),("the","DT"),("wall","NN")]
-#
-# grammar = "NP:{<DT>?<JJ>*<NN>}"
-#
-# parser_chunking = nltk.RegexpParser(grammar)
-#
-# parser_chunking.parse(sentence)
-#
-# output = parser_chunking.parse(sentence)
-#
-# output.draw()
-
-
-##SPACY
-# from collections import Counter
-import re
-
 import spacy
-import ebooklib
-from ebooklib import epub
+import re
+import time
 
-# Spicy version, python version, en_core_web_sm version
-# # Load English tokenizer, tagger, parser and NER
-from MachineBookExtract.venv.epub2txt import main_method
+class BookAnalyzer:
+        __doc__ = "Prepare book for analysie"
+        def __init__(self):
+                # self.str = open(r'Books/A Christmas Carol by Charles Dickens',  encoding="utf8").read()
+                self.str = open(r'Books/Alices Adventures in Wonderland by Lewis Carroll',  encoding="utf8").read()
+                # self.str = open(r'Books/Dracula by Bram Stoker', encoding="utf8").read()
+                # self.str = open(r'Books/Moby Dick; Or, The Whale_Herman Melville',  encoding="utf8").read()
+                # self.str = open(r'Books/Peter Pan by J. M. Barrie',  encoding="utf8").read()
+                # self.str = open(r'Books/The Adventures of Sherlock Holmes by Arthur Conan Doyle',  encoding="utf8").read()
+                # self.str = open(r'Books/The Castle of Otranto by Horace Walpole',  encoding="utf8").read()
+                # self.str = open(r'Books/The Moonstone by Wilkie Collins',  encoding="utf8").read()
+                # self.str = open(r'Books/The Odyssey by Homer',  encoding="utf8").read()
+                # self.str = open(r'Books/Wuthering Heights by Emily Bronte',  encoding="utf8").read()
 
-nlp = spacy.load("en_core_web_sm")
-print("Test1")
-# Process whole documents
-text = ("When Sebastian Thrun started working on self-driving cars at "
-        "Google in 2007, few people outside of the company took him "
-        "seriously. “I can tell you very senior CEOs of major American "
-        "car companies would shake my hand and turn away because I wasn’t "
-        "worth talking to,” said Thrun, in an interview with Recode earlier "
-        "this week.")
-doc = nlp(text)
+        def start(self):
+                self.start = time.time()
+                self.nlp = spacy.load("en_core_web_sm")
+                self.nlp.max_length = 2_500_000
+                str1 = self.str.split('PROJECT GUTENBERG EBOOK')
+                str2 = str1[1].split('PROJECT GUTENBERG EBOOK')
+                content = str2[0];
+                print("Book length: ", content.__len__())
+                self.doc = self.nlp(content)
 
-# Analyze syntax
-# print("Noun phrases:", [chunk.text for chunk in doc.noun_chunks])
-# print("Verbs:", [token.lemma_ for token in doc if token.pos_ == "VERB"])
-#
-# # Find named entities, phrases and concepts
-# for entity in doc.ents:
-#     print(entity.text, entity.label_)
+        def getAvergeOfSentenceInBook(self):
+                blank = ' '
+                sentencesSum = 0
+                counter = 0
+                averge = 0
+                special_characters = r"!@#$%^&*()-+?_=,<>/"
 
-#book = epub.read_epub(r'C:\Users\pa-wo\Desktop\Studia\Magisterka\MachineBookExtract\MobyDick.epub')
-# str = []
-
-#main_method(r'C:\Users\pa-wo\Desktop\Studia\Magisterka\MachineBookExtract\MobyDick.epub')
-
-# str = open('test111.txt',  encoding="utf8").read()
-#
-# #print(str)
-#
-# # text = ("When Sebastian Thrun started working on self-driving cars at "
-# #         "Google in 2007, few people outside of the company took him "
-# #         "seriously. “I can tell you very senior CEOs of major American "
-# #         "car companies would shake my hand and turn away because I wasn’t "
-# #         "worth talking to,” said Thrun, in an interview with Recode earlier "
-# #         "this week.")
-#
-# info = (str[:999990] + '..') if len(str) > 999990 else str
-# # info = info.replace('\n', '')
-# # info = info.replace('        ## CHAPTER', '')
-# # info = info.replace('�', '')
-#
-# doc = nlp(info)
-#
-# # Analyze syntax
-# print("Noun phrases:", [chunk.text for chunk in doc.noun_chunks])
-# print("Verbs:", [token.lemma_ for token in doc if token.pos_ == "VERB"])
-#
-# # Find named entities, phrases and concepts
-#
-#
-# for entity in doc.ents:
-#         #if entity.label_ == 'PERSON':
-#         #print(entity.text)
-#         print(entity.text, entity.label_)
-
-#Delete posftfix, prefix form
-# str = open(r'Books/A Christmas Carol by Charles Dickens',  encoding="utf8").read()
-# str = open(r'Books/Alices Adventures in Wonderland by Lewis Carroll',  encoding="utf8").read()
-str = open(r'Books/Dracula by Bram Stoker',  encoding="utf8").read()
-# str = open(r'Books/Moby Dick; Or, The Whale_Herman Melville',  encoding="utf8").read()
-# str = open(r'Books/Peter Pan by J. M. Barrie',  encoding="utf8").read()
-# str = open(r'Books/The Adventures of Sherlock Holmes by Arthur Conan Doyle',  encoding="utf8").read()
-# str = open(r'Books/The Castle of Otranto by Horace Walpole',  encoding="utf8").read()
-# str = open(r'Books/The Moonstone by Wilkie Collins',  encoding="utf8").read()
-# str = open(r'Books/The Odyssey by Homer',  encoding="utf8").read()
-# str = open(r'Books/Wuthering Heights by Emily Bronte',  encoding="utf8").read()
+                for sent in self.doc.sents:
+                        string_check = re.compile(r'[@_!#$%^&*()<>?/\|}{~:]')
+                        if string_check.search(sent.__str__()) == None:
+                                if sent.__str__() != blank and '\n\n' not in sent.__str__():
+                                        sentencesSum += len(sent)
+                                        counter += 1
+                                        #print(sent.__len__())
+                if counter != 0:
+                        averge = sentencesSum / counter
+                print("Averge of sentence in book: ", averge, " chars")
 
 
+        def getCharactersInBook(self):
+                # print("Main")
+                # Analyze syntax
+                liNouns = [chunk.text for chunk in self.doc.noun_chunks]
+
+                for s in liNouns:
+                        s = s.replace(r'\n', ' ')
+
+                print("Noun phrases:", [chunk.text for chunk in self.doc.noun_chunks])
+                # print("Verbs:", [token.lemma_ for token in self.doc if token.pos_ == "VERB"])
+                liCharacters = []
+
+                for entity in self.doc.ents:
+                        if entity.label_ == 'PERSON':
+                                # print("Persons: [", end=" ")
+                                # print(entity.text, end= " ")
+                                # print("]")
+                                if entity.text[0].isupper():
+                                        liCharacters.append(entity.text)
+
+                # Remove duplicates
+                liCharNotDuplicates = list(dict.fromkeys(liCharacters))
+
+                # attach nouns
+                liPrefix = []
+                print("The a :")
+                for s in liNouns:
+                        sFinal = ''
+                        if (s.startswith('a ') or s.startswith('A ')) and s[2].isupper() and 'CHAPTER' not in s:
+                                sFinal = s[2:]
+                                # print("LL", s[2:])
+                                liPrefix.append(sFinal)
+                        elif (s.startswith('the ') or s.startswith('The ')) and s[4].isupper() and 'CHAPTER' not in s:
+                                sFinal = s[4:]
+                                # print("LL", s[4:])
+                                liPrefix.append(sFinal)
+
+                # Remove duplicates
+                liPrefix = list(dict.fromkeys(liPrefix))
+                print(liPrefix)
+
+                # Check is in Nouns
+                liNounPerson = []
+                for s in liCharNotDuplicates:
+                        if s in liNouns:
+                                liNounPerson.append(s)
+
+                for s in liPrefix:
+                        liNounPerson.append(s)
+
+                # Count amount of apperiance in book
+                liNounPerson = list(dict.fromkeys(liNounPerson))
+                print(liNounPerson)
+                blank = ' '
+
+                liCharactersRates = []
+                for s in liNounPerson:
+                        p = PersonRate()
+                        p.rate = 0
+                        p.word = s
+                        liCharactersRates.append(p)
 
 
 
-str1 = str.split('PROJECT GUTENBERG EBOOK')
-str2 = str1[1].split('PROJECT GUTENBERG EBOOK')
-content = str2[0];
+                # Get words in sentence
+                for sent in self.doc.sents:
+                        string_check = re.compile(r'[@_!#$%^&*()<>?/\|}{~:]')
+                        if string_check.search(sent.__str__()) == None:
+                                if sent.__str__() != blank and '\n\n' not in sent.__str__():
+                                        words = sent.__str__().split(' ')
+                                        for w in words:
+                                                for s in liCharactersRates:
+                                                        if s.word == w:
+                                                                s.rate += 1
 
-print(content.__len__())
+                liCharactersRates.sort(key=lambda x: x.rate, reverse=True)
+                count = 0
+                for s in liCharactersRates:
+                        print(s)
+                        count += 1
+                        if count >= 10:
+                                break
 
-#Averge of sentence length
-doc = nlp(content)
+                # Get only 10 values with main character
+                # The White Rabbit
+                # The Queen of Hearts
+                # The King of Hearts
+                # The Cheshire Cat
+                # The Duchess
+                # The Duchess
+                # The Mad Hatter
+                # The March Hare
+                # The Dormouse
+                # The Gryphon
+                # The Mock Turtle
+                # Alice’s sister
+                # Main characters:
 
-blank = ' '
-sentencesSum = 0
-counter = 0
-averge = 0
 
-for sent in doc.sents:
-        #print("================================================================")
-        if sent.__str__() != blank and "[Illustration]" not in sent.__str__() and '\n\n' not in sent.__str__():
-                sentencesSum += int(sent.__len__())
-                counter += 1
-                #print(sent.__len__())
-if counter != 0:
-        averge = sentencesSum / counter
-print("Averge of book: ", averge, " chars")
 
-# Analyze syntax
-# if content.__len__() > 999990:
-#         print("Too long")
-# else:
-#         doc = nlp(content)
-#         print("Noun phrases:", [chunk.text for chunk in doc.noun_chunks])
-#         print("Verbs:", [token.lemma_ for token in doc if token.pos_ == "VERB"])
-#         for entity in doc.ents:
-#                 if entity.label_ == 'PERSON':
-#                         print("Persons: [", end=" ")
-#                         print(entity.text, end= " ")
-#                         print("]")
+        def printExecutionTime(self):
+                self.end = time.time()
+                print("Execution time: ", self.end - self.start)
 
+class PersonRate:
+        def __init__(self):
+                self.rate = 0
+                self.word = ''
+
+        def __str__(self):
+                return str(self.word) + " : " + str(self.rate)
+
+
+if __name__ == "__main__":
+        analyzer = BookAnalyzer()
+        analyzer.start()
+        #analyzer.getAvergeOfSentenceInBook()
+        analyzer.getCharactersInBook()
+        analyzer.printExecutionTime()
 
