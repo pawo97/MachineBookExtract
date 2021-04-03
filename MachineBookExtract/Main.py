@@ -29,31 +29,91 @@ class BookAnalyzer:
                 str1 = self.str.split('PROJECT GUTENBERG EBOOK')
                 str2 = str1[1].split('PROJECT GUTENBERG EBOOK')
                 content = str2[0];
-                print("Book length: ", content.__len__())
+                # print("Book length: ", content.__len__())
                 self.content = content
                 self.doc = self.nlp(content)
 
-        def getAvergeOfSentenceInBook(self):
-                blank = ' '
-                sentencesSum = 0
-                counter = 0
-                averge = 0
-                special_characters = r"!@#$%^&*()-+?_=,<>/"
+        def getAvergeLengthOfSentenceInBook(self):
+                workContent = self.content.replace('\n', ' ')
+                sentences = re.split('[.!?]', workContent)
+                sentencesCorrect = []
+                for w in sentences:
+                        if "Illustration" not in w and "CHAPTER" not in w and "BOOK" not in w:
+                                sentencesCorrect.append(w)
+                totalSum = len(workContent)
+                sentencesRate = []
+                for w in sentencesCorrect:
+                        sentencesRate.append(w.__len__())
 
-                for sent in self.doc.sents:
-                        string_check = re.compile(r'[@_!#$%^&*()<>?/\|}{~:]')
-                        if string_check.search(sent.__str__()) == None:
-                                if sent.__str__() != blank and '\n\n' not in sent.__str__():
-                                        sentencesSum += len(sent)
-                                        counter += 1
-                                        #print(sent.__len__())
-                if counter != 0:
-                        averge = sentencesSum / counter
+                averge = sum(sentencesRate) / len(sentences)
                 print("Averge of sentence in book: ", averge, " chars")
+                return averge
+
+        def getAvergeWordInSentenceInBook(self):
+                workContent = self.content.replace('\n', ' ')
+                sentences = re.split('[.!?]', workContent)
+                sentencesCorrect = []
+                for w in sentences:
+                        if "Illustration" not in w and "CHAPTER" not in w and "BOOK" not in w:
+                                sentencesCorrect.append(w)
+                totalSum = len(workContent)
+                sentencesRate = []
+                for w in sentencesCorrect:
+                        words = w.split(' ')
+                        sentencesRate.append(words.__len__())
+
+                averge = sum(sentencesRate) / len(sentences)
+                print("Averge of words in sentence in book: ", averge, " chars")
+                return averge
+
+        def getBookLength(self):
+                workContent = self.content.replace('\n', ' ')
+                print("Book length: ", workContent.__len__(), " chars")
+                return workContent.__len__()
+
+        def getAmountOfWords(self):
+                words = self.content.split(' ')
+                print("Words in book: ", words.__len__())
+                return words.__len__()
+
+        def getAmountOfDialogue(self):
+                workContent = self.content.replace('\n', ' ')
+                sentences = re.split('[.!?]', workContent)
+                # for w in sentences:
+
+        def getVerbsNow(self):
+                print("Counting verbs")
+                words = self.content.split(' ')
+                pastVerbsSize = 0
+                presentVerbsSize = 0
+                for w in words:
+                        doc = self.nlp(w)
+                        if len(doc) > 0 and 'VBD' == doc[0].tag_:
+                                pastVerbsSize += 1
+                        if len(doc) > 0 and 'VB' == doc[0].tag_:
+                                presentVerbsSize += 1
+
+                total = presentVerbsSize + pastVerbsSize
+                percentVerbsPresent = (presentVerbsSize * 100) / total
+                percentVerbsPast = (pastVerbsSize * 100) / total
+
+                print("Total verbs: " + str(total))
+                print("Present: " + str(presentVerbsSize) + ' ' + str(percentVerbsPresent) + " %")
+                print("Past: " + str(pastVerbsSize) + ' ' + str(percentVerbsPast) + " %")
+
+
+
+
+
+        def getStatistics(self):
+                # self.getAvergeLengthOfSentenceInBook()
+                # self.getAvergeWordInSentenceInBook()
+                # self.getBookLength()
+                # self.getAmountOfWords()
+                self.getVerbsNow()
 
 
         def getCharactersInBook(self):
-
                 #Words in all book
                 blank = ' '
                 words = self.content.split(' ')
@@ -127,6 +187,8 @@ class BookAnalyzer:
 
                 # Get persons
                 liCharNotDuplicates = list(dict.fromkeys(liCharacters))
+                # print("PERSONS")
+                # print(liCharNotDuplicates)
 
                 # Remove two words
                 liCharPrefixNonSpace = []
@@ -163,7 +225,7 @@ class BookAnalyzer:
 
                 # Remove duplicates
                 liCharNotAphaNumeric = list(dict.fromkeys(liCharNotAphaNumeric))
-                # print(liCharNotAphaNumeric)
+                print(liCharNotAphaNumeric)
 
                 # Two list togheter without duplicates
                 liPersons = liCharNotAphaNumeric + liPrefixNonAlphaNumeric
@@ -210,7 +272,6 @@ class BookAnalyzer:
 
                 return liRatingPersons
 
-
         def printExecutionTime(self):
                 self.end = time.time()
                 print("Execution time: ", self.end - self.start)
@@ -230,37 +291,42 @@ if __name__ == "__main__":
 
         #=======================================================================================
 
-        #Method test Alice
+        # Method test Alice
         # b = BookAnalyzer(r'Books/Alices Adventures in Wonderland by Lewis Carroll')
         # b.start()
+        # b.getStatistics()
         # t = TestBook()
         # t.mainCharactersCheck(["rabbit", "queen", "king", "cat", "duchess", "hatter", "hare", "dormouse", "gryphon"], b, 'Alice Test')
-        #
+
         # # Method test Christmas Carol
         # b = BookAnalyzer(r'Books/A Christmas Carol by Charles Dickens')
         # b.start()
+        # b.getStatistics()
         # t = TestBook()
         # t.mainCharactersCheck(["scrooge", "marley", "cratchit", "ghost", "tim", "fred", "fezziwig", "marta"], b, 'Christmas Test')
         #
         # # Method test Drakula
         # b = BookAnalyzer(r'Books/Dracula by Bram Stoker')
         # b.start()
+        # b.getStatistics()
         # t = TestBook()
-        # t.mainCharactersCheck(["lucy", "dracula", "harker", "john", "helsing", "renfield", "seward", "morris"], b,
+        # t.mainCharactersCheck(["lucy", "dracula", "harker", "lucy", "helsing", "renfield", "seward", "morris"], b,
         #                       'Dracula Test')
         #
         # # Method test Moby
         # b = BookAnalyzer(r'Books/Moby Dick; Or, The Whale_Herman Melville')
         # b.start()
+        # b.getStatistics()
         # t = TestBook()
         # t.mainCharactersCheck(["ahab", "dick", "ishmael", "queequeg", "mapple", "sam", "boomer", "sturbuck", "stubb", "elijah"], b,
         #                       'Moby Test')
 
         #=========================================================================================
 
-        # Method test Peter
+        #Method test Peter
         b = BookAnalyzer(r'Books/Peter Pan by J. M. Barrie')
         b.start()
+        b.getStatistics()
         t = TestBook()
         t.mainCharactersCheck(["peter", "wendy", "hak", "darling", "lilia", "smee", "nibs", "rabbit", "bell"], b,
                               'Peter Test')
@@ -268,6 +334,7 @@ if __name__ == "__main__":
         # Method test Sherlock
         b = BookAnalyzer(r'Books/The Adventures of Sherlock Holmes by Arthur Conan Doyle')
         b.start()
+        b.getStatistics()
         t = TestBook()
         t.mainCharactersCheck(["holmes", "watson", "lestrade", "bohemia", "adler", "wilson", "sutherland", "mccarthy"], b,
                               'Sherlock Test')
@@ -275,6 +342,7 @@ if __name__ == "__main__":
         # Method test Castle
         b = BookAnalyzer(r'Books/The Castle of Otranto by Horace Walpole')
         b.start()
+        b.getStatistics()
         t = TestBook()
         t.mainCharactersCheck(["manfred", r"hippolita", "conrad", "matilda", r"isabella", "theodore", "jerome", "diego"], b,
                               'Castle Test')
@@ -282,23 +350,26 @@ if __name__ == "__main__":
         # Method test Moonstone
         b = BookAnalyzer(r'Books/The Moonstone by Wilkie Collins')
         b.start()
+        b.getStatistics()
         t = TestBook()
         t.mainCharactersCheck(["verinder", "blake", "ablewhite", "betteredge", "jennings", "cuff", "clack", "bruff", "candy"], b,
                               'Moonstone Test')
 
-        # # Method test Odyssey
-        # b = BookAnalyzer(r'Books/The Odyssey by Homer')
-        # b.start()
-        # t = TestBook()
-        # t.mainCharactersCheck([r"odysseus", r"apollo", r"penelope", r"agamemnon", r"queen", "zeus", r"neptune", "eurymachus", r"amphinomus"], b,
-        #                       'Odyssey Test')
-        #
-        # # Method test Wuthering
-        # b = BookAnalyzer(r'Books/Wuthering Heights by Emily Bronte')
-        # b.start()
-        # t = TestBook()
-        # t.mainCharactersCheck(["heathcliff", "catherine", "linton", "dean", "lockwood", "earnshaw", "linton", "joseph"], b,
-        #                       'Wuthering Test')
+        # Method test Odyssey
+        b = BookAnalyzer(r'Books/The Odyssey by Homer')
+        b.start()
+        b.getStatistics()
+        t = TestBook()
+        t.mainCharactersCheck([r"odysseus", r"apollo", r"penelope", r"agamemnon", r"queen", "zeus", r"neptune", "eurymachus", r"amphinomus"], b,
+                              'Odyssey Test')
+
+        # Method test Wuthering
+        b = BookAnalyzer(r'Books/Wuthering Heights by Emily Bronte')
+        b.start()
+        b.getStatistics()
+        t = TestBook()
+        t.mainCharactersCheck(["heathcliff", "catherine", "linton", "dean", "lockwood", "earnshaw", "linton", "joseph"], b,
+                              'Wuthering Test')
 
 
 
@@ -318,16 +389,41 @@ if __name__ == "__main__":
 # Wuthering                     8                       8               73        8             30
 
 #=================================================================================================
-#Dlugosc zdan, ilosc slow, ilosc dialogow, stosunek czasow
+#Dlugosc zdan, ilosc slow, ilosc dialogow, stosunek czasow, podział na rozdziały
 #=================================================================================================
-# Nazwa książki	                Bohaterowie 	        Dopasowanie     max       Dopasowanie   min
-# Alicja w krainie czarów     	9	                    9               69        9             30
-# Chrismas Carol	            8	                    7               92        7             30
-# Dracula	                    8                       7               249       4             30
-# Moby Dick                     10                      6               678       1             30
-# Peter Pan                     9                       4               57        4             30
-# Sherlock Holmes               8                       7               211       1             30
-# Castle of Othrando            8                       3               71        3             30
-# Moonstone                     9                       7               287       5             30
-# Odyssey                       9                       7               212       1             30
-# Wuthering                     8                       8               73        8             30
+# Nazwa książki                 Srednia dl zdan         Srednia ilosc slow w zdaniu     Ilosc znakow            Ilosc slow
+# Alicja w krainie czarów       85                      17                              144787                  24643
+# Chrismas Carol                73                      14                              164528                  26550
+# Dracula                       87                      18                              846165                  153522
+# Moby Dick                     112                     21                              1218971                 194862
+# Peter Pan                     74                      15                              255622                  42847
+# Sherlock Holmes               76                      15                              562425                  95606
+# Castle of Othrando            93                      17                              210802                  33646
+# Moonstone                     75                      15                              1073519                 177787
+# Odyssey                       142                     28                              678977                  119465
+# Wuthering                     87                      17                              645594                  105731
+#=================================================================================================
+# Nazwa książki               ilosc czaswonikow       czas teraz      present %       czas przeszly   past %
+# Alicja w krainie czarów     3518                    1273            36              2245            63
+# Chrismas Carol              3318                    1088            32              2230            67
+# Dracula                     18699                   8651            46              10048           53
+# Moby Dick                   17117                   8280            48              8837            51
+# Peter Pan                   6360                    2131            33              4229            66
+# Sherlock Holmes             11385                   4628            40              6757            59
+# Castle of Othrando          4106                    1675            40              2431            59
+# Moonstone                   21962                   8781            39              13181           60
+# Odyssey                     14304                   6685            46              7619            53
+# Wuthering                   13571                   6010            44              7561            55
+#=================================================================================================
+# Nazwa książki                 ilosc dialogow          rozdziały       przymiotniki    przyslowki
+# Alicja w krainie czarów
+# Chrismas Carol
+# Dracula
+# Moby Dick
+# Peter Pan
+# Sherlock Holmes
+# Castle of Othrando
+# Moonstone
+# Odyssey
+# Wuthering
+# =================================================================================================
