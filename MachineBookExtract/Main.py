@@ -2,6 +2,8 @@ import spacy
 import re
 import time
 
+from MachineBookExtract.ChaptersInBookTool import ChaptersInBookTool
+from MachineBookExtract.DialogueTool import DialogueTool
 from MachineBookExtract.PersonRate import PersonRate
 from TestBook import TestBook
 
@@ -10,6 +12,8 @@ class BookAnalyzer:
         __doc__ = "Prepare book for analysie"
         def __init__(self, name):
                 self.str = open(name,  encoding="utf8").read()
+                self.chapters = ChaptersInBookTool()
+                self.dialogues = DialogueTool()
 
                 # self.str = open(r'Books/Alices Adventures in Wonderland by Lewis Carroll', encoding="utf8").read()
                 # self.str = open(r'Books/A Christmas Carol by Charles Dickens',  encoding="utf8").read()
@@ -101,19 +105,6 @@ class BookAnalyzer:
                 print("Present: " + str(presentVerbsSize) + ' ' + str(percentVerbsPresent) + " %")
                 print("Past: " + str(pastVerbsSize) + ' ' + str(percentVerbsPast) + " %")
 
-        def getAmountOfDialogues(self):
-                dialouge = 0
-                words = self.content.split(' ')
-                for w in words:
-                        if '“' in w:
-                                dialouge += 1
-
-                if dialouge < 20:
-                        for w in words:
-                                if '"' in w:
-                                        dialouge += 1
-                print("Amount of dialogue " + str(dialouge))
-                return dialouge
 
         def getAmountOfAdjectives(self):
                 words = self.content.split(' ')
@@ -133,14 +124,6 @@ class BookAnalyzer:
                 # return adjectives
 
 
-        def getAmountOfChapters(self, name):
-                chapter = 0
-                words = self.content.split(' ')
-                for w in words:
-                        if name in w:
-                                chapter += 1
-                print("Amount of chapters " + str(int(chapter / 2)))
-                return int(chapter / 2)
 
         def getStatistics(self):
                 # self.getAvergeLengthOfSentenceInBook()
@@ -148,9 +131,10 @@ class BookAnalyzer:
                 # self.getBookLength()
                 # self.getAmountOfWords()
                 # self.getVerbsNow()
-                self.getAmountOfDialogues()
-                self.getAmountOfChapters('CHAPTER')
-                self.getAmountOfAdjectives()
+                self.dialogues.getAmountOfDialogues(self.content)
+                # self.chapters.getAmountOfChaptersByTableOfContent(self.content)
+                # self.chapters.getAmountOfChaptersByInsideOfContent(self.content )
+                # self.getAmountOfAdjecti ves()
 
         def getCharactersInBook(self):
                 #Words in all book
@@ -320,163 +304,3 @@ class BookAnalyzer:
                 print(doc[0].tag_, end=" | ")
 
 
-if __name__ == "__main__":
-        # analyzer = BookAnalyzer()
-        # analyzer.start()
-        # # analyzer.getAvergeOfSentenceInBook()
-        # analyzer.getCharactersInBook()
-        # analyzer.mainCharactersCheck()
-        # # analyzer.printExecutionTime()
-
-        #=======================================================================================
-
-        # # Method test Alice
-        # b = BookAnalyzer(r'Books/Alices Adventures in Wonderland by Lewis Carroll')
-        # b.start()
-        # b.getStatistics()
-        # t = TestBook()
-        # t.mainCharactersCheck(["rabbit", "queen", "king", "cat", "duchess", "hatter", "hare", "dormouse", "gryphon"], b, 'Alice Test')
-
-        # # Method test Christmas Carol
-        # b = BookAnalyzer(r'Books/A Christmas Carol by Charles Dickens')
-        # b.start()
-        # b.getStatistics()
-        # t = TestBook()
-        # t.mainCharactersCheck(["scrooge", "marley", "cratchit", "ghost", "tim", "fred", "fezziwig", "marta"], b, 'Christmas Test')
-        #
-        # # Method test Drakula
-        # b = BookAnalyzer(r'Books/Dracula by Bram Stoker')
-        # b.start()
-        # b.getStatistics()
-        # t = TestBook()
-        # t.mainCharactersCheck(["lucy", "dracula", "harker", "lucy", "helsing", "renfield", "seward", "morris"], b,
-        #                       'Dracula Test')
-        #
-        # Method test Moby
-        # b = BookAnalyzer(r'Books/Moby Dick; Or, The Whale_Herman Melville')
-        # b.start()
-        # b.getStatistics()
-        # t = TestBook()
-        # t.mainCharactersCheck(["ahab", "dick", "ishmael", "queequeg", "mapple", "sam", "boomer", "sturbuck", "stubb", "elijah"], b,
-        #                       'Moby Test')
-
-        #=========================================================================================
-
-        #Method test Peter
-        # b = BookAnalyzer(r'Books/Peter Pan by J. M. Barrie')
-        # b.start()
-        # b.getStatistics()
-        # t = TestBook()
-        # t.mainCharactersCheck(["peter", "wendy", "hak", "darling", "lilia", "smee", "nibs", "rabbit", "bell"], b,
-        #                       'Peter Test')
-        #
-        # Method test Sherlock
-        # b = BookAnalyzer(r'Books/The Adventures of Sherlock Holmes by Arthur Conan Doyle')
-        # b.start()
-        # b.getStatistics()
-        # t = TestBook()
-        # t.mainCharactersCheck(["holmes", "watson", "lestrade", "bohemia", "adler", "wilson", "sutherland", "mccarthy"], b,
-        #                       'Sherlock Test')
-        #
-        # Method test Castle
-        # b = BookAnalyzer(r'Books/The Castle of Otranto by Horace Walpole')
-        # b.start()
-        # b.getStatistics()
-        # t = TestBook()
-        # t.mainCharactersCheck(["manfred", r"hippolita", "conrad", "matilda", r"isabella", "theodore", "jerome", "diego"], b,
-        #                       'Castle Test')
-        #
-        # Method test Moonstone
-        b = BookAnalyzer(r'Books/The Moonstone by Wilkie Collins')
-        b.start()
-        b.getStatistics()
-        # t = TestBook()
-        # t.mainCharactersCheck(["verinder", "blake", "ablewhite", "betteredge", "jennings", "cuff", "clack", "bruff", "candy"], b,
-        #                       'Moonstone Test')
-        #
-        # # Method test Odyssey
-        b = BookAnalyzer(r'Books/The Odyssey by Homer')
-        b.start()
-        b.getStatistics()
-        # t = TestBook()
-        # t.mainCharactersCheck([r"odysseus", r"apollo", r"penelope", r"agamemnon", r"queen", "zeus", r"neptune", "eurymachus", r"amphinomus"], b,
-        #                       'Odyssey Test')
-        #
-        # # Method test Wuthering
-        b = BookAnalyzer(r'Books/Wuthering Heights by Emily Bronte')
-        b.start()
-        b.getStatistics()
-        # t = TestBook()
-        # t.mainCharactersCheck(["heathcliff", "catherine", "linton", "dean", "lockwood", "earnshaw", "linton", "joseph"], b,
-        #                       'Wuthering Test')
-
-
-
-# print("Noun phrases:", [chunk.text for chunk in self.doc.noun_chunks])
-# print("Verbs:", [token.lemma_ for token in self.doc if token.pos_ == "VERB"])
-
-# Nazwa książki	                Bohaterowie 	        Dopasowanie     max       Dopasowanie   min
-# Alicja w krainie czarów     	9	                    9               69        9             30
-# Chrismas Carol	            8	                    7               92        7             30
-# Dracula	                    8                       7               249       4             30
-# Moby Dick                     10                      6               678       1             30
-# Peter Pan                     9                       4               57        4             30
-# Sherlock Holmes               8                       7               211       1             30
-# Castle of Othrando            8                       3               71        3             30
-# Moonstone                     9                       7               287       5             30
-# Odyssey                       9                       7               212       1             30
-# Wuthering                     8                       8               73        8             30
-
-#=================================================================================================
-#Dlugosc zdan, ilosc slow, ilosc dialogow, stosunek czasow, podział na rozdziały
-#=================================================================================================
-# Nazwa książki                 Srednia dl zdan         Srednia ilosc slow w zdaniu     Ilosc znakow            Ilosc slow
-# Alicja w krainie czarów       85                      17                              144787                  24643
-# Chrismas Carol                73                      14                              164528                  26550
-# Dracula                       87                      18                              846165                  153522
-# Moby Dick                     112                     21                              1218971                 194862
-# Peter Pan                     74                      15                              255622                  42847
-# Sherlock Holmes               76                      15                              562425                  95606
-# Castle of Othrando            93                      17                              210802                  33646
-# Moonstone                     75                      15                              1073519                 177787
-# Odyssey                       142                     28                              678977                  119465
-# Wuthering                     87                      17                              645594                  105731
-#=================================================================================================
-# Nazwa książki               ilosc czaswonikow       czas teraz      present %       czas przeszly   past %
-# Alicja w krainie czarów     3518                    1273            36              2245            63
-# Chrismas Carol              3318                    1088            32              2230            67
-# Dracula                     18699                   8651            46              10048           53
-# Moby Dick                   17117                   8280            48              8837            51
-# Peter Pan                   6360                    2131            33              4229            66
-# Sherlock Holmes             11385                   4628            40              6757            59
-# Castle of Othrando          4106                    1675            40              2431            59
-# Moonstone                   21962                   8781            39              13181           60
-# Odyssey                     14304                   6685            46              7619            53
-# Wuthering                   13571                   6010            44              7561            55
-#=================================================================================================
-# Nazwa książki                 ilosc dialogow          rozdziały       przymiotniki
-# Alicja w krainie czarów       1115                    12              1438
-# Chrismas Carol                1127                    0               2193
-# Dracula                       2516                    27              10004
-# Moby Dick                     1606                    142             18065
-# Peter Pan                     1424                    0               2568
-# Sherlock Holmes               2703                    0               6656
-# Castle of Othrando            1051                    2 (5)           2065
-# Moonstone                     3109                    44              11295
-# Odyssey                       1243                    0               6441
-# Wuthering                     2303                    17              6821
-# =================================================================================================
-# Nazwa książki                 Czas akcji (oszacowany)         srednia dialogowa (znaki | slowa)      dlugie %    krotkie %
-# Alicja w krainie czarów
-# Chrismas Carol
-# Dracula
-# Moby Dick
-# Peter Pan
-# Sherlock Holmes
-# Castle of Othrando
-# Moonstone
-# Odyssey
-# Wuthering
-# =================================================================================================
-# Jesli ktos zaznaczy wlasciwych bohaterow i rozdzialy -> po rozdzialach bedziemy sprawdzali statystyke
-# Rozdzial      Ktory Bohater w nim byl         Pozytywne Opis      Negatywne Opis      Czas w rozdziale        Nazwy geograficzne

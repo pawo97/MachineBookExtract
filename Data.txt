@@ -1,0 +1,85 @@
+# print("Noun phrases:", [chunk.text for chunk in self.doc.noun_chunks])
+# print("Verbs:", [token.lemma_ for token in self.doc if token.pos_ == "VERB"])
+
+# rozszerzalne listy dla spacy, wlasne otagowania ?
+#
+
+# Table
+# specyficzny tekst (baśnie)
+#================================================================================================= => POPRAWIĆ LEPSZE WYCIĄGANIE
+# Nazwa książki	                Bohaterowie 	        Dopasowanie     max       Dopasowanie   min
+# Alicja w krainie czarów     	9	                    9               69        9             30
+# Chrismas Carol	            8	                    7               92        7             30
+# Dracula	                    8                       7               249       4             30
+# Moby Dick                     10                      6               678       1             30
+# Peter Pan                     9                       4               57        4             30
+# Sherlock Holmes               8                       7               211       1             30
+# Castle of Othrando            8                       3               71        3             30
+# Moonstone                     9                       7               287       5             30
+# Odyssey                       9                       7               212       1             30
+# Wuthering                     8                       8               73        8             30
+
+#=================================================================================================
+#Dlugosc zdan, ilosc slow, ilosc dialogow, stosunek czasow, podział na rozdziały
+#================================================================================================= OK
+# Nazwa książki                 Srednia dl zdan (znaki) Srednia ilosc slow w zdaniu     Ilosc znakow            Ilosc slow
+# Alicja w krainie czarów       85                      17                              144787                  24643
+# Chrismas Carol                73                      14                              164528                  26550
+# Dracula                       87                      18                              846165                  153522
+# Moby Dick                     112                     21                              1218971                 194862
+# Peter Pan                     74                      15                              255622                  42847
+# Sherlock Holmes               76                      15                              562425                  95606
+# Castle of Othrando            93                      17                              210802                  33646
+# Moonstone                     75                      15                              1073519                 177787
+# Odyssey                       142                     28                              678977                  119465
+# Wuthering                     87                      17                              645594                  105731
+#======================= -> normalne statystyki
+#================================================================================================= OK
+# Nazwa książki               ilosc czaswonikow       czas teraz      present %       czas przeszly   past %
+# Alicja w krainie czarów     3518                    1273            36              2245            63
+# Christmas Carol             3318                    1088            32              2230            67
+# Dracula                     18699                   8651            46              10048           53
+# Moby Dick                   17117                   8280            48              8837            51
+# Peter Pan                   6360                    2131            33              4229            66
+# Sherlock Holmes             11385                   4628            40              6757            59
+# Castle of Othrando          4106                    1675            40              2431            59
+# Moonstone                   21962                   8781            39              13181           60
+# Odyssey                     14304                   6685            46              7619            53
+# Wuthering                   13571                   6010            44              7561            55
+============= -> Tutaj dodasz wykres kołowy i właściwości do niego
+#================================================================================================= OK
+# Nazwa książki                                r     rozdziały content (name) rozdzialy inside      przymiotniki
+# Alicja w krainie czarów                      12    12                       12                    1438
+# Christmas Carol                              5     0                        5                     2193
+# Dracula                                      27    27                       27                    10004
+# Moby Dick                                    135   135                      135                   18065
+# Peter Pan                                    17    17                       17                    2568
+# Sherlock Holmes                              12    0                        12                    6656
+# Castle of Othrando                           5     0                        5                     2065
+# Wuthering                                    34    0                        34                    6821
+# ================================================================================================= OK
+# Nazwa książki                 ilosc dialogow   srednie dialog slowa  srednie dialog znaki     krotkie   %      dlugie  %
+# Alicja w krainie czarów       1114             10                    39                       815       73     299     26
+# Chrismas Carol                682              19                    77                       539       79     143     20
+# Dracula                       1459             59                    235                      1164      79     295     20
+# Moby Dick                     1476             32                    141                      1169      79     307     20
+# Peter Pan                     1464             7                     27                       982       67     482     32
+# Sherlock Holmes               2325             35                    144                      1904      81     421     18
+# Castle of Othrando            1054             18                    78                       753       71     301     28
+# Wuthering                     2183             25                    107                      1689      77     494     22
+# =================================================================================================> Poprawić lepsze wyciąganie
+# Nazwa książki                 Czas akcji (oszacowany)           rozdziały z dialogami i bardziej opisowe
+# Alicja w krainie czarów       daty, jak odbiegają to ina akcja
+# Chrismas Carol
+# Dracula
+# Moby Dick
+# Peter Pan
+# Sherlock Holmes
+# Castle of Othrando
+# Moonstone
+# Odyssey
+# Wuthering
+# =================================================================================================
+# Jesli ktos zaznaczy wlasciwych bohaterow i rozdzialy -> po rozdzialach bedziemy sprawdzali statystyke
+# ===> licznik znakow po rozdzialach, substring na fragmentach i stamtad informacje zaciagamy
+# Rozdzial      Ktory Bohater w nim byl         Pozytywne Opis      Negatywne Opis      Czas w rozdziale        Nazwy geograficzne
