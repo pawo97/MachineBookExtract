@@ -67,7 +67,7 @@ if __name__ == "__main__":
         #                       'Castle Test')
         #
         # Method test Moonstone
-        # b = BookAnalyzer(r'Books/The Moonstone by Wilkie Collins')
+        # b = BookAnalyzer(r'Books/Metamorphosis by Franz Kafka')
         # b.start()
         # b.getStatistics()
         # t = TestBook()
@@ -75,7 +75,7 @@ if __name__ == "__main__":
         #                       'Moonstone Test')
         #
         # # Method test Odyssey
-        # b = BookAnalyzer(r'Books/The Odyssey by Homer')
+        # b = BookAnalyzer(r'Books/Pride and Prejudice by Jane Austen')
         # b.start()
         # b.getStatistics()
         # t = TestBook()
@@ -83,7 +83,7 @@ if __name__ == "__main__":
         #                       'Odyssey Test')
         #
         # # Method test Wuthering
-        b = BookAnalyzer(r'Books/Wuthering Heights by Emily Bronte')
+        b = BookAnalyzer(r'MachineBookExtract/Books/Wuthering Heights by Emily Bronte')
         b.start()
         b.getStatistics()
         # t = TestBook()

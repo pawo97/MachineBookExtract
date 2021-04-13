@@ -1,4 +1,4 @@
-from MachineBookExtract.PersonRate import PersonRate
+from MachineBookExtract.BookTools.PersonRate import PersonRate
 
 
 class TestBook:

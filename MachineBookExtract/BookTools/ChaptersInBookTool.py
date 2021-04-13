@@ -41,6 +41,8 @@ class ChaptersInBookTool():
         # check if last word has ROMAN NUMBER and .
         # on the end and then check if its roman number, order it and check if it is one for one
         liChapters = []
+        liChaptersCharPositions = []
+        counter = 0
         for l in lines:
             if l == '':
                 continue
@@ -59,7 +61,10 @@ class ChaptersInBookTool():
                 lastword = lastword[0:lastword.__len__() - 1]
                 # print(l, lastwordot, words[words.__len__() - 1], lastword, self.checkIfRomanNumeral(lastword))
                 if self.checkIfRomanNumeral(lastword):
+                    liChaptersCharPositions.append(counter)
                     liChapters.append(self.romanToDecimal(lastword))
+
+            counter += 1
 
         # print(liChapters)
         liChapters = sorted(liChapters)
@@ -81,6 +86,7 @@ class ChaptersInBookTool():
             # check if last word has ROMAN NUMBER and .
             # on the end and then check if its roman number, order it and check if it is one for one
             liChapters = []
+            liChaptersCharPositions = []
             for i in range(lines.__len__()):
                 if i - 1 > 0 and i + 1 < lines.__len__():
                     if lines[i - 1] == '' and lines[i + 1] == '':
@@ -101,6 +107,7 @@ class ChaptersInBookTool():
                         # print(lastword)
                         if self.checkIfRomanNumeral(lastword):
                             liChapters.append(self.romanToDecimal(lastword))
+                            liChaptersCharPositions.append(i)
 
             chaptersCount = 0
             for i in range(liChapters.__len__()):
@@ -116,21 +123,25 @@ class ChaptersInBookTool():
             # check if start word has CHAPTER and NUMBER and .
             # on the end and then check if its roman number, order it and check if it is one for one
             liChapters = []
+            liChaptersCharPositions = []
             for i in range(lines.__len__()):
                 if i - 1 > 0:
                     if lines[i - 1] == '':
+
                         if lines[i] == '':
                             continue
                         if 'THE END.' in lines[i]:
                             continue
-                        words = lines[i].split(' ')
+                        # print(lines[i])
+                        words = lines[i].lstrip().split(' ')
                         firstword = words[0]
-
+                        # print('Word : ' , firstword)
                         s = ''
                         if firstword.lower() == 'chapter':
                             s = re.sub(r'[^a-zA-Z0-9]', '', words[1])
                             # print(s)
                             liChapters.append(s)
+                            liChaptersCharPositions.append(i)
 
                         # if self.checkIfRomanNumeral(lastword):
                         #         liChapters.append(self.romanToDecimal(lastword))
@@ -150,6 +161,7 @@ class ChaptersInBookTool():
             # check if start word has ROMAN NUMBER and .
             # on the end and then check if its roman number, order it and check if it is one for one
             liChapters = []
+            liChaptersCharPositions = []
             for i in range(lines.__len__()):
                 if i - 1 > 0:
                     if lines[i - 1] == '':
@@ -177,6 +189,7 @@ class ChaptersInBookTool():
                         if self.checkIfRomanNumeral(s):
                             # print(s)
                             liChapters.append(self.romanToDecimal(s))
+                            liChaptersCharPositions.append(i)
 
             chaptersCount = 0
             liChapters = sorted(liChapters)
@@ -192,6 +205,7 @@ class ChaptersInBookTool():
                 find = True
 
         print('Amount of chapters inside ' + str(chaptersCount))
+        print(liChaptersCharPositions)
 
     def checkIfRomanNumeral(self, numeral):
             # numeral = numeral.upper()

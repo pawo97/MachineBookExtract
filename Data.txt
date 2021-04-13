@@ -33,6 +33,8 @@
 # Moonstone                     75                      15                              1073519                 177787
 # Odyssey                       142                     28                              678977                  119465
 # Wuthering                     87                      17                              645594                  105731
+# Pride and Prejudice           106                     28                              484893                  115786
+# Metamorphosis                 140                     27                              118523                  20192
 #======================= -> normalne statystyki
 #================================================================================================= OK
 # Nazwa książki               ilosc czaswonikow       czas teraz      present %       czas przeszly   past %
@@ -43,9 +45,9 @@
 # Peter Pan                   6360                    2131            33              4229            66
 # Sherlock Holmes             11385                   4628            40              6757            59
 # Castle of Othrando          4106                    1675            40              2431            59
-# Moonstone                   21962                   8781            39              13181           60
-# Odyssey                     14304                   6685            46              7619            53
 # Wuthering                   13571                   6010            44              7561            55
+# Pride and Prejudice         9127                    4003            43              5124            56
+# Metamorphosis               2892                    1059            36              1833            63
 ============= -> Tutaj dodasz wykres kołowy i właściwości do niego
 #================================================================================================= OK
 # Nazwa książki                                r     rozdziały content (name) rozdzialy inside      przymiotniki
@@ -57,6 +59,8 @@
 # Sherlock Holmes                              12    0                        12                    6656
 # Castle of Othrando                           5     0                        5                     2065
 # Wuthering                                    34    0                        34                    6821
+# Pride and Prejudice                                                         61
+# Metamorphosis                                                               3
 # ================================================================================================= OK
 # Nazwa książki                 ilosc dialogow   srednie dialog slowa  srednie dialog znaki     krotkie   %      dlugie  %
 # Alicja w krainie czarów       1114             10                    39                       815       73     299     26
@@ -67,6 +71,8 @@
 # Sherlock Holmes               2325             35                    144                      1904      81     421     18
 # Castle of Othrando            1054             18                    78                       753       71     301     28
 # Wuthering                     2183             25                    107                      1689      77     494     22
+# Pride and Prejudice           1151             46                    136                      831       72     320     27
+# Metamorphosis                 131              20                    81                       111       84     20      15
 # =================================================================================================> Poprawić lepsze wyciąganie
 # Nazwa książki                 Czas akcji (oszacowany)           rozdziały z dialogami i bardziej opisowe
 # Alicja w krainie czarów       daty, jak odbiegają to ina akcja
