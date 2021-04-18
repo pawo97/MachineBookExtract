@@ -1,10 +1,17 @@
+import collections
 import re
-
+import pandas as pd
 # TO DO:
 # podzial na watki
 # podzielic na rozdzialy ksiazke string
+from MachineBookExtract.BookTools.DialogueTool import DialogueTool
+
 
 class ChaptersInBookTool():
+
+    def __init__(self, doc):
+        self.doc = doc
+
     def getAmountOfChaptersByTableOfContent(self, content):
         # Check content first
         lines = content.split('\n')
@@ -34,178 +41,295 @@ class ChaptersInBookTool():
         return chapters
 
     def getAmountOfChaptersByInsideOfContent(self, content):
-        # linie i zaczyna sie tekst, konczy sie liczba rzymska albo cyfra obojetnie
+
         lines = content.split('\n')
-        find = False
-        CHAPTERS_COUNT = 3
-        # check if last word has ROMAN NUMBER and .
-        # on the end and then check if its roman number, order it and check if it is one for one
         liChapters = []
         liChaptersCharPositions = []
-        counter = 0
-        for l in lines:
-            if l == '':
-                continue
-            if 'THE END.' in l:
-                continue
-            words = l.split(' ')
-            lastword = words[words.__len__() - 1]
-            # lastword = lastword[0:lastword.__len__() - 1]
+        thisdictRomanAndDot = {}
+        thisdictRoman = {}
+        thisdictChapterNumberDot = {}
+        thisdictChapterRomanDot = {}
+        # counter = 0
+        for i in range(lines.__len__()):
+            # print("=====================")
+            # print('L', lines[i])
+            if i - 1 > 0:
+                if lines[i - 1] == '':
+                    if lines[i] == '':
+                        continue
+                    if 'THE END.' in lines[i]:
+                        continue
+                    # Remove table of contents
+                    # print('B', lines[i])
+                    if i + 1 < lines.__len__() and i + 2 < lines.__len__():
+                        wordsNext = lines[i + 1].lstrip().split(' ')
+                        wordsNextNext = lines[i + 2].lstrip().split(' ')
+                        if 'chapter' in wordsNext[0].lower() or 'chapter' in wordsNextNext[0].lower():
+                            continue
+                    words = lines[i].lstrip().split(' ')
+                    # print('F', lines[i])
 
-            try:
-                lastwordot = lastword[-1]
-            except:
-                lastwordot = ''
+                    # Check first word
+                    # CHAPTER and NUMBER and .
+                    firstword = words[0]
+                    # if 'CHAPTER 30.' in lines[i]:
+                    #     break
+                    s = ''
+                    # print(lines[i],'|',firstword)
+                    if firstword.lower() == 'chapter':
+                        # print(lines[i], '|', words[0], words[1])
+                        s = re.sub(r'[^a-zA-Z0-9]', '', words[1])
+                        if not self.checkIfRomanNumeral(s):
+                            thisdictChapterNumberDot[int(s)] = i
 
-            if lastwordot == '.':
-                lastword = lastword[0:lastword.__len__() - 1]
-                # print(l, lastwordot, words[words.__len__() - 1], lastword, self.checkIfRomanNumeral(lastword))
-                if self.checkIfRomanNumeral(lastword):
-                    liChaptersCharPositions.append(counter)
-                    liChapters.append(self.romanToDecimal(lastword))
+                    # Check first word
+                    # ROMAN NUMBER and .
+                    s = ''
+                    try:
+                        s = re.sub(r'[^a-zA-Z0-9]', '', firstword)
+                    except:
+                        s = ''
+                    lastwordot = ''
+                    try:
+                        lastwordot = s[-1]
+                        # print(s)
+                    except:
+                        lastwordot = ''
+                    if self.checkIfRomanNumeral(s):
+                        # print(lines[i], '|', s)
+                        if thisdictChapterRomanDot.get(self.romanToDecimal(s)) == None:
+                            thisdictChapterRomanDot[int(self.romanToDecimal(s))] = i
 
-            counter += 1
+                    # Check last word
+                    # ROMAN NUMBER and .
+                    lastwordot = ''
+                    try:
+                        lastwordot = words[words.__len__() - 1]
+                    except:
+                        lastwordot = ''
+                    if lastwordot != '' and lastwordot[-1] == '.':
+                        lastword = lastwordot[0:lastwordot.__len__() - 1]
+                        if self.checkIfRomanNumeral(lastword):
+                            if thisdictRomanAndDot.get(self.romanToDecimal(lastword)) == None:
+                                # print(lines[i], '|', lastwordot)
+                                thisdictRomanAndDot[self.romanToDecimal(lastword)] = i
 
-        # print(liChapters)
-        liChapters = sorted(liChapters)
-        liChapters = list(dict.fromkeys(liChapters))
-        second = False
+                    # Check last word
+                    # ROMAN NUMBER
+                    lastwordot = ''
+                    try:
+                        lastwordot = words[words.__len__() - 1]
+                    except:
+                        lastwordot = ''
+                    if lastwordot != '':
 
-        # print(liChapters)
-        chaptersCount = 0
-        for i in range(liChapters.__len__()):
-            if i + 1 == liChapters[i]:
-                chaptersCount += 1
+                        lastword = lastwordot
+                        if self.checkIfRomanNumeral(lastword):
+                            if thisdictRoman.get(self.romanToDecimal(lastword)) == None:
+                                # print(lines[i], '|', lastwordot)
+                                thisdictRoman[self.romanToDecimal(lastword)] = i
+
+
+
+        # Create List of chapters and positions
+        # Roman and .
+        chaptersCountRomanAndDot = 0
+        od = sorted(thisdictRomanAndDot.items())
+        # print(od)
+        count = 1
+        liChaptersCharPositionsApprovedRomanAndDot = []
+        for key in od:
+            if key[0] == count:
+                chaptersCountRomanAndDot += 1
+                liChaptersCharPositionsApprovedRomanAndDot.append(key[1])
+                count += 1
             else:
                 break
 
-        if chaptersCount > CHAPTERS_COUNT:
-            find = True
+        # Roman
+        chaptersCountRoman = 0
+        od = sorted(thisdictRoman.items())
+        print(od)
+        count = 1
+        liChaptersCharPositionsApprovedRoman = []
+        for key in od:
+            if key[0] == count:
+                chaptersCountRoman += 1
+                liChaptersCharPositionsApprovedRoman.append(key[1])
+                count += 1
+            else:
+                break
 
-        if find == False:
-            # check if last word has ROMAN NUMBER and .
-            # on the end and then check if its roman number, order it and check if it is one for one
-            liChapters = []
-            liChaptersCharPositions = []
-            for i in range(lines.__len__()):
-                if i - 1 > 0 and i + 1 < lines.__len__():
-                    if lines[i - 1] == '' and lines[i + 1] == '':
-                        if lines[i] == '':
-                            continue
-                        if 'THE END.' in lines[i]:
-                            continue
-                        words = lines[i].split(' ')
-                        lastword = words[words.__len__() - 1]
-                        # lastword = lastword[0:lastword.__len__() - 1]
+        # Chapter Number Dot
+        chaptersCountChapterNumberDot = 0
+        od = sorted(thisdictChapterNumberDot.items())
+        count = 1
+        liChaptersCharPositionsApprovedChapterNumberDot = []
+        for key in od:
+            if key[0] == count:
+                chaptersCountChapterNumberDot += 1
+                liChaptersCharPositionsApprovedChapterNumberDot.append(key[1])
+                count += 1
+            else:
+                break
 
-                        try:
-                            lastwordot = lastword[-1]
-                        except:
-                            lastwordot = ''
+        # Chapter Roman Dot
+        chaptersCountChapterRomanDot = 0
+        od = sorted(thisdictChapterRomanDot.items())
+        count = 1
+        liChaptersCharPositionsApprovedChapterRomanDot = []
+        for key in od:
+            if key[0] == count:
+                chaptersCountChapterRomanDot += 1
+                liChaptersCharPositionsApprovedChapterRomanDot.append(key[1])
+                count += 1
+            else:
+                break
 
-                        # lastword = lastword[0:lastword.__len__() - 1]
-                        # print(lastword)
-                        if self.checkIfRomanNumeral(lastword):
-                            liChapters.append(self.romanToDecimal(lastword))
-                            liChaptersCharPositions.append(i)
+        # Check most apropriate
+        liMax = []
+        liMax.append(chaptersCountRomanAndDot)
+        liMax.append(chaptersCountRoman)
+        liMax.append(chaptersCountChapterNumberDot)
+        liMax.append(chaptersCountChapterRomanDot)
 
-            chaptersCount = 0
-            for i in range(liChapters.__len__()):
-                if i + 1 == liChapters[i]:
-                    chaptersCount += 1
-                else:
-                    break
-
-            if chaptersCount > CHAPTERS_COUNT:
-                find = True
-
-        if find == False:
-            # check if start word has CHAPTER and NUMBER and .
-            # on the end and then check if its roman number, order it and check if it is one for one
-            liChapters = []
-            liChaptersCharPositions = []
-            for i in range(lines.__len__()):
-                if i - 1 > 0:
-                    if lines[i - 1] == '':
-
-                        if lines[i] == '':
-                            continue
-                        if 'THE END.' in lines[i]:
-                            continue
-                        # print(lines[i])
-                        words = lines[i].lstrip().split(' ')
-                        firstword = words[0]
-                        # print('Word : ' , firstword)
-                        s = ''
-                        if firstword.lower() == 'chapter':
-                            s = re.sub(r'[^a-zA-Z0-9]', '', words[1])
-                            # print(s)
-                            liChapters.append(s)
-                            liChaptersCharPositions.append(i)
-
-                        # if self.checkIfRomanNumeral(lastword):
-                        #         liChapters.append(self.romanToDecimal(lastword))
-
-            chaptersCount = 0
-            # print(liChapters)
-            for i in range(liChapters.__len__()):
-                if i + 1 == int(liChapters[i]):
-                    chaptersCount += 1
-                else:
-                    break
-
-            if chaptersCount > CHAPTERS_COUNT:
-                find = True
-
-        if find == False:
-            # check if start word has ROMAN NUMBER and .
-            # on the end and then check if its roman number, order it and check if it is one for one
-            liChapters = []
-            liChaptersCharPositions = []
-            for i in range(lines.__len__()):
-                if i - 1 > 0:
-                    if lines[i - 1] == '':
-                        if lines[i] == '':
-                            continue
-                        if 'THE END.' in lines[i]:
-                            continue
-                        words = lines[i].split(' ')
-                        firstword = words[0]
-
-                        s = ''
-                        try:
-                            s = re.sub(r'[^a-zA-Z0-9]', '', firstword)
-                        except:
-                            s = ''
-
-                        # check dots
-                        lastwordot = ''
-                        try:
-                            lastwordot = s[-1]
-                            # print(s)
-                        except:
-                            lastwordot = ''
-
-                        if self.checkIfRomanNumeral(s):
-                            # print(s)
-                            liChapters.append(self.romanToDecimal(s))
-                            liChaptersCharPositions.append(i)
-
-            chaptersCount = 0
-            liChapters = sorted(liChapters)
-            liChapters = list(dict.fromkeys(liChapters))
-            # print(liChapters)
-            for i in range(liChapters.__len__()):
-                if i + 1 == int(liChapters[i]):
-                    chaptersCount += 1
-                else:
-                    break
-
-            if chaptersCount > CHAPTERS_COUNT:
-                find = True
+        print(liMax)
+        liMax.sort()
+        if liMax[-1] == chaptersCountRomanAndDot:
+            chaptersCount = chaptersCountRomanAndDot
+            liChaptersCharPositionsApproved = liChaptersCharPositionsApprovedRomanAndDot
+        elif liMax[-1] == chaptersCountRoman:
+            chaptersCount = chaptersCountRoman
+            liChaptersCharPositionsApproved = liChaptersCharPositionsApprovedRoman
+        elif liMax[-1] == chaptersCountChapterNumberDot:
+            chaptersCount = chaptersCountChapterNumberDot
+            liChaptersCharPositionsApproved = liChaptersCharPositionsApprovedChapterNumberDot
+        elif liMax[-1] == chaptersCountChapterRomanDot:
+            chaptersCount = chaptersCountChapterRomanDot
+            liChaptersCharPositionsApproved = liChaptersCharPositionsApprovedChapterRomanDot
 
         print('Amount of chapters inside ' + str(chaptersCount))
-        print(liChaptersCharPositions)
+        print(liChaptersCharPositionsApproved.__len__())
+        print(liChaptersCharPositionsApproved)
+
+        self.getFragmentsOfBook(lines, liChaptersCharPositionsApproved)
+
+    def getFragmentsOfBook(self, lines, p):
+        fragments = []
+        j = 0
+        chapter = ''
+        for i in range(lines.__len__()):
+            if i < p[j]:
+                continue
+            if i >= p[j]:
+                if j + 1 < p.__len__() and i == p[j + 1]:
+                    j += 1
+                    fragments.append(chapter)
+                    chapter = ''
+                else:
+                    chapter += lines[i].strip()
+                if i + 1 >= lines.__len__():
+                    fragments.append(chapter)
+
+        # print('FRAGMENTS')
+        # for i in range(fragments.__len__()):
+        #     print('CHAPTER ', i + 1)
+        #     print(fragments[i])
+
+
+        df = self.getStatisticsDialogByChapter(fragments)
+        df = self.getStatisticsAdjectiveByChapter(fragments, self.doc, df)
+        df = self.getStatisticsTimeLineByChapter(fragments, self.doc, df)
+        self.getStatisticsLocationByChapter(fragments, self.doc, df)
+
+    def getStatisticsDialogByChapter(self, fragments):
+        d = DialogueTool()
+
+        df = pd.DataFrame()
+
+        data = []
+
+        for i in range(fragments.__len__()):
+            dr = d.getAmountOfDialogues(fragments[i], 'LOCAL')
+            data.append(dr)
+            # df.append(dr)
+
+        df = df.append(data, True)
+        return df
+
+    def getStatisticsAdjectiveByChapter(self, fragments, doc, df):
+        liWordsAmount = []
+        liAdjAmount = []
+        liAdjPercent = []
+        adj = [token.lemma_ for token in doc if token.pos_ == "ADJ"]
+
+        for i in range(fragments.__len__()):
+            words = fragments[i].split(' ')
+            wordsAmount = words.__len__()
+            adjAmount = 0
+
+            for w in words:
+                if w in adj:
+                    adjAmount += 1
+
+            liWordsAmount.append(wordsAmount)
+            liAdjAmount.append(adjAmount)
+            liAdjPercent.append((adjAmount*100)/wordsAmount)
+            # print(i, wordsAmount, adjAmount, (adjAmount*100)/wordsAmount)
+
+        df['WordsTotal'] = liWordsAmount
+        df['AdjAmount'] = liAdjAmount
+        df['AdjPercent'] = liAdjPercent
+
+        return df
+
+    def getStatisticsTimeLineByChapter(self, fragments, doc, df):
+
+        # for ent in doc.ents:
+        #     print("{} -> {}".format(ent.text, ent.label_))
+
+        liDates = []
+        for ent in filter(lambda e: e.label_ == 'DATE', doc.ents):
+            liDates.append(ent.text)
+
+        myDateList = list(dict.fromkeys(liDates))
+        listTimes = []
+
+        for i in range(fragments.__len__()):
+            words = fragments[i].split(' ')
+            fragmentTime = []
+            for d in myDateList:
+                if d in words:
+                    fragmentTime.append(d)
+
+            listTimes.append(fragmentTime)
+            # print(fragmentTime)
+
+        df['Times'] = listTimes
+        return  df
+
+    def getStatisticsLocationByChapter(self, fragments, doc, df):
+        liLoc = []
+        for ent in filter(lambda e: e.label_ == 'LOC' or e.label_ == 'NORP', doc.ents):
+            liLoc.append(ent.text)
+
+        myLocList = list(dict.fromkeys(liLoc))
+        listLoc = []
+
+        for i in range(fragments.__len__()):
+            words = fragments[i].split(' ')
+            fragmentLoc = []
+            for d in myLocList:
+                if d in words:
+                    fragmentLoc.append(d)
+
+            listLoc.append(fragmentLoc)
+            # print(fragmentTime)
+
+        df['Locations'] = listLoc
+        df.to_excel("output.xlsx")
+
+
 
     def checkIfRomanNumeral(self, numeral):
             # numeral = numeral.upper()

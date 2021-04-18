@@ -13,7 +13,6 @@ class BookAnalyzer:
         __doc__ = "Prepare book for analysie"
         def __init__(self, name):
                 self.str = open(name,  encoding="utf8").read()
-                self.chapters = ChaptersInBookTool()
                 self.dialogues = DialogueTool()
                 self.characters = CharactersTool()
                 self.basicStatistics = BasicStatisticsTool()
@@ -30,10 +29,12 @@ class BookAnalyzer:
                 self.content = content
                 self.doc = self.nlp(content)
 
+                self.chapters = ChaptersInBookTool(self.doc)
+
         def getAmountOfAdjectives(self):
                 words = self.content.split(' ')
 
-                verbs = [token.lemma_ for token in self.doc if token.pos_ == "ADJ"]
+                adj = [token.lemma_ for token in self.doc if token.pos_ == "ADJ"]
                 # adjectives = 0
                 # for w in words:
                 #         doc = self.nlp(w)
@@ -43,7 +44,7 @@ class BookAnalyzer:
                 #                 adjectives += 1
                 #         if len(doc) > 0 and 'JJS' == doc[0].tag_:
                 #                 adjectives += 1
-                print(len(verbs))
+                return adj
                 # print("Amount of adjectives " + str(adjectives))
                 # return adjectives
 
@@ -53,14 +54,14 @@ class BookAnalyzer:
                 # self.getAvergeLengthOfSentenceInBook()
                 # self.getAvergeWordInSentenceInBook()
                 # self.getBookLength()
-                self.basicStatistics.getAmountOfWords(self.content)
-                self.basicStatistics.getBookLength(self.content)
-                self.basicStatistics.getAvergeLengthOfSentenceInBook(self.content)
-                self.basicStatistics.getAvergeWordInSentenceInBook(self.content)
+                # self.basicStatistics.getAmountOfWords(self.content)
+                # self.basicStatistics.getBookLength(self.content)
+                # self.basicStatistics.getAvergeLengthOfSentenceInBook(self.content)
+                # self.basicStatistics.getAvergeWordInSentenceInBook(self.content)
                 # self.timeStatistics.getVerbsNow(self.content, self.nlp)
                 # self.dialogues.getAmountOfDialogues(self.content)
                 # self.chapters.getAmountOfChaptersByTableOfContent(self.content)
-                # self.chapters.getAmountOfChaptersByInsideOfContent(self.content )
+                self.chapters.getAmountOfChaptersByInsideOfContent(self.content)
                 # self.getAmountOfAdjecti ves()
 
 
@@ -101,10 +102,10 @@ if __name__ == "__main__":
         # t.mainCharactersCheck(["lucy", "dracula", "harker", "lucy", "helsing", "renfield", "seward", "morris"], b,
         #                       'Dracula Test')
         #
-        # Method test Moby
-        # b = BookAnalyzer(r'Books/Moby Dick; Or, The Whale_Herman Melville')
-        # b.start()
-        # b.getStatistics()
+        # # Method test Moby
+        b = BookAnalyzer(r'Books/Moby Dick; Or, The Whale_Herman Melville')
+        b.start()
+        b.getStatistics()
         # t = TestBook()
         # t.mainCharactersCheck(["ahab", "dick", "ishmael", "queequeg", "mapple", "sam", "boomer", "sturbuck", "stubb", "elijah"], b,
         #                       'Moby Test')
@@ -119,7 +120,7 @@ if __name__ == "__main__":
         # t.mainCharactersCheck(["peter", "wendy", "hak", "darling", "lilia", "smee", "nibs", "rabbit", "bell"], b,
         #                       'Peter Test')
         #
-        # Method test Sherlock
+        # # Method test Sherlock
         # b = BookAnalyzer(r'Books/The Adventures of Sherlock Holmes by Arthur Conan Doyle')
         # b.start()
         # b.getStatistics()
@@ -144,9 +145,9 @@ if __name__ == "__main__":
         #                       'Moonstone Test')
         #
         # # Method test Pride
-        b = BookAnalyzer(r'Books/Pride and Prejudice by Jane Austen')
-        b.start()
-        b.getStatistics()
+        # b = BookAnalyzer(r'Books/Pride and Prejudice by Jane Austen')
+        # b.start()
+        # b.getStatistics()
         # t = TestBook()
         # t.mainCharactersCheck([r"odysseus", r"apollo", r"penelope", r"agamemnon", r"queen", "zeus", r"neptune", "eurymachus", r"amphinomus"], b,
         #                       'Odyssey Test')
