@@ -1,7 +1,9 @@
 import pandas as pd
 
-
 class DialogueTool():
+    def __init__(self):
+        pass
+
     def getAmountOfDialogues(self, content, type):
         dialouge = 0
         content = content.replace('\n', ' ')
@@ -54,7 +56,9 @@ class DialogueTool():
         else:
             for i in range(dialoges.__len__()):
                 dialoges[i] = dialoges[i].replace('"', '')
+        return dialoges
 
+    def dialougeAvergeWords(self, dialoges, dialouge):
         # Amount of words in dialoges (averge)
         dialougesCounterSum = 0
         for i in range(dialoges.__len__()):
@@ -65,9 +69,9 @@ class DialogueTool():
             dialougesAvergeWords = dialougesCounterSum / dialouge
         except:
             dialougesAvergeWords = 0
-        # print('Averge words in dialoge: ', dialougesAvergeWords)
+        return dialougesAvergeWords
 
-        # Amount of chars in dialoges (averge)
+    def dialougeAvergeChars(self, dialoges, dialouge):
         dialougesCounterCharSum = 0
         for i in range(dialoges.__len__()):
             wordsDialog = dialoges[i].split(' ')
@@ -79,8 +83,10 @@ class DialogueTool():
             dialougesAvergeChars = dialougesCounterCharSum / dialouge
         except:
             dialougesAvergeChars = 0
-        # print('Averge chars in dialoge: ', dialougesAvergeChars)
 
+        return dialougesAvergeChars
+
+    def dialogueLongShort(self, dialoges, dialougesAvergeWords):
         longDialougeCount = 0
         shortDialougeCount = 0
         # Long dialouges amount and percent for words
@@ -91,6 +97,9 @@ class DialogueTool():
             else:
                 shortDialougeCount += 1
 
+        return longDialougeCount, shortDialougeCount
+
+    def dialougeLongShortPercent(self, shortDialougeCount, longDialougeCount, dialoges):
         percentShortDialogue = 0
         percentLongDialogue = 0
         try:
@@ -100,20 +109,28 @@ class DialogueTool():
             percentShortDialogue = 0
             percentLongDialogue = 0
 
-        # print('All dialogue: ', dialoges.__len__())
-        # print('Short dialogue:', shortDialougeCount, percentShortDialogue, '%')
-        # print('Long dialogue:', longDialougeCount, percentLongDialogue, '%')
+        return percentLongDialogue, percentShortDialogue
 
-        if type == 'LOCAL':
-            # df = pd.DataFrame(columns=['Len', 'WA', 'CA', 'SDC', 'LDC', 'SDP', 'LDP'])
-            d = {'Len': dialoges.__len__(), 'WA': "{:.0f}".format(dialougesAvergeWords), 'CA': "{:.0f}".format(dialougesAvergeChars),
-                       'SDC': "{:.0f}".format(shortDialougeCount), 'LDC': "{:.0f}".format(longDialougeCount), 'SDP': "{:.0f}".format(percentShortDialogue),
-                       'LDP': "{:.0f}".format(percentLongDialogue)}
-            # df = pd.DataFrame(data=d)
-            # print(df)
-            return d
 
-        else:
-            print(dialoges.__len__(), "{:.0f}".format(dialougesAvergeWords), "{:.0f}".format(dialougesAvergeChars), "{:.0f}".format(shortDialougeCount), "{:.0f}".format(percentShortDialogue), '%', "{:.0f}".format(longDialougeCount), "{:.0f}".format(percentLongDialogue), '%')
+    # def rest(self):
+    #     dialoges = []
+    #     dialouge = 0
+    #     dialougesAvergeWords = 0
 
-        # return dialouge
+        # # print('All dialogue: ', dialoges.__len__())
+        # # print('Short dialogue:', shortDialougeCount, percentShortDialogue, '%')
+        # # print('Long dialogue:', longDialougeCount, percentLongDialogue, '%')
+        #
+        # if type == 'LOCAL':
+        #     # df = pd.DataFrame(columns=['Len', 'WA', 'CA', 'SDC', 'LDC', 'SDP', 'LDP'])
+        #     d = {'Len': dialoges.__len__(), 'WA': "{:.0f}".format(dialougesAvergeWords), 'CA': "{:.0f}".format(dialougesAvergeChars),
+        #                'SDC': "{:.0f}".format(shortDialougeCount), 'LDC': "{:.0f}".format(longDialougeCount), 'SDP': "{:.0f}".format(percentShortDialogue),
+        #                'LDP': "{:.0f}".format(percentLongDialogue)}
+        #     # df = pd.DataFrame(data=d)
+        #     # print(df)
+        #     return d
+        #
+        # else:
+        #     print(dialoges.__len__(), "{:.0f}".format(dialougesAvergeWords), "{:.0f}".format(dialougesAvergeChars), "{:.0f}".format(shortDialougeCount), "{:.0f}".format(percentShortDialogue), '%', "{:.0f}".format(longDialougeCount), "{:.0f}".format(percentLongDialogue), '%')
+        #
+        # # return dialouge

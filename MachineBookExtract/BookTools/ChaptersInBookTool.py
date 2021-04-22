@@ -149,7 +149,7 @@ class ChaptersInBookTool():
         # Roman
         chaptersCountRoman = 0
         od = sorted(thisdictRoman.items())
-        print(od)
+        # print(od)
         count = 1
         liChaptersCharPositionsApprovedRoman = []
         for key in od:
@@ -193,7 +193,7 @@ class ChaptersInBookTool():
         liMax.append(chaptersCountChapterNumberDot)
         liMax.append(chaptersCountChapterRomanDot)
 
-        print(liMax)
+        # print(liMax)
         liMax.sort()
         if liMax[-1] == chaptersCountRomanAndDot:
             chaptersCount = chaptersCountRomanAndDot
@@ -208,11 +208,13 @@ class ChaptersInBookTool():
             chaptersCount = chaptersCountChapterRomanDot
             liChaptersCharPositionsApproved = liChaptersCharPositionsApprovedChapterRomanDot
 
-        print('Amount of chapters inside ' + str(chaptersCount))
-        print(liChaptersCharPositionsApproved.__len__())
-        print(liChaptersCharPositionsApproved)
+        return chaptersCount
 
-        self.getFragmentsOfBook(lines, liChaptersCharPositionsApproved)
+        # print('Amount of chapters inside ' + str(chaptersCount))
+        # print(liChaptersCharPositionsApproved.__len__())
+        # print(liChaptersCharPositionsApproved)
+        #
+        # self.getFragmentsOfBook(lines, liChaptersCharPositionsApproved)
 
     def getFragmentsOfBook(self, lines, p):
         fragments = []
