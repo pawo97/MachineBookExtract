@@ -59,7 +59,7 @@
 # Sherlock Holmes                              12    0                        12                    6656
 # Castle of Othrando                           5     0                        5                     2065
 # Wuthering                                    34    0                        34                    6821
-# Pride and Prejudice                          61    0                        43
+# Pride and Prejudice                          43    0                        43
 # Metamorphosis                                3     0                        3
 # ================================================================================================= OK
 # Nazwa książki                 ilosc dialogow   srednie dialog slowa  srednie dialog znaki     krotkie   %      dlugie  %

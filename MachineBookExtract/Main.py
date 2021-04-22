@@ -1,5 +1,5 @@
 import spacy
-
+from spacy_syllables import SpacySyllables
 import time
 
 from MachineBookExtract.BookTools.BasicStatisticsTool import BasicStatisticsTool
@@ -27,26 +27,33 @@ class BookAnalyzer:
                 content = str2[0];
                 # print("Book length: ", content.__len__())
                 self.content = content
+                self.syllables = SpacySyllables(self.nlp, "en_US")
+                self.nlp.add_pipe("syllables", after="tagger", config={"lang": "en_US"})
                 self.doc = self.nlp(content)
 
                 self.chapters = ChaptersInBookTool(self.doc)
 
         def getAmountOfAdjectives(self):
                 words = self.content.split(' ')
-
                 adj = [token.lemma_ for token in self.doc if token.pos_ == "ADJ"]
-                # adjectives = 0
-                # for w in words:
-                #         doc = self.nlp(w)
-                #         if len(doc) > 0 and 'JJ' == doc[0].tag_:
-                #                 adjectives += 1
-                #         if len(doc) > 0 and 'JJR' == doc[0].tag_:
-                #                 adjectives += 1
-                #         if len(doc) > 0 and 'JJS' == doc[0].tag_:
-                #                 adjectives += 1
                 return adj
                 # print("Amount of adjectives " + str(adjectives))
                 # return adjectives
+
+        def getSylabes(self):
+                doc = self.nlp("ALICE")
+
+                # for token in self.doc:
+                #         print(token.text)
+                #         print(token._.syllables)
+                # y - liczna sylab
+
+                data = [
+                        (token.text, token._.syllables, token._.syllables_count)
+                        for token in self.doc
+                ]
+                print('NEW METHOD')
+                print(data)
 
 
 
@@ -62,6 +69,7 @@ class BookAnalyzer:
                 # self.dialogues.getAmountOfDialogues(self.content)
                 # self.chapters.getAmountOfChaptersByTableOfContent(self.content)
                 self.chapters.getAmountOfChaptersByInsideOfContent(self.content)
+                self.getSylabes()
                 # self.getAmountOfAdjecti ves()
 
 
@@ -81,9 +89,9 @@ if __name__ == "__main__":
         #=======================================================================================
 
         # # Method test Alice
-        # b = BookAnalyzer(r'Books/Alices Adventures in Wonderland by Lewis Carroll')
-        # b.start()
-        # b.getStatistics()
+        b = BookAnalyzer(r'Books/Alices Adventures in Wonderland by Lewis Carroll')
+        b.start()
+        b.getStatistics()
         # t = TestBook()
         # t.mainCharactersCheck(["rabbit", "queen", "king", "cat", "duchess", "hatter", "hare", "dormouse", "gryphon"], b, 'Alice Test')
 
@@ -103,9 +111,9 @@ if __name__ == "__main__":
         #                       'Dracula Test')
         #
         # # Method test Moby
-        b = BookAnalyzer(r'Books/Moby Dick; Or, The Whale_Herman Melville')
-        b.start()
-        b.getStatistics()
+        # b = BookAnalyzer(r'Books/Moby Dick; Or, The Whale_Herman Melville')
+        # b.start()
+        # b.getStatistics()
         # t = TestBook()
         # t.mainCharactersCheck(["ahab", "dick", "ishmael", "queequeg", "mapple", "sam", "boomer", "sturbuck", "stubb", "elijah"], b,
         #                       'Moby Test')
