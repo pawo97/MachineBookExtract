@@ -1,5 +1,6 @@
 import math
 
+import pandas as pd
 import spacy
 from spacy_syllables import SpacySyllables
 import time
@@ -39,7 +40,7 @@ class BookAnalyzer:
         def getStatistics(self):
                 # TOTAL
                 print('=============================')
-                self.getTimeStatisticsTotal()
+                present, past = self.getTimeStatisticsTotal()
                 print('=============================')
                 self.getReadabilityTotal()
                 print('=============================')
@@ -49,20 +50,48 @@ class BookAnalyzer:
                 print('=============================')
                 self.getDialogesTotal()
                 print('=============================')
-                self.getChaptersAmount()
+                self.getChaptersAmount(present, past)
                 print('=============================')
-
-                # LOCAL
-
+                # HEROES LIST AND AMOUNT
+                print('=============================')
 
                 # REST
                 self.printExecutionTime()
 
+        def getChaptersAmount(self, present, past):
+                print("CHAPTERS AMOUNT", self.chapters.getAmountOfChaptersByInsideOfContent(self.content))
+                # LOCAL
+                f = self.chapters.getFragmentsOfBook()
+
+                # BASIC
+                df1 = self.chapters.getLengthWordCharsByChapter(f)
+
+                # DIALOGES
+                df2 = self.chapters.getStatisticsDialogByChapter(f)
+
+                # ADJ
+                df3 = self.chapters.getStatisticsAdjectiveByChapter(f, self.doc)
+
+                # TIME STATISTICS
+                df4 = self.chapters.getTimeStatisticsByChapter(f, self.doc, present, past)
+
+                # HEROES
+
+                # CONNECT
+                # print(df1)
+                # print(df2)
+                # print(df3)
+                # print(df4)
+
+                # df5 = pd.DataFrame()
+                # df1.append(df1)
+                dat1 = pd.concat([df1, df2, df3, df4], axis=1)
+
+                #EXCEL
+                dat1.to_excel("newoutput.xlsx")
+
         def getCharactersTotal(self):
                 pass
-
-        def getChaptersAmount(self):
-                print("CHAPTERS AMOUNT", self.chapters.getAmountOfChaptersByInsideOfContent(self.content))
 
         def getDialogesTotal(self):
                 dialoges = self.dialogues.getAmountOfDialogues(self.content, 'GLOBAL')
@@ -97,11 +126,16 @@ class BookAnalyzer:
 
         def getTimeStatisticsTotal(self):
                 self.timeStatistics = TimeStatistics()
-                print("TOTAL AMOUNT", self.timeStatistics.getVerbsTotal(self.doc))
-                print("PRESENT AMOUNT", self.timeStatistics.getVerbsNowAmount(self.doc))
+                present = self.timeStatistics.getVerbsNowAmount(self.doc)
+                past = self.timeStatistics.getVerbsPastAmount(self.doc)
+
+                print("TOTAL AMOUNT", len(present) + len(past))
+                print("PRESENT AMOUNT", len(present))
                 print("PRESENT PERCENT", self.timeStatistics.getVerbsNowPercent(self.doc))
-                print("PAST AMOUNT", self.timeStatistics.getVerbsPastAmount(self.doc))
+                print("PAST AMOUNT", len(past))
                 print("PAST PERCENT", self.timeStatistics.getVerbsPastPercent(self.doc))
+
+                return present, past
 
         def printExecutionTime(self):
                 self.end = time.time()

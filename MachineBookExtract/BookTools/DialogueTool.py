@@ -99,7 +99,7 @@ class DialogueTool():
 
         return longDialougeCount, shortDialougeCount
 
-    def dialougeLongShortPercent(self, shortDialougeCount, longDialougeCount, dialoges):
+    def dialougeLongShortPercent(self, longDialougeCount, shortDialougeCount, dialoges):
         percentShortDialogue = 0
         percentLongDialogue = 0
         try:

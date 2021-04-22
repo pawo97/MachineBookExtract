@@ -5,7 +5,7 @@ class TimeStatistics():
             if token.tag_ == 'VB':
                 verbsPresent.append(token.text)
 
-        return len(verbsPresent)
+        return verbsPresent
 
     def getVerbsPastAmount(self, doc):
         verbsPast = []
@@ -13,21 +13,21 @@ class TimeStatistics():
             if token.tag_ == 'VBD':
                 verbsPast.append(token.text)
 
-        return len(verbsPast)
+        return verbsPast
 
     def getVerbsTotal(self, doc):
-        return self.getVerbsNowAmount(doc) + self.getVerbsPastAmount(doc)
+        return len(self.getVerbsNowAmount(doc)) + len(self.getVerbsPastAmount(doc))
 
     def getVerbsNowPercent(self, doc):
-        present = self.getVerbsNowAmount(doc)
-        past = self.getVerbsPastAmount(doc)
+        present = len(self.getVerbsNowAmount(doc))
+        past = len(self.getVerbsPastAmount(doc))
         total = present + past
         percentVerbsPresent = (present * 100) / total
         return percentVerbsPresent
 
     def getVerbsPastPercent(self, doc):
-        present = self.getVerbsNowAmount(doc)
-        past = self.getVerbsPastAmount(doc)
+        present = len(self.getVerbsNowAmount(doc))
+        past = len(self.getVerbsPastAmount(doc))
         total = present + past
         pastVerbsPresent = (past * 100) / total
         return pastVerbsPresent
