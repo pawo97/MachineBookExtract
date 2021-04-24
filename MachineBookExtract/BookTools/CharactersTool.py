@@ -2,10 +2,10 @@ from MachineBookExtract.BookTools.PersonRate import PersonRate
 
 
 class CharactersTool():
-    def getCharactersInBook(self):
+    def getCharactersInBook(self, content, doc, nlp):
         # Words in all book
         blank = ' '
-        words = self.content.split(' ')
+        words = content.split(' ')
         # print('compare words in book')
         # print(words)
         wordsSelected = []
@@ -25,7 +25,7 @@ class CharactersTool():
 
         # Nouns + Persons + Big literal
         # Nouns
-        liNouns = [chunk.text for chunk in self.doc.noun_chunks]
+        liNouns = [chunk.text for chunk in doc.noun_chunks]
         # z duzej litery
 
         # zaczyna sie na a, the
@@ -69,7 +69,7 @@ class CharactersTool():
 
         # Get persons
         liCharacters = []
-        for entity in self.doc.ents:
+        for entity in doc.ents:
             if entity.label_ == 'PERSON':
                 if entity.text[0].isupper():
                     liCharacters.append(entity.text)
@@ -114,10 +114,10 @@ class CharactersTool():
 
         # Remove duplicates
         liCharNotAphaNumeric = list(dict.fromkeys(liCharNotAphaNumeric))
-        print(liCharNotAphaNumeric)
+        # print(liCharNotAphaNumeric)
 
         # Two list togheter without duplicates
-        liPersons = liCharNotAphaNumeric + liPrefixNonAlphaNumeric
+        liPersons = liCharNotAphaNumeric #+ liPrefixNonAlphaNumeric
         liPersons = list(dict.fromkeys(liPersons))
         # print(liPersons)
         # Delete verbs, adverbs, adjective
@@ -129,7 +129,7 @@ class CharactersTool():
         for p in liPersons:
             if p != 'the' and p != 'a' and p.__len__() > 1:
                 # check spacy tag
-                doc = self.nlp(p)
+                doc = nlp(p)
                 # print(p, doc[0].tag_, end=" | ")
                 if 'NN' == doc[0].tag_:
                     person = PersonRate()
@@ -155,8 +155,20 @@ class CharactersTool():
                     p.rate += 1
 
         liRatingPersons.sort(key=lambda x: x.rate, reverse=True)
-        del liRatingPersons[30:]
-        # for p in liRatingPersons:
-        #         print(str(p.word) + ' ' + str(p.tag) + ' ' + str(p.rate))
+        liRatingPersons = list(dict.fromkeys(liRatingPersons))
 
-        return liRatingPersons
+        del liRatingPersons[30:]
+        liPersons = []
+        for p in liRatingPersons:
+                # print(str(p.word) + ' ' + str(p.tag) + ' ' + str(p.rate))
+                liPersons.append(str(p.word))
+
+        del liCharNotAphaNumeric[30:]
+
+        for i in range(len(liCharNotAphaNumeric)):
+            liCharNotAphaNumeric[i] = liCharNotAphaNumeric[i].title()
+
+
+
+        return liCharNotAphaNumeric
+

@@ -374,6 +374,19 @@ class ChaptersInBookTool():
         df['PresentPercent'] = presentPercentAmountLi
         return df
 
+    def getCharactersInChapters(self, fragments, characters):
+        df = pd.DataFrame()
+        liChaptersLevel = []
+        for i in range(fragments.__len__()):
+            liCharactersInside = []
+            words = fragments[i].split(' ')
+            for c in characters:
+                if c in words:
+                    liCharactersInside.append(c)
+            liChaptersLevel.append(liCharactersInside)
+
+        df['Heroes'] = liChaptersLevel
+        return df
 
 
 
