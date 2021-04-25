@@ -41,7 +41,7 @@ class BookAnalyzer:
         # WYGENEROWAĆ DLA WSZYSTKICH
         # ANALIZA DANYCH
         # OTESTOWAĆ TO
-        def getStatistics(self, name):
+        def getStatisticsOutput(self, name):
                 # TOTAL
                 # print('=============================')
                 present, past, s1 = self.getTimeStatisticsTotal()
@@ -64,11 +64,34 @@ class BookAnalyzer:
 
                 # SAVE
                 s0 = s1 + '\n' + s2 + '\n' + s3 + '\n' + s4 + '\n' + s5 + '\n' + s6 + '\n' + s7
-                text_file = open(r'Output/' + str(name) + " BASIC.txt", "w")
+                text_file = open(r'MachineBookExtract/Output/' + str(name) + " BASIC.txt", "w")
                 text_file.write(s0)
                 text_file.close()
 
+        def getStatisticsPrint(self, name):
+                # TOTAL
+                # print('=============================')
+                present, past, s1 = self.getTimeStatisticsTotal()
+                # print('=============================')
+                s2 = self.getReadabilityTotal()
+                # print('=============================')
+                s3 = self.getAdjectivesTotal()
+                # print('=============================')
+                s4 = self.getBasicStatisticsTotal()
+                # print('=============================')
+                s5 = self.getDialogesTotal()
+                # print('=============================')
+                li, s6 = self.getCharactersTotal(self.content, self.doc, self.nlp)
+                # print('=============================')
+                # self.getChaptersAmount(present, past, li, name)
+                # print('=============================')
 
+                # REST
+                s7 = self.printExecutionTime()
+
+                # SAVE
+                s0 = s1 + '\n' + s2 + '\n' + s3 + '\n' + s4 + '\n' + s5 + '\n' + s6 + '\n' + s7
+                print(s0)
 
         def getChaptersAmount(self, present, past, characters, name):
                 print("CHAPTERS AMOUNT", self.chapters.getAmountOfChaptersByInsideOfContent(self.content))
@@ -101,7 +124,7 @@ class BookAnalyzer:
                 dat1 = pd.concat([df1, df2, df3, df4, df5], axis=1)
 
                 #EXCEL
-                dat1.to_excel(r'Output/' + str(name) + " CHAPTERS.xlsx")
+                dat1.to_excel(r'MachineBookExtract/Output/' + str(name) + " CHAPTERS.xlsx")
 
         def getCharactersTotal(self, content, doc, nlp):
                 chT = CharactersTool()
@@ -208,21 +231,22 @@ if __name__ == "__main__":
         # # Method test Alice
         # b = BookAnalyzer(r'Books/Alices Adventures in Wonderland by Lewis Carroll')
         # b.start()
-        # b.getStatistics()
+        # b.getStatisticsOutput("Alices")
         # t = TestBook()
         # t.mainCharactersCheck(["rabbit", "queen", "king", "cat", "duchess", "hatter", "hare", "dormouse", "gryphon"], b, 'Alice Test')
 
         # # Method test Christmas Carol
         # b = BookAnalyzer(r'Books/A Christmas Carol by Charles Dickens')
         # b.start()
-        # b.getStatistics()
+        # b.getStatisticsOutput("Christmas")
         # t = TestBook()
         # t.mainCharactersCheck(["scrooge", "marley", "cratchit", "ghost", "tim", "fred", "fezziwig", "marta"], b, 'Christmas Test')
         #
         # # Method test Drakula
-        b = BookAnalyzer(r'Books/Dracula by Bram Stoker')
-        b.start()
-        b.getStatistics("Dracula")
+        # b = BookAnalyzer(r'Books/Dracula by Bram Stoker')
+        # b.start()
+        # b.getStatisticsOutput("Dracula")
+        # b.getStatisticsPrint("Dracula")
         # t = TestBook()
         # t.mainCharactersCheck(["lucy", "dracula", "harker", "lucy", "helsing", "renfield", "seward", "morris"], b,
         #                       'Dracula Test')
@@ -230,25 +254,24 @@ if __name__ == "__main__":
         # # Method test Moby
         # b = BookAnalyzer(r'Books/Moby Dick; Or, The Whale_Herman Melville')
         # b.start()
-        # b.getStatistics()
+        # b.getStatisticsOutput("Moby")
         # t = TestBook()
         # t.mainCharactersCheck(["ahab", "dick", "ishmael", "queequeg", "mapple", "sam", "boomer", "sturbuck", "stubb", "elijah"], b,
         #                       'Moby Test')
 
-        #=========================================================================================
-
-        #Method test Peter
-        # b = BookAnalyzer(r'Books/Peter Pan by J. M. Barrie')
-        # b.start()
-        # b.getStatistics()
+        # Method test Peter
+        b = BookAnalyzer(r'MachineBookExtract/Books/Peter Pan by J. M. Barrie')
+        b.start()
+        b.getStatisticsOutput("Peter")
         # t = TestBook()
         # t.mainCharactersCheck(["peter", "wendy", "hak", "darling", "lilia", "smee", "nibs", "rabbit", "bell"], b,
         #                       'Peter Test')
-        #
+        #=========================================================================================
+
         # # Method test Sherlock
-        # b = BookAnalyzer(r'Books/The Adventures of Sherlock Holmes by Arthur Conan Doyle')
+        # b = BookAnalyzer(r'MachineBookExtract/Books/The Adventures of Sherlock Holmes by Arthur Conan Doyle')
         # b.start()
-        # b.getStatistics()
+        # b.getStatisticsOutput("Sherlock")
         # t = TestBook()
         # t.mainCharactersCheck(["holmes", "watson", "lestrade", "bohemia", "adler", "wilson", "sutherland", "mccarthy"], b,
         #                       'Sherlock Test')
@@ -256,7 +279,7 @@ if __name__ == "__main__":
         # Method test Castle
         # b = BookAnalyzer(r'Books/The Castle of Otranto by Horace Walpole')
         # b.start()
-        # b.getStatistics()
+        # b.getStatisticsOutput("Castle")
         # t = TestBook()
         # t.mainCharactersCheck(["manfred", r"hippolita", "conrad", "matilda", r"isabella", "theodore", "jerome", "diego"], b,
         #                       'Castle Test')
@@ -264,7 +287,7 @@ if __name__ == "__main__":
         # Method test Methamorphios
         # b = BookAnalyzer(r'Books/Metamorphosis by Franz Kafka')
         # b.start()
-        # b.getStatistics()
+        # b.getStatisticsOutput("Metamorphosis")
         # t = TestBook()
         # t.mainCharactersCheck(["verinder", "blake", "ablewhite", "betteredge", "jennings", "cuff", "clack", "bruff", "candy"], b,
         #                       'Moonstone Test')
@@ -272,7 +295,7 @@ if __name__ == "__main__":
         # # Method test Pride
         # b = BookAnalyzer(r'Books/Pride and Prejudice by Jane Austen')
         # b.start()
-        # b.getStatistics()
+        # b.getStatisticsOutput("Pride")
         # t = TestBook()
         # t.mainCharactersCheck([r"odysseus", r"apollo", r"penelope", r"agamemnon", r"queen", "zeus", r"neptune", "eurymachus", r"amphinomus"], b,
         #                       'Odyssey Test')
@@ -280,7 +303,7 @@ if __name__ == "__main__":
         # # Method test Wuthering
         # b = BookAnalyzer(r'Books/Wuthering Heights by Emily Bronte')
         # b.start()
-        # b.getStatistics()
+        # b.getStatisticsOutput("Wuthering")
         # t = TestBook()
         # t.mainCharactersCheck(["heathcliff", "catherine", "linton", "dean", "lockwood", "earnshaw", "linton", "joseph"], b,
         #                       'Wuthering Test')
