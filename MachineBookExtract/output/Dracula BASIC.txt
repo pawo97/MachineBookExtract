@@ -25,4 +25,4 @@ LONG DIALOGES PERCENT 21.590130226182318
 SHORT DIALOGES PERCENT 78.40986977381769
 
 ['Dracula', 'Stoker', 'Harker', 'Lucy', 'Dailygraph', 'Westenra', 'Seward', 'Diary', 'Harkers', 'Budapesth', 'Klausenburgh', 'Mem', 'Mina', 'Wallachs', 'Szekelys', 'Herr', 'Bistritz', 'Hawkins', 'Hitherto', 'Whitaker', 'Saxon', 'Jonathan', 'Whitby', 'Wodin', 'Honfoglalas', 'Voivode', 'Woe', 'Mohács', 'Billington', 'Leutner']
-Execution time: 152.46308875083923
+Execution time: 161.219318151474

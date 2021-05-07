@@ -1,4 +1,4 @@
-from MachineBookExtract.BookTools.PersonRate import PersonRate
+from book_tools.PersonRate import PersonRate
 
 
 class CharactersTool():
@@ -172,3 +172,21 @@ class CharactersTool():
 
         return liCharNotAphaNumeric
 
+    def getPercentStatisticsInBook(self, content, liCharNotAphaNumeric):
+        content = content.replace('\n', ' ')
+        words = content.split(' ')
+        liCharAmount = []
+
+        for c in liCharNotAphaNumeric:
+            s = 0
+            for w in words:
+                if c in w:
+                    s += 1
+            if s == 0:
+                s = 1
+
+            st = (s * 100) / len(words)
+
+            liCharAmount.append((c, st))
+
+        return liCharAmount

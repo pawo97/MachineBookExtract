@@ -5,19 +5,19 @@ import spacy
 from spacy_syllables import SpacySyllables
 import time
 
-from MachineBookExtract.BookTools.AdjectiveTool import AdjectiveTool
-from MachineBookExtract.BookTools.BasicStatisticsTool import BasicStatisticsTool
-from MachineBookExtract.BookTools.ChaptersInBookTool import ChaptersInBookTool
-from MachineBookExtract.BookTools.CharactersTool import CharactersTool
-from MachineBookExtract.BookTools.DialogueTool import DialogueTool
-from MachineBookExtract.BookTools.Redability import Readability
-from MachineBookExtract.BookTools.TimeStatistics import TimeStatistics
+from book_tools.AdjectiveTool import AdjectiveTool
+from book_tools.BasicStatisticsTool import BasicStatisticsTool
+from book_tools.ChaptersInBookTool import ChaptersInBookTool
+from book_tools.CharactersTool import CharactersTool
+from book_tools.DialogueTool import DialogueTool
+from book_tools.Redability import Readability
+from book_tools.TimeStatistics import TimeStatistics
 
 
 class BookAnalyzer:
         __doc__ = "Prepare book for analysie"
-        def __init__(self, name):
-                self.str = open(name,  encoding="utf8").read()
+        def __init__(self, content):
+                self.str = content
                 self.dialogues = DialogueTool()
                 self.characters = CharactersTool()
 
@@ -37,7 +37,7 @@ class BookAnalyzer:
                 self.chapters = ChaptersInBookTool(self.doc)
                 self.basicStatistics = BasicStatisticsTool(self.content)
 
-        # PODZIELIĆ NA SAVE, OUTPUT, GUI
+        # PODZIELIĆ NA SAVE, OUTPUT, gui
         # WYGENEROWAĆ DLA WSZYSTKICH
         # ANALIZA DANYCH
         # OTESTOWAĆ TO
@@ -54,17 +54,17 @@ class BookAnalyzer:
                 # print('=============================')
                 s5 = self.getDialogesTotal()
                 # print('=============================')
-                li, s6 = self.getCharactersTotal(self.content, self.doc, self.nlp)
+                li, s6, li1 = self.getCharactersTotal(self.content, self.doc, self.nlp)
                 # print('=============================')
-                self.getChaptersAmount(present, past, li, name)
+                # self.getChaptersAmount(present, past, li, name)
                 # print('=============================')
 
                 # REST
                 s7 = self.printExecutionTime()
 
                 # SAVE
-                s0 = s1 + '\n' + s2 + '\n' + s3 + '\n' + s4 + '\n' + s5 + '\n' + s6 + '\n' + s7
-                text_file = open(r'MachineBookExtract/Output/' + str(name) + " BASIC.txt", "w")
+                s0 = s1 + '\n' + s2 + '\n' + s3 + '\n' + s4 + '\n' + s5 + '\n' + s6 + '\n' + s7 + '\n' + str(li1)
+                text_file = open(r'output/' + str(name) + " BASIC.txt", "w")
                 text_file.write(s0)
                 text_file.close()
 
@@ -81,7 +81,7 @@ class BookAnalyzer:
                 # print('=============================')
                 s5 = self.getDialogesTotal()
                 # print('=============================')
-                li, s6 = self.getCharactersTotal(self.content, self.doc, self.nlp)
+                li, s6, li1 = self.getCharactersTotal(self.content, self.doc, self.nlp)
                 # print('=============================')
                 # self.getChaptersAmount(present, past, li, name)
                 # print('=============================')
@@ -90,7 +90,7 @@ class BookAnalyzer:
                 s7 = self.printExecutionTime()
 
                 # SAVE
-                s0 = s1 + '\n' + s2 + '\n' + s3 + '\n' + s4 + '\n' + s5 + '\n' + s6 + '\n' + s7
+                s0 = s1 + '\n' + s2 + '\n' + s3 + '\n' + s4 + '\n' + s5 + '\n' + s6 + '\n' + s7 + '\n' + str(li1)
                 print(s0)
 
         def getChaptersAmount(self, present, past, characters, name):
@@ -124,13 +124,14 @@ class BookAnalyzer:
                 dat1 = pd.concat([df1, df2, df3, df4, df5], axis=1)
 
                 #EXCEL
-                dat1.to_excel(r'MachineBookExtract/Output/' + str(name) + " CHAPTERS.xlsx")
+                dat1.to_excel(r'output/' + str(name) + " CHAPTERS.xlsx")
 
         def getCharactersTotal(self, content, doc, nlp):
                 chT = CharactersTool()
                 li = chT.getCharactersInBook(content, doc, nlp)
+                li1 = chT.getPercentStatisticsInBook(content, li)
                 # print(li)
-                return li, li.__str__()
+                return li, str(len(li)), li1
 
         def getDialogesTotal(self):
                 dialoges = self.dialogues.getAmountOfDialogues(self.content, 'GLOBAL')
@@ -156,21 +157,6 @@ class BookAnalyzer:
                 # print("LONG DIALOGES PERCENT ", longDialoguePercent)
                 # print("SHORT DIALOGES PERCENT ", shortDialoguePercent)
 
-                return s0
-
-
-        def getBasicStatisticsTotal(self):
-                s1 = "SENTENCES AMOUNT " + str(len(self.basicStatistics.sentences))+ "\n"
-                s2 = "SENTENCES AVERGE BY CHARS "+ str( self.basicStatistics.getAvergeLengthOfSentenceInBook(self.content))+ "\n"
-                s3 = "SENTENCES AVERGE BY WORDS "+ str(self.basicStatistics.getAvergeWordInSentenceInBook())+ "\n"
-                s4 = "BOOK LENGTH CHARS "+ str( self.basicStatistics.getBookLength(self.content))+ "\n"
-                s5 = "BOOK LENGTH WORDS "+ str( self.basicStatistics.getAmountOfWords(self.content))+ "\n"
-                s0 = s1 + s2 + s3 + s4 + s5
-                # print("SENTENCES AMOUNT ", len(self.basicStatistics.sentences))
-                # print("SENTENCES AVERGE BY CHARS ", self.basicStatistics.getAvergeLengthOfSentenceInBook(self.content))
-                # print("SENTENCES AVERGE BY WORDS ", self.basicStatistics.getAvergeWordInSentenceInBook())
-                # print("BOOK LENGTH CHARS", self.basicStatistics.getBookLength(self.content))
-                # print("BOOK LENGTH WORDS ", self.basicStatistics.getAmountOfWords(self.content))
                 return s0
 
         def getAdjectivesTotal(self):
@@ -217,6 +203,29 @@ class BookAnalyzer:
                 s1 = "Execution time: " + str((self.end - self.start))
                 return s1
 
+        def getBasicStatisticsTotal(self):
+                s1 = "SENTENCES AMOUNT " + str(len(self.basicStatistics.sentences))+ "\n"
+                s2 = "SENTENCES AVERGE BY CHARS "+ str( self.basicStatistics.getAvergeLengthOfSentenceInBook(self.content))+ "\n"
+                s3 = "SENTENCES AVERGE BY WORDS "+ str(self.basicStatistics.getAvergeWordInSentenceInBook())+ "\n"
+                s4 = "BOOK LENGTH CHARS "+ str( self.basicStatistics.getBookLength(self.content))+ "\n"
+                s5 = "BOOK LENGTH WORDS "+ str( self.basicStatistics.getAmountOfWords(self.content))+ "\n"
+                s0 = s1 + s2 + s3 + s4 + s5
+                # print("SENTENCES AMOUNT ", len(self.basicStatistics.sentences))
+                # print("SENTENCES AVERGE BY CHARS ", self.basicStatistics.getAvergeLengthOfSentenceInBook(self.content))
+                # print("SENTENCES AVERGE BY WORDS ", self.basicStatistics.getAvergeWordInSentenceInBook())
+                # print("BOOK LENGTH CHARS", self.basicStatistics.getBookLength(self.content))
+                # print("BOOK LENGTH WORDS ", self.basicStatistics.getAmountOfWords(self.content))
+                return s0
+        #===============================================================================
+
+        def getBookLengthChars(self):
+                return str(self.basicStatistics.getBookLength(self.content))
+
+        def getBookLengthWords(self):
+                return str(self.basicStatistics.getAmountOfWords(self.content))
+
+        def getBookSentenceAmount(self):
+                return str(len(self.basicStatistics.sentences))
 
 if __name__ == "__main__":
         # analyzer = BookAnalyzer()
@@ -229,21 +238,21 @@ if __name__ == "__main__":
         #=======================================================================================
 
         # # Method test Alice
-        # b = BookAnalyzer(r'Books/Alices Adventures in Wonderland by Lewis Carroll')
+        # b = BookAnalyzer(r'books/Alices Adventures in Wonderland by Lewis Carroll')
         # b.start()
         # b.getStatisticsOutput("Alices")
         # t = TestBook()
         # t.mainCharactersCheck(["rabbit", "queen", "king", "cat", "duchess", "hatter", "hare", "dormouse", "gryphon"], b, 'Alice Test')
 
         # # Method test Christmas Carol
-        # b = BookAnalyzer(r'Books/A Christmas Carol by Charles Dickens')
+        # b = BookAnalyzer(r'books/A Christmas Carol by Charles Dickens')
         # b.start()
         # b.getStatisticsOutput("Christmas")
         # t = TestBook()
         # t.mainCharactersCheck(["scrooge", "marley", "cratchit", "ghost", "tim", "fred", "fezziwig", "marta"], b, 'Christmas Test')
         #
         # # Method test Drakula
-        # b = BookAnalyzer(r'Books/Dracula by Bram Stoker')
+        # b = BookAnalyzer(r'books/Dracula by Bram Stoker')
         # b.start()
         # b.getStatisticsOutput("Dracula")
         # b.getStatisticsPrint("Dracula")
@@ -252,7 +261,7 @@ if __name__ == "__main__":
         #                       'Dracula Test')
         #
         # # Method test Moby
-        # b = BookAnalyzer(r'Books/Moby Dick; Or, The Whale_Herman Melville')
+        # b = BookAnalyzer(r'books/Moby Dick; Or, The Whale_Herman Melville')
         # b.start()
         # b.getStatisticsOutput("Moby")
         # t = TestBook()
@@ -260,7 +269,7 @@ if __name__ == "__main__":
         #                       'Moby Test')
 
         # Method test Peter
-        b = BookAnalyzer(r'MachineBookExtract/Books/Peter Pan by J. M. Barrie')
+        b = BookAnalyzer(r'books/Peter Pan by J. M. Barrie')
         b.start()
         b.getStatisticsOutput("Peter")
         # t = TestBook()
@@ -269,7 +278,7 @@ if __name__ == "__main__":
         #=========================================================================================
 
         # # Method test Sherlock
-        # b = BookAnalyzer(r'MachineBookExtract/Books/The Adventures of Sherlock Holmes by Arthur Conan Doyle')
+        # b = BookAnalyzer(r'MachineBookExtract/books/The Adventures of Sherlock Holmes by Arthur Conan Doyle')
         # b.start()
         # b.getStatisticsOutput("Sherlock")
         # t = TestBook()
@@ -277,7 +286,7 @@ if __name__ == "__main__":
         #                       'Sherlock Test')
         #
         # Method test Castle
-        # b = BookAnalyzer(r'Books/The Castle of Otranto by Horace Walpole')
+        # b = BookAnalyzer(r'books/The Castle of Otranto by Horace Walpole')
         # b.start()
         # b.getStatisticsOutput("Castle")
         # t = TestBook()
@@ -285,7 +294,7 @@ if __name__ == "__main__":
         #                       'Castle Test')
         #
         # Method test Methamorphios
-        # b = BookAnalyzer(r'Books/Metamorphosis by Franz Kafka')
+        # b = BookAnalyzer(r'books/Metamorphosis by Franz Kafka')
         # b.start()
         # b.getStatisticsOutput("Metamorphosis")
         # t = TestBook()
@@ -293,7 +302,7 @@ if __name__ == "__main__":
         #                       'Moonstone Test')
         #
         # # Method test Pride
-        # b = BookAnalyzer(r'Books/Pride and Prejudice by Jane Austen')
+        # b = BookAnalyzer(r'books/Pride and Prejudice by Jane Austen')
         # b.start()
         # b.getStatisticsOutput("Pride")
         # t = TestBook()
@@ -301,7 +310,7 @@ if __name__ == "__main__":
         #                       'Odyssey Test')
         #
         # # Method test Wuthering
-        # b = BookAnalyzer(r'Books/Wuthering Heights by Emily Bronte')
+        # b = BookAnalyzer(r'books/Wuthering Heights by Emily Bronte')
         # b.start()
         # b.getStatisticsOutput("Wuthering")
         # t = TestBook()

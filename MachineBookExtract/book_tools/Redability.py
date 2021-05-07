@@ -40,6 +40,8 @@ class Readability():
         # s - liczba zdań
         # 1 - 100, 30 - universitiy, 80 - school
         r = 206.835 - 84.6 * (self.y / self.w) - 1.015 * self.w / self.s
+        if r >= 100:
+            r = 100;
         return r
 
     def getMcLaughlinSMOGRedability(self):

@@ -4,9 +4,9 @@ import pandas as pd
 # TO DO:
 # podzial na watki
 # podzielic na rozdzialy ksiazke string
-from MachineBookExtract.BookTools.BasicStatisticsTool import BasicStatisticsTool
-from MachineBookExtract.BookTools.DialogueTool import DialogueTool
-from MachineBookExtract.BookTools.TimeStatistics import TimeStatistics
+from book_tools.BasicStatisticsTool import BasicStatisticsTool
+from book_tools.DialogueTool import DialogueTool
+from book_tools.TimeStatistics import TimeStatistics
 
 
 class ChaptersInBookTool():
@@ -377,12 +377,19 @@ class ChaptersInBookTool():
     def getCharactersInChapters(self, fragments, characters):
         df = pd.DataFrame()
         liChaptersLevel = []
-        for i in range(fragments.__len__()):
+        for i in range(len(fragments)):
             liCharactersInside = []
             words = fragments[i].split(' ')
             for c in characters:
                 if c in words:
-                    liCharactersInside.append(c)
+                    if c in words:
+                        s = 0
+                        for w in words:
+                            if c in w:
+                                s += 1
+
+                        st = (s * 100) / len(words)
+                        liCharactersInside.append((c, st))
             liChaptersLevel.append(liCharactersInside)
 
         df['Heroes'] = liChaptersLevel

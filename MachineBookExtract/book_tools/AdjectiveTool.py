@@ -9,9 +9,3 @@ class AdjectiveTool():
                 adj.append(token.text)
 
         return len(adj)
-
-    #by chapters
-    def getAmountOfAdjectivesByContent(self):
-        words = self.content.split(' ')
-        adj = [token.lemma_ for token in self.doc if token.pos_ == "ADJ"]
-        return adj
