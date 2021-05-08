@@ -21,7 +21,8 @@ class BookAnalyzer:
                 self.dialogues = DialogueTool()
                 self.characters = CharactersTool()
 
-        def start(self):
+        def start(self, progressBar):
+                self.progressBar = progressBar
                 self.start = time.time()
                 self.nlp = spacy.load("en_core_web_sm")
                 self.nlp.max_length = 2_500_000
@@ -32,8 +33,9 @@ class BookAnalyzer:
                 self.content = content
                 self.syllables = SpacySyllables(self.nlp, "en_US")
                 self.nlp.add_pipe("syllables", after="tagger", config={"lang": "en_US"})
-                self.doc = self.nlp(content)
 
+                self.progressBar.setValue(20)
+                self.doc = self.nlp(content)
                 self.chapters = ChaptersInBookTool(self.doc)
                 self.basicStatistics = BasicStatisticsTool(self.content)
 
@@ -47,21 +49,26 @@ class BookAnalyzer:
                 present, past, s1 = self.getTimeStatisticsTotal()
                 # print('=============================')
                 s2 = self.getReadabilityTotal()
+                self.progressBar.setValue(30)
                 # print('=============================')
                 s3 = self.getAdjectivesTotal()
+                self.progressBar.setValue(40)
                 # print('=============================')
                 s4 = self.getBasicStatisticsTotal()
+                self.progressBar.setValue(50)
                 # print('=============================')
                 s5 = self.getDialogesTotal()
+                self.progressBar.setValue(60)
                 # print('=============================')
                 li, s6, li1 = self.getCharactersTotal(self.content, self.doc, self.nlp)
+                self.progressBar.setValue(70)
                 # print('=============================')
-                # self.getChaptersAmount(present, past, li, name)
+                self.getChaptersAmount(present, past, li, name)
                 # print('=============================')
 
                 # REST
                 s7 = self.printExecutionTime()
-
+                self.progressBar.setValue(100)
                 # SAVE
                 s0 = s1 + '\n' + s2 + '\n' + s3 + '\n' + s4 + '\n' + s5 + '\n' + s6 + '\n' + s7 + '\n' + str(li1)
                 text_file = open(r'output/' + str(name) + " BASIC.txt", "w")
@@ -83,7 +90,7 @@ class BookAnalyzer:
                 # print('=============================')
                 li, s6, li1 = self.getCharactersTotal(self.content, self.doc, self.nlp)
                 # print('=============================')
-                # self.getChaptersAmount(present, past, li, name)
+                self.getChaptersAmount(present, past, li, name)
                 # print('=============================')
 
                 # REST
@@ -226,6 +233,20 @@ class BookAnalyzer:
 
         def getBookSentenceAmount(self):
                 return str(len(self.basicStatistics.sentences))
+
+        def getBookSentenceAverageChars(self):
+                return str(int(self.basicStatistics.getAvergeLengthOfSentenceInBook(self.content)))
+
+        def getBookSentenceAverageWords(self):
+                return str(int(self.basicStatistics.getAvergeWordInSentenceInBook()))
+
+        def getTotalVerbsStatisticsAmount(self):
+                present = len(self.timeStatistics.getVerbsNowAmount(self.doc))
+                past = len(self.timeStatistics.getVerbsPastAmount(self.doc))
+                total = present + past
+                return str(total), str(present), str(past)
+
+
 
 if __name__ == "__main__":
         # analyzer = BookAnalyzer()
