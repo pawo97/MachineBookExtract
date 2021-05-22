@@ -168,8 +168,13 @@ class CharactersTool():
         for i in range(len(liCharNotAphaNumeric)):
             liCharNotAphaNumeric[i] = liCharNotAphaNumeric[i].title()
 
+        index = 0
+        for i in range(len(liCharNotAphaNumeric)):
+            if liCharNotAphaNumeric[i] == '':
+                index = i
 
-
+        if index != 0:
+            del liCharNotAphaNumeric[index]
         return liCharNotAphaNumeric
 
     def getPercentStatisticsInBook(self, content, liCharNotAphaNumeric):

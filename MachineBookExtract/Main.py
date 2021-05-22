@@ -21,8 +21,8 @@ class BookAnalyzer:
                 self.dialogues = DialogueTool()
                 self.characters = CharactersTool()
 
-        def start(self, progressBar):
-                self.progressBar = progressBar
+        def start(self):
+                # self.progressBar = progressBar
                 self.start = time.time()
                 self.nlp = spacy.load("en_core_web_sm")
                 self.nlp.max_length = 2_500_000
@@ -34,7 +34,7 @@ class BookAnalyzer:
                 self.syllables = SpacySyllables(self.nlp, "en_US")
                 self.nlp.add_pipe("syllables", after="tagger", config={"lang": "en_US"})
 
-                self.progressBar.setValue(20)
+                # self.progressBar.setValue(20)
                 self.doc = self.nlp(content)
                 self.chapters = ChaptersInBookTool(self.doc)
                 self.basicStatistics = BasicStatisticsTool(self.content)
@@ -49,26 +49,26 @@ class BookAnalyzer:
                 present, past, s1 = self.getTimeStatisticsTotal()
                 # print('=============================')
                 s2 = self.getReadabilityTotal()
-                self.progressBar.setValue(30)
+                # self.progressBar.setValue(30)
                 # print('=============================')
                 s3 = self.getAdjectivesTotal()
-                self.progressBar.setValue(40)
+                # self.progressBar.setValue(40)
                 # print('=============================')
                 s4 = self.getBasicStatisticsTotal()
-                self.progressBar.setValue(50)
+                # self.progressBar.setValue(50)
                 # print('=============================')
                 s5 = self.getDialogesTotal()
-                self.progressBar.setValue(60)
+                # self.progressBar.setValue(60)
                 # print('=============================')
                 li, s6, li1 = self.getCharactersTotal(self.content, self.doc, self.nlp)
-                self.progressBar.setValue(70)
+                # self.progressBar.setValue(70)
                 # print('=============================')
                 self.getChaptersAmount(present, past, li, name)
                 # print('=============================')
 
                 # REST
                 s7 = self.printExecutionTime()
-                self.progressBar.setValue(100)
+                # self.progressBar.setValue(100)
                 # SAVE
                 s0 = s1 + '\n' + s2 + '\n' + s3 + '\n' + s4 + '\n' + s5 + '\n' + s6 + '\n' + s7 + '\n' + str(li1)
                 text_file = open(r'output/' + str(name) + " BASIC.txt", "w")
@@ -246,7 +246,40 @@ class BookAnalyzer:
                 total = present + past
                 return str(total), str(present), str(past)
 
+        def getFRESMOGFOGReadability(self):
+                self.readability = Readability(self.doc, self.basicStatistics, self.content)
 
+                s1 = str(round(self.readability.getMcLaughlinFRERedability(),2))
+                s2 = str(round(self.readability.getMcLaughlinSMOGRedability(),2))
+                s3 = str(round(self.readability.getMcLaughlinFOGRedability(),2))
+                return s1, s2, s3
+
+        def getAdjectivesAmount(self):
+                self.adjectives = AdjectiveTool(self.doc)
+                return str(self.adjectives.getAmountOfAdjectivesTotal())
+
+        def getDialogesAmounts(self):
+                dialoges = self.dialogues.getAmountOfDialogues(self.content, 'GLOBAL')
+                dialogesAvergeWords = self.dialogues.dialougeAvergeWords(dialoges, len(dialoges))
+                dialogesAvergeChars = self.dialogues.dialougeAvergeChars(dialoges, len(dialoges))
+                longDialogueAmount, shortDialogueAmount = self.dialogues.dialogueLongShort(dialoges, dialogesAvergeWords)
+                longDialoguePercent, shortDialoguePercent = self.dialogues.dialougeLongShortPercent(longDialogueAmount, shortDialogueAmount, dialoges)
+
+                s1 = str(len(dialoges))
+                s2 = str(dialogesAvergeWords)
+                s3 = str(dialogesAvergeChars)
+                s4 = str(longDialogueAmount)
+                s5 = str(shortDialogueAmount)
+                return s1, s2, s3, s4, s5
+
+        def getCharactersList(self, content, doc, nlp):
+                chT = CharactersTool()
+                li = chT.getCharactersInBook(content, doc, nlp)
+                return li
+
+        def getFragmentsAndChapters(self):
+                amount = self.chapters.getAmountOfChaptersByInsideOfContent(self.content)
+                return amount, self.chapters.getFragmentsOfBook()
 
 if __name__ == "__main__":
         # analyzer = BookAnalyzer()
