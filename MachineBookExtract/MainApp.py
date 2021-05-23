@@ -4,9 +4,9 @@ import sys
 from asyncio import coroutine
 from time import sleep, time
 
-from PyQt5.QtChart import QPieSeries, QPieSlice, QChartView
+from PyQt5.QtChart import QPieSeries, QPieSlice, QChartView, QChart
 from PyQt5.QtCore import QRunnable, pyqtSlot, Qt, QThread, QObject, pyqtSignal
-from PyQt5.QtGui import QPainter
+from PyQt5.QtGui import QPainter, QPen
 from PyQt5.QtWidgets import QPlainTextEdit, QHBoxLayout, QVBoxLayout, QPushButton, QApplication, QWidget, QLabel, \
     QLineEdit, QFileDialog, QListView, QListWidget, QGridLayout, QTableWidget, QTableWidgetItem
 from matplotlib.backends.backend_template import FigureCanvas
@@ -96,22 +96,27 @@ class Example(QWidget):
         self.label_6 = QLabel()
         self.label_6_text = 'Amount of words: '
         self.label_6.setText(self.label_6_text)
+        self.label_6_1 = QLabel()
 
         self.label_7 = QLabel()
         self.label_7_text = 'Amount of chars: '
         self.label_7.setText(self.label_7_text)
+        self.label_7_1 = QLabel()
 
         self.label_8 = QLabel()
         self.label_8_text = 'Amount of sentences: '
         self.label_8.setText(self.label_8_text)
+        self.label_8_1 = QLabel()
 
         self.label_9 = QLabel()
         self.label_9_text = 'Average amount of sentences (chars): '
         self.label_9.setText(self.label_9_text)
+        self.label_9_1 = QLabel()
 
         self.label_10 = QLabel()
         self.label_10_text = 'Average amount of sentences (words): '
         self.label_10.setText(self.label_10_text)
+        self.label_10_1 = QLabel()
 
         self.label_11 = QLabel()
         self.label_11_text = 'Analise book status: '
@@ -175,6 +180,27 @@ class Example(QWidget):
 
         self.listwidget.addItems(entries)
 
+        # Local labels
+        self.label_1_local = QLabel()
+        self.label_1_local.setText(self.label_6_text)
+        self.label_1_local_value = QLabel()
+
+        self.label_2_local = QLabel()
+        self.label_2_local.setText(self.label_7_text)
+        self.label_2_local_value = QLabel()
+
+        self.label_3_local = QLabel()
+        self.label_3_local.setText(self.label_8_text)
+        self.label_3_local_value = QLabel()
+
+        self.label_4_local = QLabel()
+        self.label_4_local.setText(self.label_9_text)
+        self.label_4_local_value = QLabel()
+
+        self.label_5_local = QLabel()
+        self.label_5_local.setText(self.label_10_text)
+        self.label_5_local_value = QLabel()
+
 
         # add logic
         open_button.clicked.connect(self.openFileNameDialog)
@@ -212,6 +238,14 @@ class Example(QWidget):
         vbox_2_1.addWidget(self.label_8)
         vbox_2_1.addWidget(self.label_9)
         vbox_2_1.addWidget(self.label_10)
+
+        vbox_2_1_1 = QVBoxLayout()
+        vbox_2_1_1.addWidget(self.label_6_1)
+        vbox_2_1_1.addWidget(self.label_7_1)
+        vbox_2_1_1.addWidget(self.label_8_1)
+        vbox_2_1_1.addWidget(self.label_9_1)
+        vbox_2_1_1.addWidget(self.label_10_1)
+
         vbox_2_1.addWidget(self.label_18)
         vbox_2_1.addWidget(self.label_18)
         vbox_2_1.addWidget(self.label_19)
@@ -224,23 +258,32 @@ class Example(QWidget):
         vbox_2_2.addWidget(self.label_13)
         vbox_2_2.addWidget(self.label_14)
 
-        vbox_2_2.addWidget(self.label_15)
-        vbox_2_2.addWidget(self.label_16)
-        vbox_2_2.addWidget(self.label_17)
-        vbox_2_2.addWidget(self.listwidget)
+        vbox_2_3 = QVBoxLayout()
+        vbox_2_3.addWidget(self.label_12)
+        vbox_2_3.addWidget(self.label_13)
+        vbox_2_3.addWidget(self.label_14)
+
+        vbox_2_3.addWidget(self.label_15)
+        vbox_2_3.addWidget(self.label_16)
+        vbox_2_3.addWidget(self.label_17)
+        vbox_2_3.addWidget(self.listwidget)
         # vbox_2_2.addWidget(self.addChart())
 
         # hbox_2_3.addWidget(self.label_7)
 
-        vbox_2_3 = QVBoxLayout()
-        # self.createTable()
-        # vbox_2_3.addWidget(self.tableWidget)
+        vbox_2_4 = QVBoxLayout()
+        vbox_2_4.addWidget(self.getPieChart1())
+
+        vbox_2_5 = QVBoxLayout()
+        vbox_2_5.addWidget(self.getPieChart2())
 
         vbox_3 = QHBoxLayout()
         vbox_3.addLayout(vbox_2_1)
+        vbox_3.addLayout(vbox_2_1_1)
         vbox_3.addLayout(vbox_2_2)
         vbox_3.addLayout(vbox_2_3)
-
+        vbox_3.addLayout(vbox_2_4)
+        vbox_3.addLayout(vbox_2_5)
         vbox_2.addLayout(vbox_3)
 
         # vbox_3 = QVBoxLayout()
@@ -250,9 +293,33 @@ class Example(QWidget):
         hbox_3_1.addWidget(prev_button)
         hbox_3_1.addWidget(next_button)
 
+        vbox_3_2 = QVBoxLayout()
+        vbox_3_2.addWidget(self.label_1_local)
+        vbox_3_2.addWidget(self.label_2_local)
+        vbox_3_2.addWidget(self.label_3_local)
+        vbox_3_2.addWidget(self.label_4_local)
+        vbox_3_2.addWidget(self.label_5_local)
+
+        vbox_3_2_val = QVBoxLayout()
+        vbox_3_2_val.addWidget(self.label_1_local_value)
+        vbox_3_2_val.addWidget(self.label_2_local_value)
+        vbox_3_2_val.addWidget(self.label_3_local_value)
+        vbox_3_2_val.addWidget(self.label_4_local_value)
+        vbox_3_2_val.addWidget(self.label_5_local_value)
+
+        vbox_3_text = QVBoxLayout()
+        vbox_3_text.addWidget(self.text_editor)
+
+        hbox_text = QHBoxLayout()
+        hbox_text.addLayout(vbox_3_text)
+        hbox_text.addLayout(vbox_3_2)
+        hbox_text.addLayout(vbox_3_2_val)
+
         vbox_2.addWidget(self.label_3)
         vbox_2.addLayout(hbox_3_1)
-        vbox_2.addWidget(self.text_editor)
+        vbox_2.addLayout(hbox_text)
+
+
 
         # vbox_4 = QVBoxLayout()
         # vbox_4.addWidget(label_4)
@@ -313,16 +380,23 @@ class Example(QWidget):
         #     print(e)
 
         # Set labels
-        self.label_6.setText(self.label_6_text + self.b.getBookLengthWords())
-        self.label_7.setText(self.label_7_text + self.b.getBookLengthChars())
-        self.label_8.setText(self.label_8_text + self.b.getBookSentenceAmount())
-        self.label_9.setText(self.label_9_text + self.b.getBookSentenceAverageChars())
-        self.label_10.setText(self.label_10_text + self.b.getBookSentenceAverageWords())
+        self.label_6_1.setText(self.b.getBookLengthWords())
+        self.label_7_1.setText(self.b.getBookLengthChars())
+        self.label_8_1.setText(self.b.getBookSentenceAmount())
+        self.label_9_1.setText(self.b.getBookSentenceAverageChars())
+        self.label_10_1.setText(self.b.getBookSentenceAverageWords())
 
-        total, present, past = self.b.getTotalVerbsStatisticsAmount()
+        total, present, past, presentPercent, pastPercent = self.b.getTotalVerbsStatisticsAmount()
         self.label_12.setText(self.label_12_text + total)
         self.label_13.setText(self.label_13_text + present)
         self.label_14.setText(self.label_14_text + past)
+
+        # Add to chart
+        series1 = QPieSeries()
+        series1.append("Past", pastPercent)
+        series1.append("Present", presentPercent)
+        self.chart.removeAllSeries()
+        self.chart.addSeries(series1)
 
         fre, smog, fog = self.b.getFRESMOGFOGReadability()
         self.label_15.setText(self.label_15_text + fre)
@@ -332,12 +406,18 @@ class Example(QWidget):
         adj = self.b.getAdjectivesAmount()
         self.label_18.setText(self.label_18_text + adj)
 
-        s1, s2, s3, s4, s5 = self.b.getDialogesAmounts()
+        s1, s2, s3, s4, s5, plong, pshort = self.b.getDialogesAmounts()
         self.label_19.setText(self.label_19_text + s1)
         self.label_20.setText(self.label_20_text + s2)
         self.label_21.setText(self.label_21_text + s3)
         self.label_22.setText(self.label_22_text + s4)
         self.label_23.setText(self.label_23_text + s5)
+
+        series2 = QPieSeries()
+        series2.append("Long", plong)
+        series2.append("Short", pshort)
+        self.chart2.removeAllSeries()
+        self.chart2.addSeries(series2)
 
         entries = self.b.getCharactersList(self.b.content, self.b.doc, self.b.nlp)
         self.listwidget.addItems(entries)
@@ -345,10 +425,14 @@ class Example(QWidget):
     def getCahptersView(self):
         # get fragments
         self.currentVal = 0
-        self.amountChapters, self.fragments = self.b.getFragmentsAndChapters()
-        # self.text_editor = self.fragments[0]
+        self.amountChapters, self.fragments, self.df1 = self.b.getFragmentsAndChapters()
+        print(self.df1)
         self.text_editor.setPlainText(self.fragments[self.currentVal])
         self.label_3.setText('Chapter: ' + str(self.currentVal + 1))
+        self.label_1_local_value.setText(str(self.df1.iat[0, 0]))
+        self.label_2_local_value.setText(str(self.df1.iat[0, 1]))
+        self.label_3_local_value.setText(str(self.df1.iat[0, 2]))
+        self.label_4_local_value.setText(str(self.df1.iat[0, 3]))
         print('Ended')
 
     def getNext(self):
@@ -356,6 +440,10 @@ class Example(QWidget):
             self.currentVal += 1
             self.text_editor.setPlainText(self.fragments[self.currentVal])
             self.label_3.setText('Chapter: ' + str(self.currentVal + 1))
+            self.label_1_local_value.setText(str(self.df1.iat[self.currentVal, 0]))
+            self.label_2_local_value.setText(str(self.df1.iat[self.currentVal, 1]))
+            self.label_3_local_value.setText(str(self.df1.iat[self.currentVal, 2]))
+            self.label_4_local_value.setText(str(self.df1.iat[self.currentVal, 3]))
 
 
     def getPrev(self):
@@ -363,6 +451,10 @@ class Example(QWidget):
             self.currentVal -= 1
             self.text_editor.setPlainText(self.fragments[self.currentVal])
             self.label_3.setText('Chapter: ' + str(self.currentVal + 1))
+            self.label_1_local_value.setText(str(self.df1.iat[self.currentVal, 0]))
+            self.label_2_local_value.setText(str(self.df1.iat[self.currentVal, 1]))
+            self.label_3_local_value.setText(str(self.df1.iat[self.currentVal, 2]))
+            self.label_4_local_value.setText(str(self.df1.iat[self.currentVal, 3]))
 
     def createTable(self):
         # Create table
@@ -392,43 +484,43 @@ class Example(QWidget):
                 # print(self.content)
 
 
-    def getPieChart(self):
-        self.chartView = QChartView()
-        self.chartView.setRenderHint(QPainter.Antialiasing)
-        self.chart = self.chartView.chart()
-        self.m_donuts = []
-        # self.chart.legend().setVisible(False)
-        # self.chart.setTitle("Nested donuts demo")
-        # self.chart.setAnimationOptions(QChart.AllAnimations)
+    def getPieChart1(self):
+        self.series = QPieSeries()
+        self.series.append("Python", 40)
+        self.series.append("C++", 60)
 
-        minSize = 0.1
-        maxSize = 0.9
-        donutCount = 5
+        self.chart = QChart()
+        self.chart.legend().hide()
+        self.chart.addSeries(self.series)
+        self.chart.createDefaultAxes()
+        self.chart.setAnimationOptions(QChart.SeriesAnimations)
+        self.chart.setTitle("Pie Chart Example")
 
-        donut = QPieSeries()
-        sliceCount = 2
-        for j in range(sliceCount):
-            # Amount size
-            value = 60
-            slice_ = QPieSlice(str(value), value)
-            slice_.setLabelVisible(True)
-            slice_.setLabelColor(Qt.white)
-            slice_.setLabelPosition(QPieSlice.LabelInsideTangential)
-            # slice_.hovered[bool].connect(functools.partial(self.explodeSlice, slice_=slice_))
-            donut.append(slice_)
-            donut.setHoleSize(minSize + 1 * (maxSize - minSize) / donutCount)
-            donut.setPieSize(minSize + (1 + 1) * (maxSize - minSize) / donutCount)
+        self.chart.legend().setVisible(True)
+        self.chart.legend().setAlignment(Qt.AlignBottom)
 
+        chartview = QChartView(self.chart)
+        chartview.setRenderHint(QPainter.Antialiasing)
+        return chartview
 
-        self.m_donuts.append(donut)
-        # self.chartView.chart().addSeries(donut)
+    def getPieChart2(self):
+        self.series2 = QPieSeries()
+        self.series2.append("Python", 40)
+        self.series2.append("C++", 60)
 
-        return self.chartView
-        # create main layout
-        # self.mainLayout = QGridLayout(self)
-        # self.mainLayout.addWidget(self.chartView, 1, 1)
-        # self.chartView.show()
-        # self.setLayout(self.mainLayout)
+        self.chart2 = QChart()
+        self.chart2.legend().hide()
+        self.chart2.addSeries(self.series2)
+        self.chart2.createDefaultAxes()
+        self.chart2.setAnimationOptions(QChart.SeriesAnimations)
+        self.chart2.setTitle("Pie Chart Example")
+
+        self.chart2.legend().setVisible(True)
+        self.chart2.legend().setAlignment(Qt.AlignBottom)
+
+        chartview = QChartView(self.chart2)
+        chartview.setRenderHint(QPainter.Antialiasing)
+        return chartview
 
 
 # class MyThread(QThread):

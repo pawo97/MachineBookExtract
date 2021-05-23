@@ -244,7 +244,9 @@ class BookAnalyzer:
                 present = len(self.timeStatistics.getVerbsNowAmount(self.doc))
                 past = len(self.timeStatistics.getVerbsPastAmount(self.doc))
                 total = present + past
-                return str(total), str(present), str(past)
+                presentPercent = self.timeStatistics.getVerbsNowPercent(self.doc)
+                pastPercent = self.timeStatistics.getVerbsPastPercent(self.doc)
+                return str(total), str(present), str(past), presentPercent, pastPercent
 
         def getFRESMOGFOGReadability(self):
                 self.readability = Readability(self.doc, self.basicStatistics, self.content)
@@ -270,7 +272,7 @@ class BookAnalyzer:
                 s3 = str(dialogesAvergeChars)
                 s4 = str(longDialogueAmount)
                 s5 = str(shortDialogueAmount)
-                return s1, s2, s3, s4, s5
+                return s1, s2, s3, s4, s5, longDialoguePercent, shortDialoguePercent
 
         def getCharactersList(self, content, doc, nlp):
                 chT = CharactersTool()
@@ -279,7 +281,10 @@ class BookAnalyzer:
 
         def getFragmentsAndChapters(self):
                 amount = self.chapters.getAmountOfChaptersByInsideOfContent(self.content)
-                return amount, self.chapters.getFragmentsOfBook()
+                f = self.chapters.getFragmentsOfBook()
+                # BASIC
+                df1 = self.chapters.getLengthWordCharsByChapter(f)
+                return amount, f, df1
 
 if __name__ == "__main__":
         # analyzer = BookAnalyzer()
