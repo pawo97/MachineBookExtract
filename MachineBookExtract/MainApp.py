@@ -1,14 +1,16 @@
 
 import asyncio
 import sys
+import threading
+import time
 from asyncio import coroutine
-from time import sleep, time
 
+from PyQt5 import uic
 from PyQt5.QtChart import QPieSeries, QPieSlice, QChartView, QChart
-from PyQt5.QtCore import QRunnable, pyqtSlot, Qt, QThread, QObject, pyqtSignal
+from PyQt5.QtCore import QRunnable, pyqtSlot, Qt, QThread, QObject, pyqtSignal, QThreadPool
 from PyQt5.QtGui import QPainter, QPen
 from PyQt5.QtWidgets import QPlainTextEdit, QHBoxLayout, QVBoxLayout, QPushButton, QApplication, QWidget, QLabel, \
-    QLineEdit, QFileDialog, QListView, QListWidget, QGridLayout, QTableWidget, QTableWidgetItem
+    QLineEdit, QFileDialog, QListView, QListWidget, QGridLayout, QTableWidget, QTableWidgetItem, QMainWindow
 from matplotlib.backends.backend_template import FigureCanvas
 from qtpy import QtWidgets, QtCore
 # from PyQt5.QtChart import *
@@ -48,7 +50,7 @@ from matplotlib.figure import Figure
 from Main import BookAnalyzer
 import matplotlib.pyplot as plt
 
-class Example(QWidget):
+class Example(QMainWindow):
 
     def __init__(self):
         super().__init__()
@@ -56,7 +58,22 @@ class Example(QWidget):
         self.initUI()
 
     def initUI(self):
+        print('hello')
+        uic.loadUi('TestUI.ui', self)
+        # set progress to zero
+        self.progressBar.setValue(0)
 
+        # connect buttons
+        self.pushButton.clicked.connect(self.openFileNameDialog)
+        self.pushButton_2.clicked.connect(self.startAnalisye)
+        self.pushButton_3.clicked.connect(self.getCahptersView)
+        self.pushButton_8.clicked.connect(self.getPrev)
+        self.pushButton_7.clicked.connect(self.getNext)
+        self.show()
+
+        # self.initMyComponent()
+
+    def initMyComponent(self):
         # create components
         analyze_button = QPushButton("Analyze")
         # charts_button = QPushButton("Charts")
@@ -357,16 +374,17 @@ class Example(QWidget):
         self.resize(800,800)
         self.show()
 
-    def start_analisye(self):
-        print("Start")
-        self.get_values()
+    # =====================================================================================================
+    # CONTROL BUTTONS
+    def startAnalisye(self):
+        self.runTasks()
 
+        # self.b = BookAnalyzer(self.content)
+        # self.b.start()
+        # self.b.getStatisticsOutput("Peter")
 
-    def get_values(self):
-        self.b = BookAnalyzer(self.content)
-        self.b.start()
-        self.b.getStatisticsOutput("Peter")
-        self.progressBar.setValue(10)
+        # add ===========================================
+        # self.progressBar.setValue(10)
         # b = thread.join()
         # try:
         #     thread = YouThread(num=14)
@@ -378,97 +396,98 @@ class Example(QWidget):
         #     # b = thread.join()
         # except Exception as e:
         #     print(e)
+        # add ===========================================
 
-        # Set labels
-        self.label_6_1.setText(self.b.getBookLengthWords())
-        self.label_7_1.setText(self.b.getBookLengthChars())
-        self.label_8_1.setText(self.b.getBookSentenceAmount())
-        self.label_9_1.setText(self.b.getBookSentenceAverageChars())
-        self.label_10_1.setText(self.b.getBookSentenceAverageWords())
+        # # Set labels basic amount with Readability
+        # self.label_11.setText(self.b.getBookLengthWords())
+        # self.label_10.setText(self.b.getBookLengthChars())
+        # self.label_8.setText(self.b.getBookSentenceAmount())
+        # self.label_9.setText(self.b.getBookSentenceAverageChars())
+        # self.label_22.setText(self.b.getBookSentenceAverageWords())
+        #
+        # fre, smog, fog = self.b.getFRESMOGFOGReadability()
+        # self.label_27.setText(fre)
+        # self.label_28.setText(smog)
+        # self.label_29.setText(fog)
+        #
+        # # Set labels time and dialogues
+        # total, present, past, presentPercent, pastPercent = self.b.getTotalVerbsStatisticsAmount()
+        # self.label_19.setText(total)
+        # self.label_18.setText(present)
+        # self.label_16.setText(past)
+        #
+        # dialoges, dialogesAvergeWords, dialogesAvergeChars, longDialogueAmount, shortDialogueAmount, plong, pshort = self.b.getDialogesAmounts()
+        # self.label_17.setText(dialoges)
+        # self.label_33.setText(dialogesAvergeWords)
+        # self.label_34.setText(dialogesAvergeChars)
+        # self.label_35.setText(longDialogueAmount)
+        # self.label_36.setText(shortDialogueAmount)
+        #
+        # # Set adjectives
+        # adj = self.b.getAdjectivesAmount()
+        # self.label_37.setText("Amount of adjectives: " + adj)
+        #
+        # # Characters
+        # entries = self.b.getCharactersList(self.b.content, self.b.doc, self.b.nlp)
+        # self.listWidget.addItems(entries)
 
-        total, present, past, presentPercent, pastPercent = self.b.getTotalVerbsStatisticsAmount()
-        self.label_12.setText(self.label_12_text + total)
-        self.label_13.setText(self.label_13_text + present)
-        self.label_14.setText(self.label_14_text + past)
 
-        # Add to chart
-        series1 = QPieSeries()
-        series1.append("Past", pastPercent)
-        series1.append("Present", presentPercent)
-        self.chart.removeAllSeries()
-        self.chart.addSeries(series1)
+        # add charts================================================
+        # # Add to chart
+        # series1 = QPieSeries()
+        # series1.append("Past", pastPercent)
+        # series1.append("Present", presentPercent)
+        # self.chart.removeAllSeries()
+        # self.chart.addSeries(series1)
+        #
 
-        fre, smog, fog = self.b.getFRESMOGFOGReadability()
-        self.label_15.setText(self.label_15_text + fre)
-        self.label_16.setText(self.label_16_text + smog)
-        self.label_17.setText(self.label_17_text + fog)
-
-        adj = self.b.getAdjectivesAmount()
-        self.label_18.setText(self.label_18_text + adj)
-
-        s1, s2, s3, s4, s5, plong, pshort = self.b.getDialogesAmounts()
-        self.label_19.setText(self.label_19_text + s1)
-        self.label_20.setText(self.label_20_text + s2)
-        self.label_21.setText(self.label_21_text + s3)
-        self.label_22.setText(self.label_22_text + s4)
-        self.label_23.setText(self.label_23_text + s5)
-
-        series2 = QPieSeries()
-        series2.append("Long", plong)
-        series2.append("Short", pshort)
-        self.chart2.removeAllSeries()
-        self.chart2.addSeries(series2)
-
-        entries = self.b.getCharactersList(self.b.content, self.b.doc, self.b.nlp)
-        self.listwidget.addItems(entries)
+        #
+        # adj = self.b.getAdjectivesAmount()
+        # self.label_18.setText(self.label_18_text + adj)
+        #
+        # series2 = QPieSeries()
+        # series2.append("Long", plong)
+        # series2.append("Short", pshort)
+        # self.chart2.removeAllSeries()
+        # self.chart2.addSeries(series2)
+        #
+        # entries = self.b.getCharactersList(self.b.content, self.b.doc, self.b.nlp)
+        # self.listwidget.addItems(entries)
 
     def getCahptersView(self):
         # get fragments
         self.currentVal = 0
         self.amountChapters, self.fragments, self.df1 = self.b.getFragmentsAndChapters()
         print(self.df1)
-        self.text_editor.setPlainText(self.fragments[self.currentVal])
-        self.label_3.setText('Chapter: ' + str(self.currentVal + 1))
-        self.label_1_local_value.setText(str(self.df1.iat[0, 0]))
-        self.label_2_local_value.setText(str(self.df1.iat[0, 1]))
-        self.label_3_local_value.setText(str(self.df1.iat[0, 2]))
-        self.label_4_local_value.setText(str(self.df1.iat[0, 3]))
+        self.textEdit.setPlainText(self.fragments[self.currentVal])
+        self.label_39.setText('Chapter: ' + str(self.currentVal + 1))
+        # self.label_1_local_value.setText(str(self.df1.iat[0, 0]))
+        # self.label_2_local_value.setText(str(self.df1.iat[0, 1]))
+        # self.label_3_local_value.setText(str(self.df1.iat[0, 2]))
+        # self.label_4_local_value.setText(str(self.df1.iat[0, 3]))
         print('Ended')
 
     def getNext(self):
         if self.currentVal + 1 < len(self.fragments):
             self.currentVal += 1
-            self.text_editor.setPlainText(self.fragments[self.currentVal])
-            self.label_3.setText('Chapter: ' + str(self.currentVal + 1))
-            self.label_1_local_value.setText(str(self.df1.iat[self.currentVal, 0]))
-            self.label_2_local_value.setText(str(self.df1.iat[self.currentVal, 1]))
-            self.label_3_local_value.setText(str(self.df1.iat[self.currentVal, 2]))
-            self.label_4_local_value.setText(str(self.df1.iat[self.currentVal, 3]))
+            self.textEdit.setPlainText(self.fragments[self.currentVal])
+            self.label_39.setText('Chapter: ' + str(self.currentVal + 1))
+            # self.label_1_local_value.setText(str(self.df1.iat[self.currentVal, 0]))
+            # self.label_2_local_value.setText(str(self.df1.iat[self.currentVal, 1]))
+            # self.label_3_local_value.setText(str(self.df1.iat[self.currentVal, 2]))
+            # self.label_4_local_value.setText(str(self.df1.iat[self.currentVal, 3]))
 
 
     def getPrev(self):
         if self.currentVal - 1 >= 0:
             self.currentVal -= 1
-            self.text_editor.setPlainText(self.fragments[self.currentVal])
-            self.label_3.setText('Chapter: ' + str(self.currentVal + 1))
-            self.label_1_local_value.setText(str(self.df1.iat[self.currentVal, 0]))
-            self.label_2_local_value.setText(str(self.df1.iat[self.currentVal, 1]))
-            self.label_3_local_value.setText(str(self.df1.iat[self.currentVal, 2]))
-            self.label_4_local_value.setText(str(self.df1.iat[self.currentVal, 3]))
+            self.textEdit.setPlainText(self.fragments[self.currentVal])
+            self.label_39.setText('Chapter: ' + str(self.currentVal + 1))
+            # self.label_1_local_value.setText(str(self.df1.iat[self.currentVal, 0]))
+            # self.label_2_local_value.setText(str(self.df1.iat[self.currentVal, 1]))
+            # self.label_3_local_value.setText(str(self.df1.iat[self.currentVal, 2]))
+            # self.label_4_local_value.setText(str(self.df1.iat[self.currentVal, 3]))
 
-    def createTable(self):
-        # Create table
-        self.tableWidget = QTableWidget()
-        self.tableWidget.setRowCount(4)
-        self.tableWidget.setColumnCount(2)
-        self.tableWidget.setItem(0, 0, QTableWidgetItem("Cell (1,1)"))
-        self.tableWidget.setItem(0, 1, QTableWidgetItem("Cell (1,2)"))
-        self.tableWidget.setItem(1, 0, QTableWidgetItem("Cell (2,1)"))
-        self.tableWidget.setItem(1, 1, QTableWidgetItem("Cell (2,2)"))
-        self.tableWidget.setItem(2, 0, QTableWidgetItem("Cell (3,1)"))
-        self.tableWidget.setItem(2, 1, QTableWidgetItem("Cell (3,2)"))
-        self.tableWidget.setItem(3, 0, QTableWidgetItem("Cell (4,1)"))
-        self.tableWidget.setItem(3, 1, QTableWidgetItem("Cell (4,2)"))
 
     def openFileNameDialog(self):
         options = QFileDialog.Options()
@@ -479,7 +498,7 @@ class Example(QWidget):
         if fileName:
             fileNameSplit = fileName.split('/')
             if len(fileNameSplit) >= 1:
-                self.open_text.setText(fileNameSplit[len(fileNameSplit) - 1])
+                self.label_20.setText(fileNameSplit[len(fileNameSplit) - 1])
                 self.content = open(fileName, encoding="utf8").read()
                 # print(self.content)
 
@@ -522,31 +541,118 @@ class Example(QWidget):
         chartview.setRenderHint(QPainter.Antialiasing)
         return chartview
 
+    def runTasks(self):
+        self.thread = MyThread(self.content)
+        # print('Start analyze')
+        self.progressBar.setValue(0)
+        try:
+            self.thread.changeValue.connect(self.updateLabels)
+            self.thread.start()
+        except Exception as e:
+            print(e)
 
-# class MyThread(QThread):
-#
-#     def __init__(self, content):
-#         QThread.__init__(self)
-#         self.content = content
-#
-#     def run(self):
-#         try:
-#             # b = BookAnalyzer(self.content)
-#             # b.start()
-#             # b.getStatisticsOutput("Peter")
-#             print('Finished')
-#             # return b
-#         except Exception as e:
-#             print(e)
+        self.stopThread = False
+        self.thread2 = MyThreadProgress(self.progressBar, self.stopThread)
+        # print('Start counter')
+        try:
+            self.thread2.start()
+        except Exception as e:
+            print(e)
 
-class YouThread(QtCore.QThread):
+    def updateLabels(self, label):
+        self.b = label
+        self.label_11.setText(self.b.getBookLengthWords())
+        self.label_10.setText(self.b.getBookLengthChars())
+        self.label_8.setText(self.b.getBookSentenceAmount())
+        self.label_9.setText(self.b.getBookSentenceAverageChars())
+        self.label_22.setText(self.b.getBookSentenceAverageWords())
 
-    def __init__(self, parent=None, num=None):
-        QtCore.QThread.__init__(self, parent)
-        self.num = num
+        fre, smog, fog = self.b.getFRESMOGFOGReadability()
+        self.label_27.setText(fre)
+        self.label_28.setText(smog)
+        self.label_29.setText(fog)
+
+        # Set labels time and dialogues
+        total, present, past, presentPercent, pastPercent = self.b.getTotalVerbsStatisticsAmount()
+        self.label_19.setText(total)
+        self.label_18.setText(present)
+        self.label_16.setText(past)
+
+        dialoges, dialogesAvergeWords, dialogesAvergeChars, longDialogueAmount, shortDialogueAmount, plong, pshort = self.b.getDialogesAmounts()
+        self.label_17.setText(dialoges)
+        self.label_33.setText(dialogesAvergeWords)
+        self.label_34.setText(dialogesAvergeChars)
+        self.label_35.setText(longDialogueAmount)
+        self.label_36.setText(shortDialogueAmount)
+
+        # Set adjectives
+        adj = self.b.getAdjectivesAmount()
+        self.label_37.setText("Amount of adjectives: " + adj)
+
+        # Characters
+        entries = self.b.getCharactersList(self.b.content, self.b.doc, self.b.nlp)
+        self.listWidget.addItems(entries)
+
+        # zatrzymac stad progress bar
+        self.progressBar.setValue(100)
+        try:
+            self.thread2.join()
+        except Exception as e:
+            print(e)
+
+class MyThread(QThread):
+    changeValue = pyqtSignal(object)
+
+    def __init__(self, content, parent=None):
+        QThread.__init__(self, parent)
+        self.content = content
+        # print(content)
 
     def run(self):
-        print(self.num)
+        # print('Dupa')
+        try:
+            print(len(self.content))
+            b = BookAnalyzer(self.content)
+            b.start()
+            b.getStatisticsOutput("Peter")
+
+            self.changeValue.emit(b)
+            print(threading)
+            # print('Ended')
+        except Exception as e:
+            print('Exception ' + str(e))
+
+
+class MyThreadProgress(QThread):
+    changeValue = pyqtSignal(str)
+
+    def __init__(self, progressBar, stopThread, parent=None):
+        QThread.__init__(self, parent)
+        self.counter = 0
+        self.progressBar = progressBar
+        self.stopThread = stopThread
+        self._stopevent = threading.Event()
+        self._sleepperiod = 1.
+
+    def run(self):
+        # print('Dupa')
+        try:
+            while not self._stopevent.isSet():
+                self.counter += 1
+                self.progressBar.setValue(self.counter)
+                time.sleep(1)
+                if self.counter == 100:
+                    break
+                self._stopevent.wait(self._sleepperiod)
+
+            # print('Ended')
+        except Exception as e:
+            print('Exception ' + str(e))
+
+    def join(self, timeout=None):
+        """ Stop the thread. """
+        self._stopevent.set()
+        threading.Thread.join(self, timeout)
 
 def main():
     app = QApplication(sys.argv)

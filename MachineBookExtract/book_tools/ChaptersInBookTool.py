@@ -235,14 +235,14 @@ class ChaptersInBookTool():
                     fragments.append(chapter)
                     chapter = ''
                 else:
-                    chapter += lines[i].strip()
+                    chapter += lines[i]
                 if i + 1 >= lines.__len__():
                     fragments.append(chapter)
 
-        # print('FRAGMENTS')
-        # for i in range(fragments.__len__()):
-        #     print('CHAPTER ', i + 1)
-        #     print(fragments[i])
+        print('FRAGMENTS')
+        for i in range(fragments.__len__()):
+            print('CHAPTER ', i + 1)
+            print(fragments[i])
 
         return fragments
 

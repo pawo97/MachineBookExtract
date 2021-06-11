@@ -268,8 +268,8 @@ class BookAnalyzer:
                 longDialoguePercent, shortDialoguePercent = self.dialogues.dialougeLongShortPercent(longDialogueAmount, shortDialogueAmount, dialoges)
 
                 s1 = str(len(dialoges))
-                s2 = str(dialogesAvergeWords)
-                s3 = str(dialogesAvergeChars)
+                s2 = str(round(dialogesAvergeWords, 2))
+                s3 = str(round(dialogesAvergeChars, 2))
                 s4 = str(longDialogueAmount)
                 s5 = str(shortDialogueAmount)
                 return s1, s2, s3, s4, s5, longDialoguePercent, shortDialoguePercent
