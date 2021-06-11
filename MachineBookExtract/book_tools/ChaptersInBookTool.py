@@ -222,6 +222,7 @@ class ChaptersInBookTool():
 
     def getFragmentsOfBook(self):
         p = self.liChaptersCharPositionsApproved
+        print(p)
         lines = self.lines
         fragments = []
         j = 0
@@ -235,7 +236,7 @@ class ChaptersInBookTool():
                     fragments.append(chapter)
                     chapter = ''
                 else:
-                    chapter += lines[i]
+                    chapter += lines[i] + '\n'
                 if i + 1 >= lines.__len__():
                     fragments.append(chapter)
 
