@@ -16,37 +16,6 @@ from qtpy import QtWidgets, QtCore
 # from PyQt5.QtChart import *
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
-
-
-# class MainWindow(QtWidgets.QMainWindow):
-#     def __init__(self):
-#         super().__init__()
-#         self.initUI()
-#
-#     def initUI(self):
-#         self.setWindowTitle("Machine Book Extract")
-#         self.resize(800,800)
-#
-#         okButton = QPushButton('OK')
-#         cancelButton = QPushButton('Cancel')
-#         hbox = QHBoxLayout()
-#         hbox.addStretch(1)
-#         hbox.addWidget(okButton)
-#         hbox.addWidget(cancelButton)
-#         vbox = QVBoxLayout()
-#         vbox.addStretch(1)
-#         vbox.addLayout(hbox)
-#         self.setLayout(vbox)
-#         self.setGeometry(300, 300, 350, 150)
-#         self.setWindowTitle('Box layout example, QHBoxLayout, QVBoxLayout')
-#         self.show()
-#
-#
-#
-# if __name__ == "__main__":
-#     app = QApplication(sys.argv)
-#     ex = MainWindow()
-#     sys.exit(app.exec_())
 from Main import BookAnalyzer
 import matplotlib.pyplot as plt
 
@@ -83,19 +52,7 @@ class Example(QMainWindow):
         print(self.df1)
         try:
             self.textEdit.setPlainText(self.fragments[self.currentVal])
-            self.label_39.setText('Chapter: ' + str(self.currentVal + 1))
-            self.label_63.setText(str(self.df1.iat[self.currentVal, 0]))
-            self.label_62.setText(str(self.df1.iat[self.currentVal, 1]))
-            self.label_61.setText(str(self.df1.iat[self.currentVal, 4]))
-            self.label_60.setText(str(self.df1.iat[self.currentVal, 3]))
-            self.label_59.setText(str(self.df1.iat[self.currentVal, 2]))
-            # self.label_57.setText(str(self.df1.iat[self.currentVal, 5]))
-            # self.label_64.setText(str(self.df1.iat[self.currentVal, 8]))
-            # self.label_58.setText(str(self.df1.iat[self.currentVal, 9]))
-            # self.label_41.setText(str(self.df1.iat[self.currentVal, 16]))
-            # self.label_42.setText(str(self.df1.iat[self.currentVal, 15]))
-            # self.label_43.setText(str(self.df1.iat[self.currentVal, 14]))
-            # self.label_44.setText(str(self.df1.iat[self.currentVal, 12]))
+            self.updateLabelsForLocalChapters()
         except Exception as e:
             print(e)
 
@@ -104,40 +61,38 @@ class Example(QMainWindow):
     def getNext(self):
         if self.currentVal + 1 < len(self.fragments):
             self.currentVal += 1
-            self.textEdit.setPlainText(self.fragments[self.currentVal])
-            self.label_39.setText('Chapter: ' + str(self.currentVal + 1))
-            self.label_63.setText(str(self.df1.iat[self.currentVal, 0]))
-            self.label_62.setText(str(self.df1.iat[self.currentVal, 1]))
-            self.label_61.setText(str(self.df1.iat[self.currentVal, 4]))
-            self.label_60.setText(str(self.df1.iat[self.currentVal, 3]))
-            self.label_59.setText(str(self.df1.iat[self.currentVal, 2]))
-            # self.label_57.setText(str(self.df1.iat[self.currentVal, 5]))
-            # self.label_64.setText(str(self.df1.iat[self.currentVal, 8]))
-            # self.label_58.setText(str(self.df1.iat[self.currentVal, 9]))
-            # self.label_41.setText(str(self.df1.iat[self.currentVal, 16]))
-            # self.label_42.setText(str(self.df1.iat[self.currentVal, 15]))
-            # self.label_43.setText(str(self.df1.iat[self.currentVal, 14]))
-            # self.label_44.setText(str(self.df1.iat[self.currentVal, 12]))
-
+            self.updateLabelsForLocalChapters()
 
     def getPrev(self):
         if self.currentVal - 1 >= 0:
             self.currentVal -= 1
-            self.textEdit.setPlainText(self.fragments[self.currentVal])
-            self.label_39.setText('Chapter: ' + str(self.currentVal + 1))
-            self.label_63.setText(str(self.df1.iat[self.currentVal, 0]))
-            self.label_62.setText(str(self.df1.iat[self.currentVal, 1]))
-            self.label_61.setText(str(self.df1.iat[self.currentVal, 4]))
-            self.label_60.setText(str(self.df1.iat[self.currentVal, 3]))
-            self.label_59.setText(str(self.df1.iat[self.currentVal, 2]))
-            # self.label_57.setText(str(self.df1.iat[self.currentVal, 5]))
-            # self.label_64.setText(str(self.df1.iat[self.currentVal, 8]))
-            # self.label_58.setText(str(self.df1.iat[self.currentVal, 9]))
-            # self.label_41.setText(str(self.df1.iat[self.currentVal, 16]))
-            # self.label_42.setText(str(self.df1.iat[self.currentVal, 15]))
-            # self.label_43.setText(str(self.df1.iat[self.currentVal, 14]))
-            # self.label_44.setText(str(self.df1.iat[self.currentVal, 12]))
+            self.updateLabelsForLocalChapters()
 
+    def updateLabelsForLocalChapters(self):
+        # BASIC LOCAL STATISTICS
+        self.textEdit.setPlainText(self.fragments[self.currentVal])
+        self.label_39.setText('Chapter: ' + str(self.currentVal + 1))
+        self.label_63.setText(str(self.df1.iat[self.currentVal, 0]))
+        self.label_62.setText(str(self.df1.iat[self.currentVal, 1]))
+        self.label_61.setText(str(self.df1.iat[self.currentVal, 4]))
+        self.label_60.setText(str(self.df1.iat[self.currentVal, 3]))
+        self.label_59.setText(str(self.df1.iat[self.currentVal, 2]))
+        self.label_57.setText(str(self.df1.iat[self.currentVal, 5]))
+        self.label_64.setText(str(self.df1.iat[self.currentVal, 8]))
+        self.label_58.setText(str(self.df1.iat[self.currentVal, 9]))
+        self.label_41.setText(str(self.df1.iat[self.currentVal, 16]))
+        self.label_42.setText(str(self.df1.iat[self.currentVal, 15]))
+        self.label_43.setText(str(self.df1.iat[self.currentVal, 14]))
+        self.label_44.setText(str(self.df1.iat[self.currentVal, 12]))
+
+        # Heroes
+        self.listWidget_2.clear()
+        li = self.df1.iat[self.currentVal, 19]
+        liHeroes = []
+        for i in self.df1.iat[self.currentVal, 19]:
+            liHeroes.append(i[0])
+
+        self.listWidget_2.addItems(liHeroes)
 
     def openFileNameDialog(self):
         options = QFileDialog.Options()

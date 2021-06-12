@@ -301,8 +301,8 @@ class ChaptersInBookTool():
         for i in range(fragments.__len__()):
             b = BasicStatisticsTool(fragments[i])
             sentencesLenLi.append(len(b.getSentences()))
-            sentencesCharLenLi.append(b.getAvergeLengthOfSentenceInBook(fragments[i]))
-            sentencesWordsLenLi.append(b.getAvergeWordInSentenceInBook())
+            sentencesCharLenLi.append(round(b.getAvergeLengthOfSentenceInBook(fragments[i]),2))
+            sentencesWordsLenLi.append(round(b.getAvergeWordInSentenceInBook(),2))
             fragmentsLengthCharLi.append(b.getBookLength(fragments[i]))
             fragmentsLengthWordLi.append(b.getAmountOfWords(fragments[i]))
 

@@ -284,7 +284,23 @@ class BookAnalyzer:
                 f = self.chapters.getFragmentsOfBook()
                 # BASIC
                 df1 = self.chapters.getLengthWordCharsByChapter(f)
-                return amount, f, df1
+
+                # DIALOGES
+                df2 = self.chapters.getStatisticsDialogByChapter(f)
+
+                # ADJ
+                df3 = self.chapters.getStatisticsAdjectiveByChapter(f, self.doc)
+
+                # TIME STATISTICS
+                present, past, s1 = self.getTimeStatisticsTotal()
+                df4 = self.chapters.getTimeStatisticsByChapter(f, self.doc, present, past)
+
+                # HEROES
+                characters, s6, li1 = self.getCharactersTotal(self.content, self.doc, self.nlp)
+                df5 = self.chapters.getCharactersInChapters(f, characters)
+
+                dat1 = pd.concat([df1, df2, df3, df4, df5], axis=1)
+                return amount, f, dat1
 
 if __name__ == "__main__":
         # analyzer = BookAnalyzer()
