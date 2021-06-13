@@ -1,23 +1,18 @@
-
-import asyncio
 import sys
 import threading
 import time
-from asyncio import coroutine
 
 from PyQt5 import uic
-from PyQt5.QtChart import QPieSeries, QPieSlice, QChartView, QChart
-from PyQt5.QtCore import QRunnable, pyqtSlot, Qt, QThread, QObject, pyqtSignal, QThreadPool
-from PyQt5.QtGui import QPainter, QPen
-from PyQt5.QtWidgets import QPlainTextEdit, QHBoxLayout, QVBoxLayout, QPushButton, QApplication, QWidget, QLabel, \
-    QLineEdit, QFileDialog, QListView, QListWidget, QGridLayout, QTableWidget, QTableWidgetItem, QMainWindow
-from matplotlib.backends.backend_template import FigureCanvas
-from qtpy import QtWidgets, QtCore
+from PyQt5.QtChart import QPieSeries, QChartView, QChart
+from PyQt5.QtCore import Qt, QThread, pyqtSignal
+from PyQt5.QtGui import QPainter
+from PyQt5.QtWidgets import QHBoxLayout, QApplication, QFileDialog, QMainWindow
 # from PyQt5.QtChart import *
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT as NavigationToolbar
-from matplotlib.figure import Figure
-from Main import BookAnalyzer
-import matplotlib.pyplot as plt
+from book_tools.BookAnalyzer import BookAnalyzer
+from gui.MyThread import MyThread
+from gui.MyThreadProgress import MyThreadProgress
+from gui.WindowChart import WindowChart
+
 
 class Example(QMainWindow):
 
@@ -25,11 +20,13 @@ class Example(QMainWindow):
         super().__init__()
         self.content = ''
         self.initUI()
+        self.openedFile = False
+        self.analyzedFile = False
+        self.getChapterFile = False
 
     def initUI(self):
-        print('hello')
+        # load UI
         uic.loadUi('TestUI.ui', self)
-        # set progress to zero
         self.progressBar.setValue(0)
 
         # connect buttons
@@ -38,6 +35,17 @@ class Example(QMainWindow):
         self.pushButton_3.clicked.connect(self.getCahptersView)
         self.pushButton_8.clicked.connect(self.getPrev)
         self.pushButton_7.clicked.connect(self.getNext)
+        self.pushButton_5.clicked.connect(self.showChartsTime)
+        self.pushButton_9.clicked.connect(self.showChartsDialogue)
+        self.pushButton_4.clicked.connect(self.saveOutput)
+        self.pushButton_6.clicked.connect(self.exitProgram)
+
+        # enable buttons
+        self.pushButton_2.setEnabled(False)
+        self.pushButton_3.setEnabled(False)
+        self.pushButton_8.setEnabled(False)
+        self.pushButton_7.setEnabled(False)
+
         self.show()
 
     # =====================================================================================================
@@ -56,7 +64,8 @@ class Example(QMainWindow):
         except Exception as e:
             print(e)
 
-        print('Ended')
+        self.pushButton_8.setEnabled(True)
+        self.pushButton_7.setEnabled(True)
 
     def getNext(self):
         if self.currentVal + 1 < len(self.fragments):
@@ -103,51 +112,35 @@ class Example(QMainWindow):
         if fileName:
             fileNameSplit = fileName.split('/')
             if len(fileNameSplit) >= 1:
-                self.label_20.setText(fileNameSplit[len(fileNameSplit) - 1])
+                self.file_name = fileNameSplit[len(fileNameSplit) - 1]
+                self.label_20.setText(self.file_name)
                 self.content = open(fileName, encoding="utf8").read()
-                # print(self.content)
 
+        self.pushButton_2.setEnabled(True)
 
+        # New file
+        self.pushButton_3.setEnabled(False)
+        self.pushButton_8.setEnabled(False)
+        self.pushButton_7.setEnabled(False)
+
+    def showChartsTime(self):
+        # print('Charts')
+        self.w = WindowChart(self.presentPercent, self.pastPercent, 'Time Statistics', 'Present', 'Past')
+        self.w.show()
+
+    def showChartsDialogue(self):
+        # print('Charts')
+        self.w = WindowChart(self.dlongPercent, self.dshortPercent, 'Dialogue Statistics', 'Long', 'Short')
+        self.w.show()
+
+    def saveOutput(self):
+        self.b.getStatisticsOutput(self.file_name)
+
+    def exitProgram(self):
+        sys.exit()
     # =================================================================================
-
-    def getPieChart1(self):
-        self.series = QPieSeries()
-        self.series.append("Python", 40)
-        self.series.append("C++", 60)
-
-        self.chart = QChart()
-        self.chart.legend().hide()
-        self.chart.addSeries(self.series)
-        self.chart.createDefaultAxes()
-        self.chart.setAnimationOptions(QChart.SeriesAnimations)
-        self.chart.setTitle("Pie Chart Example")
-
-        self.chart.legend().setVisible(True)
-        self.chart.legend().setAlignment(Qt.AlignBottom)
-
-        chartview = QChartView(self.chart)
-        chartview.setRenderHint(QPainter.Antialiasing)
-        return chartview
-
-    def getPieChart2(self):
-        self.series2 = QPieSeries()
-        self.series2.append("Python", 40)
-        self.series2.append("C++", 60)
-
-        self.chart2 = QChart()
-        self.chart2.legend().hide()
-        self.chart2.addSeries(self.series2)
-        self.chart2.createDefaultAxes()
-        self.chart2.setAnimationOptions(QChart.SeriesAnimations)
-        self.chart2.setTitle("Pie Chart Example")
-
-        self.chart2.legend().setVisible(True)
-        self.chart2.legend().setAlignment(Qt.AlignBottom)
-
-        chartview = QChartView(self.chart2)
-        chartview.setRenderHint(QPainter.Antialiasing)
-        return chartview
-
+    # Help functions
+    # =================================================================================
     def runTasks(self):
         self.thread = MyThread(self.content)
         # print('Start analyze')
@@ -180,12 +173,12 @@ class Example(QMainWindow):
         self.label_29.setText(fog)
 
         # Set labels time and dialogues
-        total, present, past, presentPercent, pastPercent = self.b.getTotalVerbsStatisticsAmount()
+        total, present, past, self.presentPercent, self.pastPercent = self.b.getTotalVerbsStatisticsAmount()
         self.label_19.setText(total)
         self.label_18.setText(present)
         self.label_16.setText(past)
 
-        dialoges, dialogesAvergeWords, dialogesAvergeChars, longDialogueAmount, shortDialogueAmount, plong, pshort = self.b.getDialogesAmounts()
+        dialoges, dialogesAvergeWords, dialogesAvergeChars, longDialogueAmount, shortDialogueAmount, self.dlongPercent, self.dshortPercent = self.b.getDialogesAmounts()
         self.label_17.setText(dialoges)
         self.label_33.setText(dialogesAvergeWords)
         self.label_34.setText(dialogesAvergeChars)
@@ -206,65 +199,9 @@ class Example(QMainWindow):
             self.thread2.join()
         except Exception as e:
             print(e)
+        self.pushButton_3.setEnabled(True)
 
-class MyThread(QThread):
-    changeValue = pyqtSignal(object)
-
-    def __init__(self, content, parent=None):
-        QThread.__init__(self, parent)
-        self.content = content
-        # print(content)
-
-    def run(self):
-        # print('Dupa')
-        try:
-            print(len(self.content))
-            b = BookAnalyzer(self.content)
-            b.start()
-            b.getStatisticsOutput("Peter")
-
-            self.changeValue.emit(b)
-            print(threading)
-            # print('Ended')
-        except Exception as e:
-            print('Exception ' + str(e))
-
-
-class MyThreadProgress(QThread):
-    changeValue = pyqtSignal(str)
-
-    def __init__(self, progressBar, stopThread, parent=None):
-        QThread.__init__(self, parent)
-        self.counter = 0
-        self.progressBar = progressBar
-        self.stopThread = stopThread
-        self._stopevent = threading.Event()
-        self._sleepperiod = 1.
-
-    def run(self):
-        try:
-            while not self._stopevent.isSet():
-                self.counter += 1
-                self.progressBar.setValue(self.counter)
-                time.sleep(1)
-                if self.counter == 100:
-                    break
-                self._stopevent.wait(self._sleepperiod)
-
-            # print('Ended')
-        except Exception as e:
-            print('Exception ' + str(e))
-
-    def join(self, timeout=None):
-        """ Stop the thread. """
-        self._stopevent.set()
-        threading.Thread.join(self, timeout)
-
-def main():
+if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = Example()
     sys.exit(app.exec_())
-
-
-if __name__ == '__main__':
-    main()

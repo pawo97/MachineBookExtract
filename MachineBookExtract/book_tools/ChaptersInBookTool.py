@@ -4,7 +4,7 @@ import pandas as pd
 # TO DO:
 # podzial na watki
 # podzielic na rozdzialy ksiazke string
-from book_tools.BasicStatisticsTool import BasicStatisticsTool
+from book_tools.basic_statistics_tool import basic_statistics_tool
 from book_tools.DialogueTool import DialogueTool
 from book_tools.TimeStatistics import TimeStatistics
 
@@ -264,13 +264,13 @@ class ChaptersInBookTool():
         shortDialoguePercentLi = []
 
         for i in range(fragments.__len__()):
-            dialoges = d.getAmountOfDialogues(fragments[i], 'LOCAL')
+            dialoges = d.getAmountOfDialogues(fragments[i])
             dialogesAvergeWords = d.dialougeAvergeWords(dialoges, len(dialoges))
             dialogesAvergeChars = d.dialougeAvergeChars(dialoges, len(dialoges))
-            longDialogueAmount, shortDialogueAmount = d.dialogueLongShort(dialoges, dialogesAvergeWords)
-            longDialoguePercent, shortDialoguePercent = d.dialougeLongShortPercent(longDialogueAmount,
-                                                                                                shortDialogueAmount,
-                                                                                                dialoges)
+            longDialogueAmount, shortDialogueAmount = d.dialoguesLongShortAmount(dialoges, dialogesAvergeWords)
+            longDialoguePercent, shortDialoguePercent = d.dialoguesLongShortPercent(longDialogueAmount,
+                                                                                    shortDialogueAmount,
+                                                                                    dialoges)
             dialogesLenLi.append(len(dialoges))
             dialogesAvergeWordsLi.append(dialogesAvergeWords)
             dialogesAvergeCharsLi.append(dialogesAvergeChars)
@@ -299,12 +299,12 @@ class ChaptersInBookTool():
         fragmentsLengthWordLi = []
 
         for i in range(fragments.__len__()):
-            b = BasicStatisticsTool(fragments[i])
-            sentencesLenLi.append(len(b.getSentences()))
-            sentencesCharLenLi.append(round(b.getAvergeLengthOfSentenceInBook(fragments[i]),2))
-            sentencesWordsLenLi.append(round(b.getAvergeWordInSentenceInBook(),2))
-            fragmentsLengthCharLi.append(b.getBookLength(fragments[i]))
-            fragmentsLengthWordLi.append(b.getAmountOfWords(fragments[i]))
+            b = basic_statistics_tool(fragments[i])
+            sentencesLenLi.append(len(b.sentences))
+            sentencesCharLenLi.append(round(b.get_average_chars_of_sentence(fragments[i]), 2))
+            sentencesWordsLenLi.append(round(b.get_average_words_in_sentence(), 2))
+            fragmentsLengthCharLi.append(b.get_book_length_chars(fragments[i]))
+            fragmentsLengthWordLi.append(b.get_book_length_words(fragments[i]))
 
         df['WordsTotal'] = fragmentsLengthWordLi
         df['CharTotal'] = fragmentsLengthCharLi

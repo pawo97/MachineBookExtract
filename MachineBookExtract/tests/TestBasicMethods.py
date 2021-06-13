@@ -6,7 +6,7 @@ import spacy
 # from MachineBookExtract.book_tools.AdjectiveTool import AdjectiveTool
 
 # For test coverage use this import
-from book_tools.AdjectiveTool import AdjectiveTool
+from book_tools.adjective_tool import adjective_tool
 
 
 class TestBasicMethods(unittest.TestCase):
@@ -16,6 +16,6 @@ class TestBasicMethods(unittest.TestCase):
         nlp = spacy.load("en_core_web_sm")
         nlp.max_length = 2_500_000
         doc = nlp(str)
-        adj = AdjectiveTool(doc)
-        adjLen = adj.getAmountOfAdjectivesTotal()
+        adj = adjective_tool(doc)
+        adjLen = adj.get_amount_of_adjectives()
         self.assertEqual(adjLen, 1)

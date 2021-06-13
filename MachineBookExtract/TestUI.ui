@@ -107,16 +107,23 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_4">
+         <widget class="QPushButton" name="pushButton_5">
           <property name="text">
-           <string>Save statistics</string>
+           <string>Time chart</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_5">
+         <widget class="QPushButton" name="pushButton_9">
           <property name="text">
-           <string>Show charts</string>
+           <string>Dialouge chart</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_4">
+          <property name="text">
+           <string>Save statistics</string>
           </property>
          </widget>
         </item>

@@ -1,4 +1,4 @@
-from MachineBookExtract.Main import BookAnalyzer
+from book_tools.BookAnalyzer import BookAnalyzer
 
 if __name__ == "__main__":
         # analyzer = BookAnalyzer()
