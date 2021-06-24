@@ -18,13 +18,13 @@ class BookAnalyzer:
     __doc__ = "Prepare book for analyse"
 
     def __init__(self, content):
-        # fileds other
+        # fields other
         self.content_clean = None
         self.content = None
 
         # fields analyse
-        self.book_length_chars = None
-        self.book_length_words = None
+        self.book_chars_amount = None
+        self.book_words_amount = None
 
         self.book_sentences = None
         self.book_sentences_amount = None
@@ -34,6 +34,10 @@ class BookAnalyzer:
         self.fre = None
         self.fog = None
         self.smog = None
+
+        self.total_vb = None
+        self.present_vb = None
+        self.past_vb = None
 
         # books
         self.str = content
@@ -60,37 +64,31 @@ class BookAnalyzer:
         self.syllables = SpacySyllables(self.nlp, "en_US")
         self.nlp.add_pipe("syllables", after="tagger", config={"lang": "en_US"})
 
-
         # create analyse classes
-        self.basicStatistics = basic_statistics_tool()
+        self.basic_s = basic_statistics_tool()
         self.readability = Readability()
 
         # clean txt
-        content_clean = self.basicStatistics.clean_text(content)
+        content_clean = self.basic_s.clean_text(content)
 
         # start analyse
         self.doc = self.nlp(content_clean)
         self.chapters = ChaptersInBookTool(self.doc)
 
-        token_list = []
-        for token in self.doc:
-            token_list.append(token.text)
-
-        print(len(token_list))
-
         # fill fields
-        self.book_chars_length = self.basicStatistics.get_book_length_chars(content_clean)
-        self.book_words_length = self.basicStatistics.get_book_length_words(content_clean)
+        self.book_chars_amount = self.basic_s.get_book_length_chars(self.doc.text)
+        self.book_words_amount = self.basic_s.get_book_length_words(self.doc.text)
 
-        self.book_sentences = self.basicStatistics.get_sentences(content_clean)
-        self.book_sentences_amount = len(self.basicStatistics.get_sentences(content_clean))
-        self.book_sentences_average_chars = round(self.basicStatistics.get_average_chars_of_sentence(self.book_sentences), 2)
-        self.book_sentences_average_words = round(self.basicStatistics.get_average_words_in_sentence(self.book_sentences), 2)
+        self.book_sentences = self.basic_s.get_sentences(self.doc.text)
+        self.book_sentences_amount = len(self.basic_s.get_sentences(self.doc.text))
+        self.book_sentences_average_chars = round(self.basic_s.get_average_chars_of_sentence(self.book_sentences), 2)
+        self.book_sentences_average_words = round(self.basic_s.get_average_words_in_sentence(self.book_sentences), 2)
 
-        self.fre = None
-        self.fog = None
-        self.smog = None
+        self.fre = round(self.readability.getMcLaughlinFRERedability(self.doc, self.book_words_amount, self.book_sentences_amount), 2)
+        self.fog = round(self.readability.getMcLaughlinFOGRedability(self.doc, self.book_words_amount, self.book_sentences_amount), 2)
+        self.smog = round(self.readability.getMcLaughlinSMOGRedability(self.doc, self.book_sentences_amount), 2)
 
+        # self.total_vb =
 
         # print(self.book_length_words)
 
@@ -131,7 +129,7 @@ class BookAnalyzer:
         return s1
 
     def getReadabilityTotal(self):
-        self.readability = Readability(self.doc, self.basicStatistics, self.content)
+        self.readability = Readability(self.doc, self.basic_s, self.content)
 
         s1 = "FRE Readability " + str(self.readability.getMcLaughlinFRERedability()) + "\n"
         s2 = "SMOG Readability " + str(self.readability.getMcLaughlinSMOGRedability()) + "\n"
@@ -160,12 +158,12 @@ class BookAnalyzer:
         return s1
 
     def getBasicStatisticsTotal(self):
-        s1 = "SENTENCES AMOUNT " + str(len(self.basicStatistics.sentences)) + "\n"
+        s1 = "SENTENCES AMOUNT " + str(len(self.basic_s.sentences)) + "\n"
         s2 = "SENTENCES AVERGE BY CHARS " + str(
-            self.basicStatistics.get_average_chars_of_sentence(self.content)) + "\n"
-        s3 = "SENTENCES AVERGE BY WORDS " + str(self.basicStatistics.get_average_words_in_sentence()) + "\n"
-        s4 = "BOOK LENGTH CHARS " + str(self.basicStatistics.get_book_length_chars(self.content)) + "\n"
-        s5 = "BOOK LENGTH WORDS " + str(self.basicStatistics.get_book_length_words(self.content)) + "\n"
+            self.basic_s.get_average_chars_of_sentence(self.content)) + "\n"
+        s3 = "SENTENCES AVERGE BY WORDS " + str(self.basic_s.get_average_words_in_sentence()) + "\n"
+        s4 = "BOOK LENGTH CHARS " + str(self.basic_s.get_book_length_chars(self.content)) + "\n"
+        s5 = "BOOK LENGTH WORDS " + str(self.basic_s.get_book_length_words(self.content)) + "\n"
         s0 = s1 + s2 + s3 + s4 + s5
         return s0
 
@@ -300,19 +298,19 @@ class BookAnalyzer:
     # =========================================================================================================================
 
     def getBookLengthChars(self):
-        return str(self.basicStatistics.get_book_length_chars(self.content))
+        return str(self.basic_s.get_book_length_chars(self.content))
 
     def getBookLengthWords(self):
-        return str(self.basicStatistics.get_book_length_words(self.content))
+        return str(self.basic_s.get_book_length_words(self.content))
 
     def getBookSentenceAmount(self):
-        return str(len(self.basicStatistics.sentences))
+        return str(len(self.basic_s.sentences))
 
     def getBookSentenceAverageChars(self):
-        return str(int(self.basicStatistics.get_average_chars_of_sentence(self.content)))
+        return str(int(self.basic_s.get_average_chars_of_sentence(self.content)))
 
     def getBookSentenceAverageWords(self):
-        return str(int(self.basicStatistics.get_average_words_in_sentence()))
+        return str(int(self.basic_s.get_average_words_in_sentence()))
 
     def getTotalVerbsStatisticsAmount(self):
         present = len(self.timeStatistics.getVerbsNowAmount(self.doc))
@@ -323,7 +321,7 @@ class BookAnalyzer:
         return str(total), str(present), str(past), presentPercent, pastPercent
 
     def getFRESMOGFOGReadability(self):
-        self.readability = Readability(self.doc, self.basicStatistics, self.content)
+        self.readability = Readability(self.doc, self.basic_s, self.content)
 
         s1 = str(round(self.readability.getMcLaughlinFRERedability(), 2))
         s2 = str(round(self.readability.getMcLaughlinSMOGRedability(), 2))

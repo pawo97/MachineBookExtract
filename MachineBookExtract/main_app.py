@@ -173,17 +173,16 @@ class Example(QMainWindow):
 
     def updateLabels(self, label):
         self.b = label
-        self.label_11.setText(str(self.b.book_chars_length))
-        self.label_10.setText(str(self.b.book_words_length))
+        self.label_11.setText(str(self.b.book_chars_amount))
+        self.label_10.setText(str(self.b.book_words_amount))
         self.label_8.setText(str(self.b.book_sentences_amount))
         self.label_9.setText(str(self.b.book_sentences_average_chars))
         self.label_22.setText(str(self.b.book_sentences_average_words))
 
-        # fre, smog, fog = self.b.getFRESMOGFOGReadability()
-        # self.label_27.setText(fre)
-        # self.label_28.setText(smog)
-        # self.label_29.setText(fog)
-        #
+        self.label_27.setText(str(self.b.fre))
+        self.label_28.setText(str(self.b.smog))
+        self.label_29.setText(str(self.b.fog))
+
         # # Set labels time and dialogues
         # total, present, past, self.presentPercent, self.pastPercent = self.b.getTotalVerbsStatisticsAmount()
         # self.label_19.setText(total)
