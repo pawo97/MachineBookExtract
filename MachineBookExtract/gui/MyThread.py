@@ -15,7 +15,7 @@ class MyThread(QThread):
         try:
             b = BookAnalyzer(self.content)
             b.start()
-            b.getStatisticsPrint()
+            # b.getStatisticsPrint()
             self.changeValue.emit(b)
         except Exception as e:
             print('Exception1 ' + str(e))

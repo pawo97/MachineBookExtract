@@ -58,7 +58,7 @@ class Example(QMainWindow):
         # get fragments
         self.currentVal = 0
         self.amountChapters, self.fragments, self.df1 = self.b.getFragmentsAndChapters()
-        print(self.df1)
+        # print(self.df1)
         try:
             self.textEdit.setPlainText(self.fragments[self.currentVal])
             self.updateLabelsForLocalChapters()
@@ -173,44 +173,45 @@ class Example(QMainWindow):
 
     def updateLabels(self, label):
         self.b = label
-        self.label_11.setText(self.b.getBookLengthWords())
-        self.label_10.setText(self.b.getBookLengthChars())
-        self.label_8.setText(self.b.getBookSentenceAmount())
-        self.label_9.setText(self.b.getBookSentenceAverageChars())
-        self.label_22.setText(self.b.getBookSentenceAverageWords())
+        self.label_11.setText(str(self.b.book_chars_length))
+        self.label_10.setText(str(self.b.book_words_length))
+        self.label_8.setText(str(self.b.book_sentences_amount))
+        self.label_9.setText(str(self.b.book_sentences_average_chars))
+        self.label_22.setText(str(self.b.book_sentences_average_words))
 
-        fre, smog, fog = self.b.getFRESMOGFOGReadability()
-        self.label_27.setText(fre)
-        self.label_28.setText(smog)
-        self.label_29.setText(fog)
-
-        # Set labels time and dialogues
-        total, present, past, self.presentPercent, self.pastPercent = self.b.getTotalVerbsStatisticsAmount()
-        self.label_19.setText(total)
-        self.label_18.setText(present)
-        self.label_16.setText(past)
-
-        dialoges, dialogesAvergeWords, dialogesAvergeChars, longDialogueAmount, shortDialogueAmount, self.dlongPercent, self.dshortPercent = self.b.getDialogesAmounts()
-        self.label_17.setText(dialoges)
-        self.label_33.setText(dialogesAvergeWords)
-        self.label_34.setText(dialogesAvergeChars)
-        self.label_35.setText(longDialogueAmount)
-        self.label_36.setText(shortDialogueAmount)
-
-        # Set adjectives
-        adj = self.b.getAdjectivesAmount()
-        self.label_37.setText("Amount of adjectives: " + adj)
-
-        # Characters
-        entries = self.b.getCharactersList(self.b.content, self.b.doc, self.b.nlp)
-        self.listWidget.addItems(entries)
-
-        # Stop progress bar
-        self.progressBar.setValue(100)
+        # fre, smog, fog = self.b.getFRESMOGFOGReadability()
+        # self.label_27.setText(fre)
+        # self.label_28.setText(smog)
+        # self.label_29.setText(fog)
+        #
+        # # Set labels time and dialogues
+        # total, present, past, self.presentPercent, self.pastPercent = self.b.getTotalVerbsStatisticsAmount()
+        # self.label_19.setText(total)
+        # self.label_18.setText(present)
+        # self.label_16.setText(past)
+        #
+        # dialoges, dialogesAvergeWords, dialogesAvergeChars, longDialogueAmount, shortDialogueAmount, self.dlongPercent, self.dshortPercent = self.b.getDialogesAmounts()
+        # self.label_17.setText(dialoges)
+        # self.label_33.setText(dialogesAvergeWords)
+        # self.label_34.setText(dialogesAvergeChars)
+        # self.label_35.setText(longDialogueAmount)
+        # self.label_36.setText(shortDialogueAmount)
+        #
+        # # Set adjectives
+        # adj = self.b.getAdjectivesAmount()
+        # self.label_37.setText("Amount of adjectives: " + adj)
+        #
+        # # Characters
+        # entries = self.b.getCharactersList(self.b.content, self.b.doc, self.b.nlp)
+        # self.listWidget.addItems(entries)
+        #
+        # # Stop progress bar
+        # self.progressBar.setValue(100)
         try:
             self.thread2.join()
         except Exception as e:
-            print(traceback.format_exc())
+            # print(traceback.format_exc())
+            pass
         self.pushButton_3.setEnabled(True)
 
     def show_error(self, text):

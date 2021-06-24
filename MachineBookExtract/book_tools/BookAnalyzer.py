@@ -15,9 +15,27 @@ from book_tools.TimeStatistics import TimeStatistics
 
 
 class BookAnalyzer:
-    __doc__ = "Prepare book for analysie"
+    __doc__ = "Prepare book for analyse"
 
     def __init__(self, content):
+        # fileds other
+        self.content_clean = None
+        self.content = None
+
+        # fields analyse
+        self.book_length_chars = None
+        self.book_length_words = None
+
+        self.book_sentences = None
+        self.book_sentences_amount = None
+        self.book_sentences_average_chars = None
+        self.book_sentences_average_words = None
+
+        self.fre = None
+        self.fog = None
+        self.smog = None
+
+        # books
         self.str = content
         self.dialogues = DialogueTool()
         self.characters = CharactersTool()
@@ -42,9 +60,41 @@ class BookAnalyzer:
         self.syllables = SpacySyllables(self.nlp, "en_US")
         self.nlp.add_pipe("syllables", after="tagger", config={"lang": "en_US"})
 
-        self.doc = self.nlp(content)
+
+        # create analyse classes
+        self.basicStatistics = basic_statistics_tool()
+        self.readability = Readability()
+
+        # clean txt
+        content_clean = self.basicStatistics.clean_text(content)
+
+        # start analyse
+        self.doc = self.nlp(content_clean)
         self.chapters = ChaptersInBookTool(self.doc)
-        self.basicStatistics = basic_statistics_tool(self.content)
+
+        token_list = []
+        for token in self.doc:
+            token_list.append(token.text)
+
+        print(len(token_list))
+
+        # fill fields
+        self.book_chars_length = self.basicStatistics.get_book_length_chars(content_clean)
+        self.book_words_length = self.basicStatistics.get_book_length_words(content_clean)
+
+        self.book_sentences = self.basicStatistics.get_sentences(content_clean)
+        self.book_sentences_amount = len(self.basicStatistics.get_sentences(content_clean))
+        self.book_sentences_average_chars = round(self.basicStatistics.get_average_chars_of_sentence(self.book_sentences), 2)
+        self.book_sentences_average_words = round(self.basicStatistics.get_average_words_in_sentence(self.book_sentences), 2)
+
+        self.fre = None
+        self.fog = None
+        self.smog = None
+
+
+        # print(self.book_length_words)
+
+        # self.book_length_words = self.basicStatistics.get_book_length_words(content)
 
 
     # =========================================================================================================================
@@ -146,7 +196,7 @@ class BookAnalyzer:
 
             # SAVE
             s0 = s1 + '\n' + s2 + '\n' + s3 + '\n' + s4 + '\n' + s5 + '\n' + s6 + '\n' + s7 + '\n' + str(li1)
-            print(s0)
+            # print(s0)
         except Exception as e:
             print(traceback.format_exc())
 
@@ -181,7 +231,7 @@ class BookAnalyzer:
     # Output save function
     # =========================================================================================================================
     def getChaptersAmountOutput(self, present, past, characters, name):
-        print("CHAPTERS AMOUNT", self.chapters.getAmountOfChaptersByInsideOfContent(self.content))
+        # print("CHAPTERS AMOUNT", self.chapters.getAmountOfChaptersByInsideOfContent(self.content))
         # LOCAL
         f = self.chapters.getFragmentsOfBook()
 
@@ -327,3 +377,4 @@ class BookAnalyzer:
 
         dat1 = pd.concat([df1, df2, df3, df4, df5], axis=1)
         return amount, f, dat1
+
