@@ -1,3 +1,5 @@
+import traceback
+
 import pandas as pd
 import spacy
 from spacy_syllables import SpacySyllables
@@ -27,9 +29,14 @@ class BookAnalyzer:
         self.start = time.time()
         self.nlp = spacy.load("en_core_web_sm")
         self.nlp.max_length = 2_500_000
-        str1 = self.str.split('PROJECT GUTENBERG EBOOK')
-        str2 = str1[1].split('PROJECT GUTENBERG EBOOK')
-        content = str2[0]
+
+        if 'PROJECT GUTENBERG EBOOK' in self.str:
+            str1 = self.str.split('PROJECT GUTENBERG EBOOK')
+            str2 = str1[1].split('PROJECT GUTENBERG EBOOK')
+            content = str2[0]
+
+        else:
+            content = self.str
 
         self.content = content
         self.syllables = SpacySyllables(self.nlp, "en_US")
@@ -116,52 +123,59 @@ class BookAnalyzer:
     # Output print function
     # =========================================================================================================================
     def getStatisticsPrint(self):
-        # TOTAL
-        # print('=============================')
-        present, past, s1 = self.getTimeStatisticsTotal()
-        # print('=============================')
-        s2 = self.getReadabilityTotal()
-        # print('=============================')
-        s3 = self.getAdjectivesTotal()
-        # print('=============================')
-        s4 = self.getBasicStatisticsTotal()
-        # print('=============================')
-        s5 = self.getDialogesTotal()
-        # print('=============================')
-        li, s6, li1 = self.getCharactersTotal(self.content, self.doc, self.nlp)
-        # print('=============================')
-        self.getChaptersAmountPrint(present, past, li)
-        # print('=============================')
+        try:
+            # TOTAL
+            # print('=============================')
+            present, past, s1 = self.getTimeStatisticsTotal()
+            # print('=============================')
+            s2 = self.getReadabilityTotal()
+            # print('=============================')
+            s3 = self.getAdjectivesTotal()
+            # print('=============================')
+            s4 = self.getBasicStatisticsTotal()
+            # print('=============================')
+            s5 = self.getDialogesTotal()
+            # print('=============================')
+            li, s6, li1 = self.getCharactersTotal(self.content, self.doc, self.nlp)
+            # print('=============================')
+            self.getChaptersAmountPrint(present, past, li)
+            # print('=============================')
 
-        # REST
-        s7 = self.printExecutionTime()
+            # REST
+            s7 = self.printExecutionTime()
 
-        # SAVE
-        s0 = s1 + '\n' + s2 + '\n' + s3 + '\n' + s4 + '\n' + s5 + '\n' + s6 + '\n' + s7 + '\n' + str(li1)
-        print(s0)
+            # SAVE
+            s0 = s1 + '\n' + s2 + '\n' + s3 + '\n' + s4 + '\n' + s5 + '\n' + s6 + '\n' + s7 + '\n' + str(li1)
+            print(s0)
+        except Exception as e:
+            print(traceback.format_exc())
 
     def getChaptersAmountPrint(self, present, past, characters):
-        self.chapters.getAmountOfChaptersByInsideOfContent(self.content)
-        # LOCAL
-        f = self.chapters.getFragmentsOfBook()
+        try:
+            self.chapters.getAmountOfChaptersByInsideOfContent(self.content)
+            # LOCAL
+            f = self.chapters.getFragmentsOfBook()
 
-        # BASIC
-        df1 = self.chapters.getLengthWordCharsByChapter(f)
+            # BASIC
+            df1 = self.chapters.getLengthWordCharsByChapter(f)
 
-        # DIALOGES
-        df2 = self.chapters.getStatisticsDialogByChapter(f)
+            # DIALOGES
+            df2 = self.chapters.getStatisticsDialogByChapter(f)
 
-        # ADJ
-        df3 = self.chapters.getStatisticsAdjectiveByChapter(f, self.doc)
+            # ADJ
+            df3 = self.chapters.getStatisticsAdjectiveByChapter(f, self.doc)
 
-        # TIME STATISTICS
-        df4 = self.chapters.getTimeStatisticsByChapter(f, self.doc, present, past)
+            # TIME STATISTICS
+            df4 = self.chapters.getTimeStatisticsByChapter(f, self.doc, present, past)
 
-        # HEROES
-        df5 = self.chapters.getCharactersInChapters(f, characters)
+            # HEROES
+            df5 = self.chapters.getCharactersInChapters(f, characters)
 
-        # CONNECT
-        dat1 = pd.concat([df1, df2, df3, df4, df5], axis=1)
+            # CONNECT
+            dat1 = pd.concat([df1, df2, df3, df4, df5], axis=1)
+
+        except Exception as e:
+            print(traceback.format_exc())
 
     # =========================================================================================================================
     # Output save function

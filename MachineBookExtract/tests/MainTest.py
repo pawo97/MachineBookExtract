@@ -18,7 +18,7 @@ if __name__ == "__main__":
         # t.mainCharactersCheck(["rabbit", "queen", "king", "cat", "duchess", "hatter", "hare", "dormouse", "gryphon"], b, 'Alice Test')
 
         # # Method test Christmas Carol
-        # b = BookAnalyzer(r'books/A Christmas Carol by Charles Dickens')
+        # b = BookAnalyzer(r'books/A Christmas Carol by Charles Dickens.txt')
         # b.start()
         # b.getStatistics()
         # t = TestBook()

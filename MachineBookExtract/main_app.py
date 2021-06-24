@@ -1,12 +1,13 @@
 import sys
 import threading
 import time
+import traceback
 
 from PyQt5 import uic
 from PyQt5.QtChart import QPieSeries, QChartView, QChart
 from PyQt5.QtCore import Qt, QThread, pyqtSignal
 from PyQt5.QtGui import QPainter
-from PyQt5.QtWidgets import QHBoxLayout, QApplication, QFileDialog, QMainWindow
+from PyQt5.QtWidgets import QHBoxLayout, QApplication, QFileDialog, QMainWindow, QMessageBox
 # from PyQt5.QtChart import *
 from book_tools.BookAnalyzer import BookAnalyzer
 from gui.MyThread import MyThread
@@ -32,7 +33,7 @@ class Example(QMainWindow):
         # connect buttons
         self.pushButton.clicked.connect(self.openFileNameDialog)
         self.pushButton_2.clicked.connect(self.startAnalisye)
-        self.pushButton_3.clicked.connect(self.getCahptersView)
+        self.pushButton_3.clicked.connect(self.getChaptersView)
         self.pushButton_8.clicked.connect(self.getPrev)
         self.pushButton_7.clicked.connect(self.getNext)
         self.pushButton_5.clicked.connect(self.showChartsTime)
@@ -53,7 +54,7 @@ class Example(QMainWindow):
     def startAnalisye(self):
         self.runTasks()
 
-    def getCahptersView(self):
+    def getChaptersView(self):
         # get fragments
         self.currentVal = 0
         self.amountChapters, self.fragments, self.df1 = self.b.getFragmentsAndChapters()
@@ -62,7 +63,7 @@ class Example(QMainWindow):
             self.textEdit.setPlainText(self.fragments[self.currentVal])
             self.updateLabelsForLocalChapters()
         except Exception as e:
-            print(e)
+            print(traceback.format_exc())
 
         self.pushButton_8.setEnabled(True)
         self.pushButton_7.setEnabled(True)
@@ -104,24 +105,35 @@ class Example(QMainWindow):
         self.listWidget_2.addItems(liHeroes)
 
     def openFileNameDialog(self):
+        status_ok = True
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
         fileName, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", "",
-                                                  "All Files (*);;Python Files (*.txt)", options=options)
+                                                  "Text files (*.txt)", options=options)
+
 
         if fileName:
             fileNameSplit = fileName.split('/')
             if len(fileNameSplit) >= 1:
                 self.file_name = fileNameSplit[len(fileNameSplit) - 1]
                 self.label_20.setText(self.file_name)
-                self.content = open(fileName, encoding="utf8").read()
 
-        self.pushButton_2.setEnabled(True)
+                try:
+                    self.content = open(fileName, encoding="utf8").read()
+                    if len(self.content) == 0:
+                        raise Exception
+                except Exception as e:
+                    print(traceback.format_exc())
+                    status_ok = False
+                    self.show_error('File is empty')
 
-        # New file
-        self.pushButton_3.setEnabled(False)
-        self.pushButton_8.setEnabled(False)
-        self.pushButton_7.setEnabled(False)
+        if status_ok:
+            self.pushButton_2.setEnabled(True)
+
+            # New file
+            self.pushButton_3.setEnabled(False)
+            self.pushButton_8.setEnabled(False)
+            self.pushButton_7.setEnabled(False)
 
     def showChartsTime(self):
         # print('Charts')
@@ -149,7 +161,7 @@ class Example(QMainWindow):
             self.thread.changeValue.connect(self.updateLabels)
             self.thread.start()
         except Exception as e:
-            print(e)
+            print(traceback.format_exc())
 
         self.stopThread = False
         self.thread2 = MyThreadProgress(self.progressBar, self.stopThread)
@@ -157,7 +169,7 @@ class Example(QMainWindow):
         try:
             self.thread2.start()
         except Exception as e:
-            print(e)
+            print(traceback.format_exc())
 
     def updateLabels(self, label):
         self.b = label
@@ -193,13 +205,21 @@ class Example(QMainWindow):
         entries = self.b.getCharactersList(self.b.content, self.b.doc, self.b.nlp)
         self.listWidget.addItems(entries)
 
-        # zatrzymac stad progress bar
+        # Stop progress bar
         self.progressBar.setValue(100)
         try:
             self.thread2.join()
         except Exception as e:
-            print(e)
+            print(traceback.format_exc())
         self.pushButton_3.setEnabled(True)
+
+    def show_error(self, text):
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Critical)
+        msg.setText("Error")
+        msg.setInformativeText(text)
+        msg.setWindowTitle("Error")
+        msg.exec_()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

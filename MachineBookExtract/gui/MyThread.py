@@ -1,3 +1,4 @@
+import traceback
 
 from PyQt5.QtCore import QThread, pyqtSignal
 from book_tools.BookAnalyzer import BookAnalyzer
@@ -17,4 +18,5 @@ class MyThread(QThread):
             b.getStatisticsPrint()
             self.changeValue.emit(b)
         except Exception as e:
-            print('Exception ' + str(e))
+            print('Exception1 ' + str(e))
+            print(traceback.format_exc())
