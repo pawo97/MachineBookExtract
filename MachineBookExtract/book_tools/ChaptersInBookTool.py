@@ -1,18 +1,13 @@
 import collections
 import re
 import pandas as pd
-# TO DO:
-# podzial na watki
-# podzielic na rozdzialy ksiazke string
 from book_tools.basic_statistics_tool import basic_statistics_tool
 from book_tools.DialogueTool import DialogueTool
 from book_tools.TimeStatistics import TimeStatistics
+from book_tools.book_analyser_local import book_analyser_local
 
 
 class ChaptersInBookTool():
-
-    def __init__(self, doc):
-        self.doc = doc
 
     def getAmountOfChaptersByTableOfContent(self, content):
         # Check content first
@@ -212,18 +207,68 @@ class ChaptersInBookTool():
 
         self.lines = lines
         self.liChaptersCharPositionsApproved = liChaptersCharPositionsApproved
-        return chaptersCount
 
-        # print('Amount of chapters inside ' + str(chaptersCount))
-        # print(liChaptersCharPositionsApproved.__len__())
-        # print(liChaptersCharPositionsApproved)
-        #
-        # self.getFragmentsOfBook(lines, liChaptersCharPositionsApproved)
+        fragments = self.getFragmentsOfBook(liChaptersCharPositionsApproved, lines)
 
-    def getFragmentsOfBook(self):
-        p = self.liChaptersCharPositionsApproved
-        print(p)
-        lines = self.lines
+        return fragments
+
+    # ====================================================================
+    def getFragmentsOfStatictis(self, fragments, present, past, adjs):
+        # lists
+        words_amount_list = []
+        char_amount_list = []
+        sentences_amount_list = []
+        sentences_avg_chars_list = []
+        sentences_avg_words_list = []
+        dialogues_amount_list = []
+        dialogues_l_amount_list = []
+        dialogues_s_amount_list = []
+        total_vb_amount_list = []
+        present_vb_amount_list = []
+        past_vb_amount_list = []
+        adj_vb_amount_list = []
+        df = pd.DataFrame()
+
+        for i in range(len(fragments)):
+            # update
+            b_a_l = book_analyser_local(fragments[i])
+            b_a_l.start_chapter(fragments[i], present, past, adjs)
+
+            words_amount_list.append(b_a_l.book_words_amount)
+            char_amount_list.append(b_a_l.book_chars_amount)
+            sentences_amount_list.append(b_a_l.book_sentences_amount)
+            sentences_avg_chars_list.append(b_a_l.book_sentences_average_chars)
+            sentences_avg_words_list.append(b_a_l.book_sentences_average_words)
+            dialogues_amount_list.append(b_a_l.dialogues_amount)
+            dialogues_l_amount_list.append(b_a_l.dialogues_long_a)
+            dialogues_s_amount_list.append(b_a_l.dialogues_short_a)
+            total_vb_amount_list.append(b_a_l.total_vb)
+            present_vb_amount_list.append(b_a_l.present_vb)
+            past_vb_amount_list.append(b_a_l.past_vb)
+            adj_vb_amount_list.append(b_a_l.total_adj)
+
+        # set
+        df['WordsAmount'] = words_amount_list
+        df['CharsAmount'] = char_amount_list
+        df['SentencesAmount'] = sentences_amount_list
+        df['SentencesAvgChars'] = sentences_avg_chars_list
+        df['SentencesAvgWords'] = sentences_avg_words_list
+        df['DialoguesAmount'] = dialogues_amount_list
+        df['DialoguesLongAmount'] = dialogues_l_amount_list
+        df['DialoguesShortAmount'] = dialogues_s_amount_list
+        df['VerbsAmount'] = total_vb_amount_list
+        df['VerbsPresentAmount'] = present_vb_amount_list
+        df['VerbsPastAmount'] = past_vb_amount_list
+        df['AdjectivesAmount'] = adj_vb_amount_list
+
+
+        return df
+
+
+    # ====================================================================
+    def getFragmentsOfBook(self, liChaptersCharPositionsApproved, lines):
+        p = liChaptersCharPositionsApproved
+        # print(p)
         fragments = []
         j = 0
         chapter = ''
@@ -240,17 +285,12 @@ class ChaptersInBookTool():
                 if i + 1 >= lines.__len__():
                     fragments.append(chapter)
 
-        print('FRAGMENTS')
-        for i in range(fragments.__len__()):
-            print('CHAPTER ', i + 1)
-            print(fragments[i])
+        # print('FRAGMENTS')
+        # for i in range(fragments.__len__()):
+        #     print('CHAPTER ', i + 1)
+        #     print(fragments[i])
 
         return fragments
-
-        # df = self.getStatisticsDialogByChapter(fragments)
-        # df = self.getStatisticsAdjectiveByChapter(fragments, self.doc, df)
-        # df = self.getStatisticsTimeLineByChapter(fragments, self.doc, df)
-        # self.getStatisticsLocationByChapter(fragments, self.doc, df)
 
     def getStatisticsDialogByChapter(self, fragments):
         d = DialogueTool()
@@ -292,25 +332,26 @@ class ChaptersInBookTool():
 
     def getLengthWordCharsByChapter(self, fragments):
         df = pd.DataFrame()
+        # print(fragments)
         sentencesLenLi = []
         sentencesCharLenLi = []
         sentencesWordsLenLi = []
         fragmentsLengthCharLi = []
         fragmentsLengthWordLi = []
 
-        for i in range(fragments.__len__()):
-            b = basic_statistics_tool(fragments[i])
-            sentencesLenLi.append(len(b.sentences))
-            sentencesCharLenLi.append(round(b.get_average_chars_of_sentence(fragments[i]), 2))
-            sentencesWordsLenLi.append(round(b.get_average_words_in_sentence(), 2))
-            fragmentsLengthCharLi.append(b.get_book_length_chars(fragments[i]))
-            fragmentsLengthWordLi.append(b.get_book_length_words(fragments[i]))
-
-        df['WordsTotal'] = fragmentsLengthWordLi
-        df['CharTotal'] = fragmentsLengthCharLi
-        df['SentencesWord'] = sentencesWordsLenLi
-        df['SentencesChar'] = sentencesCharLenLi
-        df['SentencesTotal'] = sentencesLenLi
+        # for i in range(fragments.__len__()):
+        #     b = basic_statistics_tool(fragments[i])
+        #     sentencesLenLi.append(len(b.sentences))
+        #     sentencesCharLenLi.append(round(b.get_average_chars_of_sentence(fragments[i]), 2))
+        #     sentencesWordsLenLi.append(round(b.get_average_words_in_sentence(), 2))
+        #     fragmentsLengthCharLi.append(b.get_book_length_chars(fragments[i]))
+        #     fragmentsLengthWordLi.append(b.get_book_length_words(fragments[i]))
+        #
+        # df['WordsTotal'] = fragmentsLengthWordLi
+        # df['CharTotal'] = fragmentsLengthCharLi
+        # df['SentencesWord'] = sentencesWordsLenLi
+        # df['SentencesChar'] = sentencesCharLenLi
+        # df['SentencesTotal'] = sentencesLenLi
         return df
 
     def getStatisticsAdjectiveByChapter(self, fragments, doc):

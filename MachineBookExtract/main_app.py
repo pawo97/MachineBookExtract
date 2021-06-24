@@ -9,7 +9,7 @@ from PyQt5.QtCore import Qt, QThread, pyqtSignal
 from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import QHBoxLayout, QApplication, QFileDialog, QMainWindow, QMessageBox
 # from PyQt5.QtChart import *
-from book_tools.BookAnalyzer import BookAnalyzer
+from book_tools.book_analyser_global import book_analyser_global
 from book_tools.book_analyser_output import book_analyser_output
 from gui.MyThread import MyThread
 from gui.MyThreadProgress import MyThreadProgress
@@ -59,18 +59,23 @@ class Example(QMainWindow):
         self.runTasks()
 
     def getChaptersView(self):
-        # get fragments
         self.currentVal = 0
-        self.amountChapters, self.fragments, self.df1 = self.book.getFragmentsAndChapters()
-        # print(self.df1)
         try:
-            self.textEdit.setPlainText(self.fragments[self.currentVal])
-            self.updateLabelsForLocalChapters()
+            # get fragments
+            if self.book.chap_inside:
+                self.fragments = self.book.fragments
+                self.amountChapters = self.book.chap_value
+                self.df1 = self.book.fragments_s
+
+                self.textEdit.setPlainText(self.fragments[self.currentVal])
+                self.updateLabelsForLocalChapters()
+                self.pushButton_8.setEnabled(True)
+                self.pushButton_7.setEnabled(True)
+            else:
+                self.show_error('Chapters not founded')
+
         except Exception as e:
             print(traceback.format_exc())
-
-        self.pushButton_8.setEnabled(True)
-        self.pushButton_7.setEnabled(True)
 
     def getNext(self):
         if self.currentVal + 1 < len(self.fragments):
@@ -88,25 +93,25 @@ class Example(QMainWindow):
         self.label_39.setText('Chapter: ' + str(self.currentVal + 1))
         self.label_63.setText(str(self.df1.iat[self.currentVal, 0]))
         self.label_62.setText(str(self.df1.iat[self.currentVal, 1]))
-        self.label_61.setText(str(self.df1.iat[self.currentVal, 4]))
+        self.label_61.setText(str(self.df1.iat[self.currentVal, 2]))
         self.label_60.setText(str(self.df1.iat[self.currentVal, 3]))
-        self.label_59.setText(str(self.df1.iat[self.currentVal, 2]))
+        self.label_59.setText(str(self.df1.iat[self.currentVal, 4]))
         self.label_57.setText(str(self.df1.iat[self.currentVal, 5]))
-        self.label_64.setText(str(self.df1.iat[self.currentVal, 8]))
-        self.label_58.setText(str(self.df1.iat[self.currentVal, 9]))
-        self.label_41.setText(str(self.df1.iat[self.currentVal, 16]))
-        self.label_42.setText(str(self.df1.iat[self.currentVal, 15]))
-        self.label_43.setText(str(self.df1.iat[self.currentVal, 14]))
-        self.label_44.setText(str(self.df1.iat[self.currentVal, 12]))
+        self.label_64.setText(str(self.df1.iat[self.currentVal, 6]))
+        self.label_58.setText(str(self.df1.iat[self.currentVal, 7]))
+        self.label_41.setText(str(self.df1.iat[self.currentVal, 8]))
+        self.label_42.setText(str(self.df1.iat[self.currentVal, 9]))
+        self.label_43.setText(str(self.df1.iat[self.currentVal, 10]))
+        self.label_44.setText(str(self.df1.iat[self.currentVal, 11]))
 
-        # Heroes
-        self.listWidget_2.clear()
-        li = self.df1.iat[self.currentVal, 19]
-        liHeroes = []
-        for i in self.df1.iat[self.currentVal, 19]:
-            liHeroes.append(i[0])
-
-        self.listWidget_2.addItems(liHeroes)
+        # # Heroes
+        # self.listWidget_2.clear()
+        # li = self.df1.iat[self.currentVal, 19]
+        # liHeroes = []
+        # for i in self.df1.iat[self.currentVal, 19]:
+        #     liHeroes.append(i[0])
+        #
+        # self.listWidget_2.addItems(liHeroes)
 
     def openFileNameDialog(self):
         status_ok = True
@@ -179,8 +184,8 @@ class Example(QMainWindow):
         self.book = label
         self.book_output = book_analyser_output(self.book)
 
-        self.label_11.setText(str(self.book.book_chars_amount))
-        self.label_10.setText(str(self.book.book_words_amount))
+        self.label_11.setText(str(self.book.book_words_amount))
+        self.label_10.setText(str(self.book.book_chars_amount))
         self.label_8.setText(str(self.book.book_sentences_amount))
         self.label_9.setText(str(self.book.book_sentences_average_chars))
         self.label_22.setText(str(self.book.book_sentences_average_words))

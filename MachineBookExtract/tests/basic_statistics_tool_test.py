@@ -67,7 +67,7 @@ class AdjectiveToolTest(unittest.TestCase):
         doc = nlp(str_test)
         basic_statistics = basic_statistics_tool(str_test)
 
-        book_words = basic_statistics.get_book_length_words(str_test)
+        book_words = basic_statistics.get_book_words(str_test)
         book_words_correct = 14
         self.assertEqual(book_words, book_words_correct)
 

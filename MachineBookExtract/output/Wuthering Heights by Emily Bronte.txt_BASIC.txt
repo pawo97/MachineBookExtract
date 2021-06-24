@@ -1,0 +1,66 @@
+|== Basic statistics ==========|
+|CHARS AMOUNT         | 643428 |
+|WORDS AMOUNT         | 116426 |
+|SENTENCES AMOUNT     | 7217   |
+|AVG CHARS SENTENCES  | 86.72  |
+|AVG WORDS SENTENCES  | 16.23  |
+|==============================|
+|== Time statistics ===========|
+|VERBS AMOUNT         | 15647  |
+|PRESENT AMOUNT       | 6718   |
+|PAST AMOUNT          | 8929   |
+|PRESENT %            | 42.93  |
+|PAST %               | 42.93  |
+|==============================|
+|== Readability statistics ====|
+|FRE AMOUNT           | 79.99  |
+|FOG AMOUNT           | 11.33  |
+|SMOG AMOUNT          | 4.98   |
+|==============================|
+|== Adjective statistics ======|
+|ADJECTIVE AMOUNT     | 6887   |
+|==============================|
+|== Dialogues statistics ======|
+|DIALOGUES AMOUNT     | 2183   |
+|DIALOGUES AVG CHARS  | 107.45 |
+|DIALOGUES AVG WORDS  | 26.12  |
+|DIALOGUES LONG       | 470    |
+|DIALOGUES SHORT      | 1713   |
+|DIALOGUES LONG %     | 21.53  |
+|DIALOGUES SHORT %    | 78.47  |
+|==============================|
+|== Characters ================|
+| 1  | Murray                  |
+| 2  | Price                   |
+| 3  | Chapter                 |
+| 4  | Heathcliff              |
+| 5  | Lockwood                |
+| 6  | Joseph                  |
+| 7  | Earnshaw                |
+| 8  | Juno                    |
+| 9  | Umph                    |
+| 10 | Hareton                 |
+| 11 | Gnasher                 |
+| 12 | Wolf                    |
+| 13 | Linton                  |
+| 14 | Catherine               |
+| 15 | Sabbath                 |
+| 16 | Cathy                   |
+| 17 | Branderham              |
+| 18 | Jabez                   |
+| 19 | Thou                    |
+| 20 | Lo                      |
+| 21 | Brethren                |
+| 22 | Zillah                  |
+| 23 | Grimalkin               |
+| 24 | Dean                    |
+| 25 | Gipsy                   |
+| 26 | Gimmerton               |
+| 27 | Hindley                 |
+| 28 | Edgar                   |
+| 29 | Isabella                |
+| 30 | Hush                    |
+|==============================|
+|== Analyse time ==============|
+|EXECUTION TIME       | 64.92  |
+|==============================|

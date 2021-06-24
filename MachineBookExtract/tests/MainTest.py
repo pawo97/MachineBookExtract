@@ -1,4 +1,4 @@
-from book_tools.BookAnalyzer import BookAnalyzer
+from book_tools.book_analyser_global import book_analyser_global
 
 if __name__ == "__main__":
         # analyzer = BookAnalyzer()
@@ -83,7 +83,7 @@ if __name__ == "__main__":
         #                       'Odyssey Test')
         #
         # # Method test Wuthering
-        b = BookAnalyzer(r'MachineBookExtract/books/Wuthering Heights by Emily Bronte')
+        b = book_analyser_global(r'MachineBookExtract/books/Wuthering Heights by Emily Bronte')
         b.start()
         b.getStatistics()
         # t = TestBook()

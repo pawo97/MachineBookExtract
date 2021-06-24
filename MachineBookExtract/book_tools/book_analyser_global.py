@@ -13,7 +13,7 @@ from book_tools.DialogueTool import DialogueTool
 from book_tools.Redability import Readability
 from book_tools.TimeStatistics import TimeStatistics
 
-class BookAnalyzer:
+class book_analyser_global:
 
     def __init__(self, content):
         """Prepare book for analyse"""
@@ -44,6 +44,9 @@ class BookAnalyzer:
         self.present_vb_p = None
         self.past_vb_p = None
 
+        self.present_vb_list = []
+        self.past_vb_list = []
+
         self.dialogues = None
         self.dialogues_amount = None
         self.dialogues_long_a = None
@@ -54,7 +57,13 @@ class BookAnalyzer:
         self.dialogues_average_words = None
 
         self.total_adj = None
+        self.adj_list = []
+
         self.characters = []
+        self.chap_value = 0
+        self.chap_inside = True
+        self.fragments = []
+        self.fragments_s = []
 
         # books
         self.str = content
@@ -86,17 +95,17 @@ class BookAnalyzer:
         self.dial_s_tool = DialogueTool()
         self.adj_s_tool = adjective_tool()
         self.char_s_tool = CharactersTool()
+        self.chap_s_tool = ChaptersInBookTool()
 
         # clean txt
         content_clean = self.basic_s_tool.clean_text(content)
 
         # start analyse
         self.doc = self.nlp(content_clean)
-        self.chapters = ChaptersInBookTool(self.doc)
 
         # fill fields
         self.book_chars_amount = self.basic_s_tool.get_book_length_chars(self.doc.text)
-        self.book_words_amount = self.basic_s_tool.get_book_length_words(self.doc.text)
+        self.book_words_amount = len(self.basic_s_tool.get_book_words(self.doc.text))
 
         self.book_sentences = self.basic_s_tool.get_sentences(self.doc.text)
         self.book_sentences_amount = len(self.basic_s_tool.get_sentences(self.doc.text))
@@ -107,13 +116,16 @@ class BookAnalyzer:
         self.fog = round(self.read_s_tool.getMcLaughlinFOGRedability(self.doc, self.book_words_amount, self.book_sentences_amount), 2)
         self.smog = round(self.read_s_tool.getMcLaughlinSMOGRedability(self.doc, self.book_sentences_amount), 2)
 
-        self.present_vb = len(self.time_s_tool.getVerbsPresentAmount(self.doc))
-        self.past_vb = len(self.time_s_tool.getVerbsPastAmount(self.doc))
+        self.present_vb_list = self.time_s_tool.getVerbsPresentAmount(self.doc)
+        self.past_vb_list = self.time_s_tool.getVerbsPastAmount(self.doc)
+
+        self.present_vb = len(self.present_vb_list)
+        self.past_vb = len(self.past_vb_list)
         self.total_vb = int(self.present_vb) + int(self.past_vb)
         self.present_vb_p = self.time_s_tool.getVerbsNowPercent(self.present_vb, self.past_vb)
         self.past_vb_p = self.time_s_tool.getVerbsPastPercent(self.present_vb, self.past_vb)
 
-        self.dialogues = self.dial_s_tool.getAmountOfDialogues(self.content)
+        self.dialogues = self.dial_s_tool.getAmountOfDialogues(self.doc.text)
         self.dialogues_amount = len(self.dialogues)
         self.dialogues_average_chars = round(self.dial_s_tool.dialougeAvergeChars(self.dialogues, self.dialogues_amount), 2)
         self.dialogues_average_words = round(self.dial_s_tool.dialougeAvergeWords(self.dialogues, self.dialogues_amount), 2)
@@ -122,13 +134,22 @@ class BookAnalyzer:
         self.dialogues_long_p = round(self.dial_s_tool.dialoguesLongPercent(self.dialogues_long_a, self.dialogues), 2)
         self.dialogues_short_p = round(self.dial_s_tool.dialoguesLongPercent(self.dialogues_short_a, self.dialogues), 2)
 
-        self.total_adj = self.adj_s_tool.get_amount_of_adjectives(self.doc)
+        self.adj_list = self.adj_s_tool.get_amount_of_adjectives(self.doc)
+        self.total_adj = len(self.adj_list)
 
         self.characters = self.char_s_tool.getCharactersInBook(self.doc.text, self.doc, self.nlp)
+
+        self.fragments = self.chap_s_tool.getAmountOfChaptersByInsideOfContent(self.content)
+        self.chap_value = len(self.fragments)
+        if self.chap_value != 0 and self.chap_value != 1:
+            self.chap_inside = True
+        else:
+            self.chap_inside = False
 
         self.end_time = time.time()
         self.analyse_time = round((self.end_time - self.start_time), 2)
 
+        self.fragments_s = self.chap_s_tool.getFragmentsOfStatictis(self.fragments, self.present_vb_list, self.past_vb_list, self.adj_list)
 
 
     def getChaptersAmountPrint(self, present, past, characters):
@@ -232,24 +253,30 @@ class BookAnalyzer:
 
     def getFragmentsAndChapters(self):
         amount = self.chapters.getAmountOfChaptersByInsideOfContent(self.content)
-        f = self.chapters.getFragmentsOfBook()
-        # BASIC
-        df1 = self.chapters.getLengthWordCharsByChapter(f)
 
-        # DIALOGES
-        df2 = self.chapters.getStatisticsDialogByChapter(f)
+        if amount != 0 and amount != 1:
+            f = self.chapters.getFragmentsOfBook()
+            print(f)
+            # BASIC
+            df1 = self.chapters.getLengthWordCharsByChapter(f)
 
-        # ADJ
-        df3 = self.chapters.getStatisticsAdjectiveByChapter(f, self.doc)
+            # DIALOGES
+            df2 = self.chapters.getStatisticsDialogByChapter(f)
 
-        # TIME STATISTICS
-        present, past, s1 = self.getTimeStatisticsTotal()
-        df4 = self.chapters.getTimeStatisticsByChapter(f, self.doc, present, past)
+            # ADJ
+            df3 = self.chapters.getStatisticsAdjectiveByChapter(f, self.doc)
 
-        # HEROES
-        characters, s6, li1 = self.getCharactersTotal(self.content, self.doc, self.nlp)
-        df5 = self.chapters.getCharactersInChapters(f, characters)
+            # TIME STATISTICS
+            present, past, s1 = self.getTimeStatisticsTotal()
+            df4 = self.chapters.getTimeStatisticsByChapter(f, self.doc, present, past)
 
-        dat1 = pd.concat([df1, df2, df3, df4, df5], axis=1)
-        return amount, f, dat1
+            # HEROES
+            characters, s6, li1 = self.getCharactersTotal(self.content, self.doc, self.nlp)
+            df5 = self.chapters.getCharactersInChapters(f, characters)
+
+            dat1 = pd.concat([df1, df2, df3, df4, df5], axis=1)
+            return amount, f, dat1
+
+        else:
+            print('Brak rozdziałów')
 

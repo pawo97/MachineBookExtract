@@ -46,10 +46,10 @@ class basic_statistics_tool:
         work_content = content.replace('\n', ' ')
         return len(work_content)
 
-    def get_book_length_words(self, content):
+    def get_book_words(self, content):
         """Get amount of words in book"""
         words = content.split(' ')
-        return len(words)
+        return words
 
     def clean_text(self, content):
         content_to_clean = content.split('\n')

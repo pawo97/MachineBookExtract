@@ -9,4 +9,4 @@ class adjective_tool:
             if token.pos_ == 'ADJ':
                 adj.append(token.text)
 
-        return len(adj)
+        return adj
