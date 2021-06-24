@@ -78,29 +78,40 @@ class DialogueTool:
 
         return dialougesAvergeChars
 
-    def dialoguesLongShortAmount(self, dialogues, dialougesAvergeWords):
-        """Number dialogues statistics long short"""
+    def dialoguesLongAmount(self, dialogues, dialougesAvergeWords):
         longDialougeCount = 0
-        shortDialougeCount = 0
 
         for i in range(len(dialogues)):
             wordsDialog = dialogues[i].split(' ')
             if len(wordsDialog) > dialougesAvergeWords:
                 longDialougeCount += 1
-            else:
+
+        return longDialougeCount
+
+    def dialoguesShortAmount(self, dialogues, dialougesAvergeWords):
+        shortDialougeCount = 0
+
+        for i in range(len(dialogues)):
+            wordsDialog = dialogues[i].split(' ')
+            if len(wordsDialog) < dialougesAvergeWords:
                 shortDialougeCount += 1
 
-        return longDialougeCount, shortDialougeCount
+        return shortDialougeCount
 
-    def dialoguesLongShortPercent(self, longDialougeCount, shortDialougeCount, dialogues):
-        """Percent dialogues statistics long short"""
-        percentShortDialogue = 0
+    def dialoguesLongPercent(self, longDialougeCount, dialogues):
         percentLongDialogue = 0
         try:
-            percentShortDialogue = (shortDialougeCount * 100) / len(dialogues)
             percentLongDialogue = (longDialougeCount * 100) / len(dialogues)
         except:
-            percentShortDialogue = 0
             percentLongDialogue = 0
 
-        return percentLongDialogue, percentShortDialogue
+        return percentLongDialogue
+
+    def dialoguesShortPercent(self, shortDialougeCount, dialogues):
+        percentShortDialogue = 0
+        try:
+            percentShortDialogue = (shortDialougeCount * 100) / len(dialogues)
+        except:
+            percentShortDialogue = 0
+
+        return percentShortDialogue

@@ -10,6 +10,7 @@ from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import QHBoxLayout, QApplication, QFileDialog, QMainWindow, QMessageBox
 # from PyQt5.QtChart import *
 from book_tools.BookAnalyzer import BookAnalyzer
+from book_tools.book_analyser_output import book_analyser_output
 from gui.MyThread import MyThread
 from gui.MyThreadProgress import MyThreadProgress
 from gui.WindowChart import WindowChart
@@ -24,6 +25,9 @@ class Example(QMainWindow):
         self.openedFile = False
         self.analyzedFile = False
         self.getChapterFile = False
+
+        self.book = None
+        self.book_output = None
 
     def initUI(self):
         # load UI
@@ -57,7 +61,7 @@ class Example(QMainWindow):
     def getChaptersView(self):
         # get fragments
         self.currentVal = 0
-        self.amountChapters, self.fragments, self.df1 = self.b.getFragmentsAndChapters()
+        self.amountChapters, self.fragments, self.df1 = self.book.getFragmentsAndChapters()
         # print(self.df1)
         try:
             self.textEdit.setPlainText(self.fragments[self.currentVal])
@@ -146,7 +150,7 @@ class Example(QMainWindow):
         self.w.show()
 
     def saveOutput(self):
-        self.b.getStatisticsOutput(self.file_name)
+        self.book_output.save_statistics(self.file_name)
 
     def exitProgram(self):
         sys.exit()
@@ -172,40 +176,38 @@ class Example(QMainWindow):
             print(traceback.format_exc())
 
     def updateLabels(self, label):
-        self.b = label
-        self.label_11.setText(str(self.b.book_chars_amount))
-        self.label_10.setText(str(self.b.book_words_amount))
-        self.label_8.setText(str(self.b.book_sentences_amount))
-        self.label_9.setText(str(self.b.book_sentences_average_chars))
-        self.label_22.setText(str(self.b.book_sentences_average_words))
+        self.book = label
+        self.book_output = book_analyser_output(self.book)
 
-        self.label_27.setText(str(self.b.fre))
-        self.label_28.setText(str(self.b.smog))
-        self.label_29.setText(str(self.b.fog))
+        self.label_11.setText(str(self.book.book_chars_amount))
+        self.label_10.setText(str(self.book.book_words_amount))
+        self.label_8.setText(str(self.book.book_sentences_amount))
+        self.label_9.setText(str(self.book.book_sentences_average_chars))
+        self.label_22.setText(str(self.book.book_sentences_average_words))
 
-        # # Set labels time and dialogues
-        # total, present, past, self.presentPercent, self.pastPercent = self.b.getTotalVerbsStatisticsAmount()
-        # self.label_19.setText(total)
-        # self.label_18.setText(present)
-        # self.label_16.setText(past)
-        #
-        # dialoges, dialogesAvergeWords, dialogesAvergeChars, longDialogueAmount, shortDialogueAmount, self.dlongPercent, self.dshortPercent = self.b.getDialogesAmounts()
-        # self.label_17.setText(dialoges)
-        # self.label_33.setText(dialogesAvergeWords)
-        # self.label_34.setText(dialogesAvergeChars)
-        # self.label_35.setText(longDialogueAmount)
-        # self.label_36.setText(shortDialogueAmount)
-        #
-        # # Set adjectives
-        # adj = self.b.getAdjectivesAmount()
-        # self.label_37.setText("Amount of adjectives: " + adj)
-        #
-        # # Characters
-        # entries = self.b.getCharactersList(self.b.content, self.b.doc, self.b.nlp)
-        # self.listWidget.addItems(entries)
-        #
-        # # Stop progress bar
-        # self.progressBar.setValue(100)
+        self.label_27.setText(str(self.book.fre))
+        self.label_28.setText(str(self.book.smog))
+        self.label_29.setText(str(self.book.fog))
+
+        self.label_19.setText(str(self.book.total_vb))
+        self.label_18.setText(str(self.book.present_vb))
+        self.label_16.setText(str(self.book.past_vb))
+
+        self.label_17.setText(str(self.book.dialogues_amount))
+        self.label_33.setText(str(self.book.dialogues_average_words))
+        self.label_34.setText(str(self.book.dialogues_average_chars))
+        self.label_35.setText(str(self.book.dialogues_long_a))
+        self.label_36.setText(str(self.book.dialogues_short_a))
+
+        # Set adjectives
+        self.label_37.setText("Amount of adjectives: " + str(self.book.total_adj))
+
+        # Characters
+        entries = self.book.characters
+        self.listWidget.addItems(entries)
+
+        # Stop progress bar
+        self.progressBar.setValue(100)
         try:
             self.thread2.join()
         except Exception as e:

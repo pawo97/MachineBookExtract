@@ -1,5 +1,5 @@
 class TimeStatistics():
-    def getVerbsNowAmount(self, doc):
+    def getVerbsPresentAmount(self, doc):
         verbsPresent = []
         for token in doc:
             if token.tag_ == 'VB':
@@ -16,18 +16,14 @@ class TimeStatistics():
         return verbsPast
 
     def getVerbsTotal(self, doc):
-        return len(self.getVerbsNowAmount(doc)) + len(self.getVerbsPastAmount(doc))
+        return len(self.getVerbsPresentAmount(doc)) + len(self.getVerbsPastAmount(doc))
 
-    def getVerbsNowPercent(self, doc):
-        present = len(self.getVerbsNowAmount(doc))
-        past = len(self.getVerbsPastAmount(doc))
+    def getVerbsNowPercent(self, present, past):
         total = present + past
         percentVerbsPresent = (present * 100) / total
         return percentVerbsPresent
 
-    def getVerbsPastPercent(self, doc):
-        present = len(self.getVerbsNowAmount(doc))
-        past = len(self.getVerbsPastAmount(doc))
+    def getVerbsPastPercent(self, present, past):
         total = present + past
         pastVerbsPresent = (past * 100) / total
         return pastVerbsPresent

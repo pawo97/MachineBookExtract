@@ -1,0 +1,66 @@
+|== Basic statistics ==========|
+|CHARS AMOUNT         | 158965 |
+|WORDS AMOUNT         | 28970  |
+|SENTENCES AMOUNT     | 2006   |
+|AVG CHARS SENTENCES  | 77.48  |
+|AVG WORDS SENTENCES  | 14.67  |
+|==============================|
+|== Time statistics ===========|
+|VERBS AMOUNT         | 3499   |
+|PRESENT AMOUNT       | 1126   |
+|PAST AMOUNT          | 2373   |
+|PRESENT %            | 32.18  |
+|PAST %               | 32.18  |
+|==============================|
+|== Readability statistics ====|
+|FRE AMOUNT           | 85.92  |
+|FOG AMOUNT           | 9.2    |
+|SMOG AMOUNT          | 4.6    |
+|==============================|
+|== Adjective statistics ======|
+|ADJECTIVE AMOUNT     | 2127   |
+|==============================|
+|== Dialogues statistics ======|
+|DIALOGUES AMOUNT     | 682    |
+|DIALOGUES AVG CHARS  | 70.66  |
+|DIALOGUES AVG WORDS  | 17.42  |
+|DIALOGUES LONG       | 148    |
+|DIALOGUES SHORT      | 534    |
+|DIALOGUES LONG %     | 21.7   |
+|DIALOGUES SHORT %    | 78.3   |
+|==============================|
+|== Characters ================|
+| 1  | Vaughan                 |
+| 2  | Jones                   |
+| 3  | Dickens                 |
+| 4  | D                       |
+| 5  | Marleys                 |
+| 6  | Marley                  |
+| 7  | Scrooge                 |
+| 8  | Pauls                   |
+| 9  | Uncle                   |
+| 10 | Bedlam                  |
+| 11 | Cornhill                |
+| 12 | Weather                 |
+| 13 | Prophet                 |
+| 14 | Speak                   |
+| 15 | Star                    |
+| 16 | Ebenezer                |
+| 17 | Ii                      |
+| 18 | Ding                    |
+| 19 | Baba                    |
+| 20 | Valentine               |
+| 21 | Orson                   |
+| 22 | Groom                   |
+| 23 | Crusoe                  |
+| 24 | Welch                   |
+| 25 | Wilkins                 |
+| 26 | Dick                    |
+| 27 | Robinson                |
+| 28 | Fezziwig                |
+| 29 | Fezziwigs               |
+| 30 | Boiled                  |
+|==============================|
+|== Analyse time ==============|
+|EXECUTION TIME       | 9.33   |
+|==============================|

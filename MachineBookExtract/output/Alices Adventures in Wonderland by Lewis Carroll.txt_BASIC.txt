@@ -1,0 +1,66 @@
+|== Basic statistics ==========|
+|CHARS AMOUNT         | 143509 |
+|WORDS AMOUNT         | 27281  |
+|SENTENCES AMOUNT     | 1632   |
+|AVG CHARS SENTENCES  | 85.78  |
+|AVG WORDS SENTENCES  | 16.84  |
+|==============================|
+|== Time statistics ===========|
+|VERBS AMOUNT         | 3725   |
+|PRESENT AMOUNT       | 1314   |
+|PAST AMOUNT          | 2411   |
+|PRESENT %            | 35.28  |
+|PAST %               | 35.28  |
+|==============================|
+|== Readability statistics ====|
+|FRE AMOUNT           | 87.9   |
+|FOG AMOUNT           | 9.75   |
+|SMOG AMOUNT          | 4.55   |
+|==============================|
+|== Adjective statistics ======|
+|ADJECTIVE AMOUNT     | 1442   |
+|==============================|
+|== Dialogues statistics ======|
+|DIALOGUES AMOUNT     | 1114   |
+|DIALOGUES AVG CHARS  | 39.27  |
+|DIALOGUES AVG WORDS  | 10.5   |
+|DIALOGUES LONG       | 299    |
+|DIALOGUES SHORT      | 815    |
+|DIALOGUES LONG %     | 26.84  |
+|DIALOGUES SHORT %    | 73.16  |
+|==============================|
+|== Characters ================|
+| 1  | Dibianca                |
+| 2  | Adventures              |
+| 3  | Carroll                 |
+| 4  | Alice                   |
+| 5  | Mabel                   |
+| 6  | Grammar                 |
+| 7  | Mouse                   |
+| 8  | Conqueror               |
+| 9  | The                     |
+| 10 | Edwin                   |
+| 11 | Mercia                  |
+| 12 | Northumbria             |
+| 13 | Atheling                |
+| 14 | William                 |
+| 15 | Shakespeare             |
+| 16 | Said                    |
+| 17 | Ann                     |
+| 18 | Pat                     |
+| 19 | Bill                    |
+| 20 | Brandy                  |
+| 21 | Jack                    |
+| 22 | Lizard                  |
+| 23 | Advice                  |
+| 24 | Speak                   |
+| 25 | Puss                    |
+| 26 | Dormouse                |
+| 27 | Hare                    |
+| 28 | Hatter                  |
+| 29 | Queen                   |
+| 30 | Elsie                   |
+|==============================|
+|== Analyse time ==============|
+|EXECUTION TIME       | 8.71   |
+|==============================|

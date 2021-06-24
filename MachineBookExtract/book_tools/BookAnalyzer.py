@@ -13,14 +13,17 @@ from book_tools.DialogueTool import DialogueTool
 from book_tools.Redability import Readability
 from book_tools.TimeStatistics import TimeStatistics
 
-
 class BookAnalyzer:
-    __doc__ = "Prepare book for analyse"
 
     def __init__(self, content):
+        """Prepare book for analyse"""
         # fields other
         self.content_clean = None
         self.content = None
+
+        self.start_time = 0
+        self.end_time = 0
+        self.analyse_time = 0
 
         # fields analyse
         self.book_chars_amount = None
@@ -38,17 +41,29 @@ class BookAnalyzer:
         self.total_vb = None
         self.present_vb = None
         self.past_vb = None
+        self.present_vb_p = None
+        self.past_vb_p = None
+
+        self.dialogues = None
+        self.dialogues_amount = None
+        self.dialogues_long_a = None
+        self.dialogues_short_a = None
+        self.dialogues_long_p = None
+        self.dialogues_short_p = None
+        self.dialogues_average_chars = None
+        self.dialogues_average_words = None
+
+        self.total_adj = None
+        self.characters = []
 
         # books
         self.str = content
-        self.dialogues = DialogueTool()
-        self.characters = CharactersTool()
 
     # =========================================================================================================================
     # Start function
     # =========================================================================================================================
     def start(self):
-        self.start = time.time()
+        self.start_time = time.time()
         self.nlp = spacy.load("en_core_web_sm")
         self.nlp.max_length = 2_500_000
 
@@ -65,138 +80,56 @@ class BookAnalyzer:
         self.nlp.add_pipe("syllables", after="tagger", config={"lang": "en_US"})
 
         # create analyse classes
-        self.basic_s = basic_statistics_tool()
-        self.readability = Readability()
+        self.basic_s_tool = basic_statistics_tool()
+        self.read_s_tool = Readability()
+        self.time_s_tool = TimeStatistics()
+        self.dial_s_tool = DialogueTool()
+        self.adj_s_tool = adjective_tool()
+        self.char_s_tool = CharactersTool()
 
         # clean txt
-        content_clean = self.basic_s.clean_text(content)
+        content_clean = self.basic_s_tool.clean_text(content)
 
         # start analyse
         self.doc = self.nlp(content_clean)
         self.chapters = ChaptersInBookTool(self.doc)
 
         # fill fields
-        self.book_chars_amount = self.basic_s.get_book_length_chars(self.doc.text)
-        self.book_words_amount = self.basic_s.get_book_length_words(self.doc.text)
+        self.book_chars_amount = self.basic_s_tool.get_book_length_chars(self.doc.text)
+        self.book_words_amount = self.basic_s_tool.get_book_length_words(self.doc.text)
 
-        self.book_sentences = self.basic_s.get_sentences(self.doc.text)
-        self.book_sentences_amount = len(self.basic_s.get_sentences(self.doc.text))
-        self.book_sentences_average_chars = round(self.basic_s.get_average_chars_of_sentence(self.book_sentences), 2)
-        self.book_sentences_average_words = round(self.basic_s.get_average_words_in_sentence(self.book_sentences), 2)
+        self.book_sentences = self.basic_s_tool.get_sentences(self.doc.text)
+        self.book_sentences_amount = len(self.basic_s_tool.get_sentences(self.doc.text))
+        self.book_sentences_average_chars = round(self.basic_s_tool.get_average_chars_of_sentence(self.book_sentences), 2)
+        self.book_sentences_average_words = round(self.basic_s_tool.get_average_words_in_sentence(self.book_sentences), 2)
 
-        self.fre = round(self.readability.getMcLaughlinFRERedability(self.doc, self.book_words_amount, self.book_sentences_amount), 2)
-        self.fog = round(self.readability.getMcLaughlinFOGRedability(self.doc, self.book_words_amount, self.book_sentences_amount), 2)
-        self.smog = round(self.readability.getMcLaughlinSMOGRedability(self.doc, self.book_sentences_amount), 2)
+        self.fre = round(self.read_s_tool.getMcLaughlinFRERedability(self.doc, self.book_words_amount, self.book_sentences_amount), 2)
+        self.fog = round(self.read_s_tool.getMcLaughlinFOGRedability(self.doc, self.book_words_amount, self.book_sentences_amount), 2)
+        self.smog = round(self.read_s_tool.getMcLaughlinSMOGRedability(self.doc, self.book_sentences_amount), 2)
 
-        # self.total_vb =
+        self.present_vb = len(self.time_s_tool.getVerbsPresentAmount(self.doc))
+        self.past_vb = len(self.time_s_tool.getVerbsPastAmount(self.doc))
+        self.total_vb = int(self.present_vb) + int(self.past_vb)
+        self.present_vb_p = self.time_s_tool.getVerbsNowPercent(self.present_vb, self.past_vb)
+        self.past_vb_p = self.time_s_tool.getVerbsPastPercent(self.present_vb, self.past_vb)
 
-        # print(self.book_length_words)
+        self.dialogues = self.dial_s_tool.getAmountOfDialogues(self.content)
+        self.dialogues_amount = len(self.dialogues)
+        self.dialogues_average_chars = round(self.dial_s_tool.dialougeAvergeChars(self.dialogues, self.dialogues_amount), 2)
+        self.dialogues_average_words = round(self.dial_s_tool.dialougeAvergeWords(self.dialogues, self.dialogues_amount), 2)
+        self.dialogues_long_a = self.dial_s_tool.dialoguesLongAmount(self.dialogues, self.dialogues_average_words)
+        self.dialogues_short_a = self.dial_s_tool.dialoguesShortAmount(self.dialogues, self.dialogues_average_words)
+        self.dialogues_long_p = round(self.dial_s_tool.dialoguesLongPercent(self.dialogues_long_a, self.dialogues), 2)
+        self.dialogues_short_p = round(self.dial_s_tool.dialoguesLongPercent(self.dialogues_short_a, self.dialogues), 2)
 
-        # self.book_length_words = self.basicStatistics.get_book_length_words(content)
+        self.total_adj = self.adj_s_tool.get_amount_of_adjectives(self.doc)
+
+        self.characters = self.char_s_tool.getCharactersInBook(self.doc.text, self.doc, self.nlp)
+
+        self.end_time = time.time()
+        self.analyse_time = round((self.end_time - self.start_time), 2)
 
 
-    # =========================================================================================================================
-    # Print function
-    # =========================================================================================================================
-    def getCharactersTotal(self, content, doc, nlp):
-        chT = CharactersTool()
-        li = chT.getCharactersInBook(content, doc, nlp)
-        li1 = chT.getPercentStatisticsInBook(content, li)
-        return li, str(len(li)), li1
-
-    def getDialogesTotal(self):
-        dialoges = self.dialogues.getAmountOfDialogues(self.content)
-        dialogesAvergeWords = self.dialogues.dialougeAvergeWords(dialoges, len(dialoges))
-        dialogesAvergeChars = self.dialogues.dialougeAvergeChars(dialoges, len(dialoges))
-        longDialogueAmount, shortDialogueAmount = self.dialogues.dialoguesLongShortAmount(dialoges, dialogesAvergeWords)
-        longDialoguePercent, shortDialoguePercent = self.dialogues.dialoguesLongShortPercent(longDialogueAmount,
-                                                                                             shortDialogueAmount,
-                                                                                             dialoges)
-        s1 = "DIALGOES TOTAL " + str(len(dialoges)) + "\n"
-        s2 = "DIALGOES AVERGE WORDS " + str(dialogesAvergeWords) + "\n"
-        s3 = "DIALOGES AVERGE CHARS " + str(dialogesAvergeChars) + "\n"
-        s4 = "LONG DIALOGES WORDS " + str(longDialogueAmount) + "\n"
-        s5 = "SHORT DIALOGES WORDS " + str(shortDialogueAmount) + "\n"
-        s6 = "LONG DIALOGES PERCENT " + str(longDialoguePercent) + "\n"
-        s7 = "SHORT DIALOGES PERCENT " + str(shortDialoguePercent) + "\n"
-        s0 = s1 + s2 + s3 + s4 + s5 + s6 + s7
-
-        return s0
-
-    def getAdjectivesTotal(self):
-        self.adjectives = adjective_tool(self.doc)
-        s1 = "ADJECTIVES AMOUNT " + str(self.adjectives.get_amount_of_adjectives()) + "\n"
-        return s1
-
-    def getReadabilityTotal(self):
-        self.readability = Readability(self.doc, self.basic_s, self.content)
-
-        s1 = "FRE Readability " + str(self.readability.getMcLaughlinFRERedability()) + "\n"
-        s2 = "SMOG Readability " + str(self.readability.getMcLaughlinSMOGRedability()) + "\n"
-        s3 = "FOG Readability " + str(self.readability.getMcLaughlinFOGRedability()) + "\n"
-        s0 = s1 + s2 + s3
-        return s0
-
-    def getTimeStatisticsTotal(self):
-        self.timeStatistics = TimeStatistics()
-        present = self.timeStatistics.getVerbsNowAmount(self.doc)
-        past = self.timeStatistics.getVerbsPastAmount(self.doc)
-
-        s1 = "TOTAL AMOUNT " + str(len(present)) + str(len(past)) + "\n"
-        s2 = "PRESENT AMOUNT " + str(len(present)) + "\n"
-        s3 = "PRESENT PERCENT " + str(self.timeStatistics.getVerbsNowPercent(self.doc)) + "\n"
-        s4 = "PAST AMOUNT " + str(len(past)) + "\n"
-        s5 = "PAST PERCENT " + str(self.timeStatistics.getVerbsPastPercent(self.doc)) + "\n"
-        s0 = s1 + s2 + s3 + s4 + s5
-
-        return present, past, s0
-
-    def printExecutionTime(self):
-        self.end = time.time()
-        # print("Execution time: ", self.end - self.start)
-        s1 = "Execution time: " + str((self.end - self.start))
-        return s1
-
-    def getBasicStatisticsTotal(self):
-        s1 = "SENTENCES AMOUNT " + str(len(self.basic_s.sentences)) + "\n"
-        s2 = "SENTENCES AVERGE BY CHARS " + str(
-            self.basic_s.get_average_chars_of_sentence(self.content)) + "\n"
-        s3 = "SENTENCES AVERGE BY WORDS " + str(self.basic_s.get_average_words_in_sentence()) + "\n"
-        s4 = "BOOK LENGTH CHARS " + str(self.basic_s.get_book_length_chars(self.content)) + "\n"
-        s5 = "BOOK LENGTH WORDS " + str(self.basic_s.get_book_length_words(self.content)) + "\n"
-        s0 = s1 + s2 + s3 + s4 + s5
-        return s0
-
-    # =========================================================================================================================
-    # Output print function
-    # =========================================================================================================================
-    def getStatisticsPrint(self):
-        try:
-            # TOTAL
-            # print('=============================')
-            present, past, s1 = self.getTimeStatisticsTotal()
-            # print('=============================')
-            s2 = self.getReadabilityTotal()
-            # print('=============================')
-            s3 = self.getAdjectivesTotal()
-            # print('=============================')
-            s4 = self.getBasicStatisticsTotal()
-            # print('=============================')
-            s5 = self.getDialogesTotal()
-            # print('=============================')
-            li, s6, li1 = self.getCharactersTotal(self.content, self.doc, self.nlp)
-            # print('=============================')
-            self.getChaptersAmountPrint(present, past, li)
-            # print('=============================')
-
-            # REST
-            s7 = self.printExecutionTime()
-
-            # SAVE
-            s0 = s1 + '\n' + s2 + '\n' + s3 + '\n' + s4 + '\n' + s5 + '\n' + s6 + '\n' + s7 + '\n' + str(li1)
-            # print(s0)
-        except Exception as e:
-            print(traceback.format_exc())
 
     def getChaptersAmountPrint(self, present, past, characters):
         try:
@@ -296,62 +229,6 @@ class BookAnalyzer:
     # =========================================================================================================================
     # GUI controllers
     # =========================================================================================================================
-
-    def getBookLengthChars(self):
-        return str(self.basic_s.get_book_length_chars(self.content))
-
-    def getBookLengthWords(self):
-        return str(self.basic_s.get_book_length_words(self.content))
-
-    def getBookSentenceAmount(self):
-        return str(len(self.basic_s.sentences))
-
-    def getBookSentenceAverageChars(self):
-        return str(int(self.basic_s.get_average_chars_of_sentence(self.content)))
-
-    def getBookSentenceAverageWords(self):
-        return str(int(self.basic_s.get_average_words_in_sentence()))
-
-    def getTotalVerbsStatisticsAmount(self):
-        present = len(self.timeStatistics.getVerbsNowAmount(self.doc))
-        past = len(self.timeStatistics.getVerbsPastAmount(self.doc))
-        total = present + past
-        presentPercent = self.timeStatistics.getVerbsNowPercent(self.doc)
-        pastPercent = self.timeStatistics.getVerbsPastPercent(self.doc)
-        return str(total), str(present), str(past), presentPercent, pastPercent
-
-    def getFRESMOGFOGReadability(self):
-        self.readability = Readability(self.doc, self.basic_s, self.content)
-
-        s1 = str(round(self.readability.getMcLaughlinFRERedability(), 2))
-        s2 = str(round(self.readability.getMcLaughlinSMOGRedability(), 2))
-        s3 = str(round(self.readability.getMcLaughlinFOGRedability(), 2))
-        return s1, s2, s3
-
-    def getAdjectivesAmount(self):
-        self.adjectives = adjective_tool(self.doc)
-        return str(self.adjectives.get_amount_of_adjectives())
-
-    def getDialogesAmounts(self):
-        dialoges = self.dialogues.getAmountOfDialogues(self.content)
-        dialogesAvergeWords = self.dialogues.dialougeAvergeWords(dialoges, len(dialoges))
-        dialogesAvergeChars = self.dialogues.dialougeAvergeChars(dialoges, len(dialoges))
-        longDialogueAmount, shortDialogueAmount = self.dialogues.dialoguesLongShortAmount(dialoges, dialogesAvergeWords)
-        longDialoguePercent, shortDialoguePercent = self.dialogues.dialoguesLongShortPercent(longDialogueAmount,
-                                                                                             shortDialogueAmount,
-                                                                                             dialoges)
-
-        s1 = str(len(dialoges))
-        s2 = str(round(dialogesAvergeWords, 2))
-        s3 = str(round(dialogesAvergeChars, 2))
-        s4 = str(longDialogueAmount)
-        s5 = str(shortDialogueAmount)
-        return s1, s2, s3, s4, s5, longDialoguePercent, shortDialoguePercent
-
-    def getCharactersList(self, content, doc, nlp):
-        chT = CharactersTool()
-        li = chT.getCharactersInBook(content, doc, nlp)
-        return li
 
     def getFragmentsAndChapters(self):
         amount = self.chapters.getAmountOfChaptersByInsideOfContent(self.content)
