@@ -1,10 +1,6 @@
-import collections
 import re
 import pandas as pd
-from book_tools.basic_statistics_tool import basic_statistics_tool
-from book_tools.DialogueTool import DialogueTool
-from book_tools.TimeStatistics import TimeStatistics
-from book_tools.book_analyser_local import book_analyser_local
+from book_tools_main.book_analyser_local import book_analyser_local
 
 
 class ChaptersInBookTool():

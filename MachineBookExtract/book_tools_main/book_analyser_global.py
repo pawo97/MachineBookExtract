@@ -9,7 +9,7 @@ from book_tools.adjective_tool import adjective_tool
 from book_tools.basic_statistics_tool import basic_statistics_tool
 from book_tools.ChaptersInBookTool import ChaptersInBookTool
 from book_tools.CharactersTool import CharactersTool
-from book_tools.DialogueTool import DialogueTool
+from book_tools.dialogue_tool import dialogue_tool
 from book_tools.Redability import Readability
 from book_tools.TimeStatistics import TimeStatistics
 
@@ -92,7 +92,7 @@ class book_analyser_global:
         self.basic_s_tool = basic_statistics_tool()
         self.read_s_tool = Readability()
         self.time_s_tool = TimeStatistics()
-        self.dial_s_tool = DialogueTool()
+        self.dial_s_tool = dialogue_tool()
         self.adj_s_tool = adjective_tool()
         self.char_s_tool = CharactersTool()
         self.chap_s_tool = ChaptersInBookTool()
@@ -125,14 +125,14 @@ class book_analyser_global:
         self.present_vb_p = self.time_s_tool.getVerbsNowPercent(self.present_vb, self.past_vb)
         self.past_vb_p = self.time_s_tool.getVerbsPastPercent(self.present_vb, self.past_vb)
 
-        self.dialogues = self.dial_s_tool.getAmountOfDialogues(self.doc.text)
+        self.dialogues = self.dial_s_tool.get_dialogues(self.doc.text)
         self.dialogues_amount = len(self.dialogues)
-        self.dialogues_average_chars = round(self.dial_s_tool.dialougeAvergeChars(self.dialogues, self.dialogues_amount), 2)
-        self.dialogues_average_words = round(self.dial_s_tool.dialougeAvergeWords(self.dialogues, self.dialogues_amount), 2)
-        self.dialogues_long_a = self.dial_s_tool.dialoguesLongAmount(self.dialogues, self.dialogues_average_words)
-        self.dialogues_short_a = self.dial_s_tool.dialoguesShortAmount(self.dialogues, self.dialogues_average_words)
-        self.dialogues_long_p = round(self.dial_s_tool.dialoguesLongPercent(self.dialogues_long_a, self.dialogues), 2)
-        self.dialogues_short_p = round(self.dial_s_tool.dialoguesLongPercent(self.dialogues_short_a, self.dialogues), 2)
+        self.dialogues_average_chars = round(self.dial_s_tool.dialogue_average_chars(self.dialogues, self.dialogues_amount), 2)
+        self.dialogues_average_words = round(self.dial_s_tool.dialogue_average_words(self.dialogues, self.dialogues_amount), 2)
+        self.dialogues_long_a = self.dial_s_tool.dialogues_long_amount(self.dialogues, self.dialogues_average_words)
+        self.dialogues_short_a = self.dial_s_tool.dialogues_short_amount(self.dialogues, self.dialogues_average_words)
+        self.dialogues_long_p = round(self.dial_s_tool.dialogues_long_percent(self.dialogues_long_a, self.dialogues), 2)
+        self.dialogues_short_p = round(self.dial_s_tool.dialogues_long_percent(self.dialogues_short_a, self.dialogues), 2)
 
         self.adj_list = self.adj_s_tool.get_amount_of_adjectives(self.doc)
         self.total_adj = len(self.adj_list)

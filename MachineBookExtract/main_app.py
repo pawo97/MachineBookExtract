@@ -1,16 +1,10 @@
 import sys
-import threading
-import time
 import traceback
 
 from PyQt5 import uic
-from PyQt5.QtChart import QPieSeries, QChartView, QChart
-from PyQt5.QtCore import Qt, QThread, pyqtSignal
-from PyQt5.QtGui import QPainter
-from PyQt5.QtWidgets import QHBoxLayout, QApplication, QFileDialog, QMainWindow, QMessageBox
+from PyQt5.QtWidgets import QApplication, QFileDialog, QMainWindow, QMessageBox
 # from PyQt5.QtChart import *
-from book_tools.book_analyser_global import book_analyser_global
-from book_tools.book_analyser_output import book_analyser_output
+from book_tools_main.book_analyser_output import book_analyser_output
 from gui.MyThread import MyThread
 from gui.MyThreadProgress import MyThreadProgress
 from gui.WindowChart import WindowChart
@@ -146,12 +140,12 @@ class Example(QMainWindow):
 
     def showChartsTime(self):
         # print('Charts')
-        self.w = WindowChart(self.presentPercent, self.pastPercent, 'Time Statistics', 'Present', 'Past')
+        self.w = WindowChart(self.book.present_vb_p, self.book.past_vb_p, 'Time Statistics', 'Present', 'Past')
         self.w.show()
 
     def showChartsDialogue(self):
         # print('Charts')
-        self.w = WindowChart(self.dlongPercent, self.dshortPercent, 'Dialogue Statistics', 'Long', 'Short')
+        self.w = WindowChart(self.book.dialogues_long_p, self.book.dialogues_short_p, 'Dialogue Statistics', 'Long', 'Short')
         self.w.show()
 
     def saveOutput(self):

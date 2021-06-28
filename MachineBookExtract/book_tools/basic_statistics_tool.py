@@ -52,6 +52,7 @@ class basic_statistics_tool:
         return words
 
     def clean_text(self, content):
+        """Clean text form alphanumerical chars"""
         content_to_clean = content.split('\n')
         clean_text_value = ''
         for l in content_to_clean:

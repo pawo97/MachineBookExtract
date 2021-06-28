@@ -1,4 +1,4 @@
-from book_tools.book_analyser_global import book_analyser_global
+from book_tools_main.book_analyser_global import book_analyser_global
 
 if __name__ == "__main__":
         # analyzer = BookAnalyzer()

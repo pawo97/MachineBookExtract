@@ -1,7 +1,7 @@
 import traceback
 
 from PyQt5.QtCore import QThread, pyqtSignal
-from book_tools.book_analyser_global import book_analyser_global
+from book_tools_main.book_analyser_global import book_analyser_global
 
 
 class MyThread(QThread):

@@ -1,6 +1,5 @@
 import traceback
 
-from book_tools.book_analyser_global import book_analyser_global
 
 class book_analyser_output():
     def __init__(self, book_analyser):
