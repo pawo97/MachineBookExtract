@@ -213,7 +213,7 @@ class ChaptersInBookTool():
         return fragments
 
     # ====================================================================
-    def getFragmentsOfStatictis(self, fragments, present, past, adjs):
+    def getFragmentsOfStatictis(self, fragments, present, past, adjs, characters):
         # lists
         words_amount_list = []
         char_amount_list = []
@@ -227,12 +227,13 @@ class ChaptersInBookTool():
         present_vb_amount_list = []
         past_vb_amount_list = []
         adj_vb_amount_list = []
+        heroes_list = []
         df = pd.DataFrame()
 
         for i in range(len(fragments)):
             # update
             b_a_l = book_analyser_local(fragments[i])
-            b_a_l.start_chapter(fragments[i], present, past, adjs)
+            b_a_l.start_chapter(fragments[i], present, past, adjs, characters)
 
             words_amount_list.append(b_a_l.book_words_amount)
             char_amount_list.append(b_a_l.book_chars_amount)
@@ -246,6 +247,7 @@ class ChaptersInBookTool():
             present_vb_amount_list.append(b_a_l.present_vb)
             past_vb_amount_list.append(b_a_l.past_vb)
             adj_vb_amount_list.append(b_a_l.total_adj)
+            heroes_list.append(b_a_l.characters)
 
         # set
         df['WordsAmount'] = words_amount_list
@@ -260,7 +262,7 @@ class ChaptersInBookTool():
         df['VerbsPresentAmount'] = present_vb_amount_list
         df['VerbsPastAmount'] = past_vb_amount_list
         df['AdjectivesAmount'] = adj_vb_amount_list
-
+        df['Characters'] = heroes_list
 
         return df
 
@@ -291,153 +293,6 @@ class ChaptersInBookTool():
         #     print(fragments[i])
 
         return fragments
-
-    def getStatisticsDialogByChapter(self, fragments):
-        d = DialogueTool()
-        df = pd.DataFrame()
-        dialogesLenLi = []
-        dialogesAvergeWordsLi = []
-        dialogesAvergeCharsLi = []
-        longDialogueAmountLi = []
-        shortDialogueAmountLi = []
-        longDialoguePercentLi = []
-        shortDialoguePercentLi = []
-
-        for i in range(fragments.__len__()):
-            dialoges = d.getAmountOfDialogues(fragments[i])
-            dialogesAvergeWords = d.dialougeAvergeWords(dialoges, len(dialoges))
-            dialogesAvergeChars = d.dialougeAvergeChars(dialoges, len(dialoges))
-            longDialogueAmount, shortDialogueAmount = d.dialoguesLongShortAmount(dialoges, dialogesAvergeWords)
-            longDialoguePercent, shortDialoguePercent = d.dialoguesLongShortPercent(longDialogueAmount,
-                                                                                    shortDialogueAmount,
-                                                                                    dialoges)
-            dialogesLenLi.append(len(dialoges))
-            dialogesAvergeWordsLi.append(dialogesAvergeWords)
-            dialogesAvergeCharsLi.append(dialogesAvergeChars)
-            longDialogueAmountLi.append(longDialogueAmount)
-            shortDialogueAmountLi.append(shortDialogueAmount)
-            longDialoguePercentLi.append(longDialoguePercent)
-            shortDialoguePercentLi.append(shortDialoguePercent)
-
-        df['DialogesTotal'] = dialogesLenLi
-        df['DialogesAvergeWords'] = dialogesAvergeWordsLi
-        df['DialogesAvergeChars'] = dialogesAvergeCharsLi
-        df['LongDialogueAmount'] = longDialogueAmountLi
-        df['ShortDialogueAmount'] = shortDialogueAmountLi
-        df['LongDialoguePercent'] = longDialoguePercentLi
-        df['ShortDialoguePercent'] = shortDialoguePercentLi
-
-        return df
-
-
-    def getLengthWordCharsByChapter(self, fragments):
-        df = pd.DataFrame()
-        # print(fragments)
-        sentencesLenLi = []
-        sentencesCharLenLi = []
-        sentencesWordsLenLi = []
-        fragmentsLengthCharLi = []
-        fragmentsLengthWordLi = []
-
-        # for i in range(fragments.__len__()):
-        #     b = basic_statistics_tool(fragments[i])
-        #     sentencesLenLi.append(len(b.sentences))
-        #     sentencesCharLenLi.append(round(b.get_average_chars_of_sentence(fragments[i]), 2))
-        #     sentencesWordsLenLi.append(round(b.get_average_words_in_sentence(), 2))
-        #     fragmentsLengthCharLi.append(b.get_book_length_chars(fragments[i]))
-        #     fragmentsLengthWordLi.append(b.get_book_length_words(fragments[i]))
-        #
-        # df['WordsTotal'] = fragmentsLengthWordLi
-        # df['CharTotal'] = fragmentsLengthCharLi
-        # df['SentencesWord'] = sentencesWordsLenLi
-        # df['SentencesChar'] = sentencesCharLenLi
-        # df['SentencesTotal'] = sentencesLenLi
-        return df
-
-    def getStatisticsAdjectiveByChapter(self, fragments, doc):
-        df = pd.DataFrame()
-        liWordsAmount = []
-        liAdjAmount = []
-        liAdjPercent = []
-        adj = [token.lemma_ for token in doc if token.pos_ == "ADJ"]
-
-        for i in range(fragments.__len__()):
-            words = fragments[i].split(' ')
-            wordsAmount = words.__len__()
-            adjAmount = 0
-
-            for w in words:
-                if w in adj:
-                    adjAmount += 1
-
-            liWordsAmount.append(wordsAmount)
-            liAdjAmount.append(adjAmount)
-            liAdjPercent.append((adjAmount*100)/wordsAmount)
-            # print(i, wordsAmount, adjAmount, (adjAmount*100)/wordsAmount)
-
-        # df['WordsTotal'] = liWordsAmount
-        df['AdjAmount'] = liAdjAmount
-        df['AdjPercent'] = liAdjPercent
-
-        return df
-
-    def getTimeStatisticsByChapter(self, fragments, doc, li1, li2):
-        df = pd.DataFrame()
-        pastAmountLi = []
-        presentAmountLi = []
-        totalAmountLi = []
-        pastPercentAmountLi = []
-        presentPercentAmountLi = []
-
-        t = TimeStatistics()
-
-        for i in range(fragments.__len__()):
-            words = fragments[i].split(' ')
-            present = 0
-            past = 0
-
-            for w in words:
-                if w in li1:
-                    present += 1
-                if w in li2:
-                    past += 1
-
-            pastAmountLi.append(past)
-            presentAmountLi.append(present)
-            totalAmountLi.append(past + present)
-            if past and present != 0:
-                pastPercentAmountLi.append((present * 100 / (past + present)))
-                presentPercentAmountLi.append((past * 100 / (past + present)))
-
-        df['PastTotal'] = pastAmountLi
-        df['PresentTotal'] = presentAmountLi
-        df['VerbsTotal'] = totalAmountLi
-        df['PastPercent'] = pastPercentAmountLi
-        df['PresentPercent'] = presentPercentAmountLi
-        return df
-
-    def getCharactersInChapters(self, fragments, characters):
-        df = pd.DataFrame()
-        liChaptersLevel = []
-        for i in range(len(fragments)):
-            liCharactersInside = []
-            words = fragments[i].split(' ')
-            for c in characters:
-                if c in words:
-                    if c in words:
-                        s = 0
-                        for w in words:
-                            if c in w:
-                                s += 1
-
-                        st = (s * 100) / len(words)
-                        liCharactersInside.append((c, st))
-            liChaptersLevel.append(liCharactersInside)
-
-        df['Heroes'] = liChaptersLevel
-        return df
-
-
 
     # EXPERIMENT - AND VALUES
     def getStatisticsTimeLineByChapter(self, fragments, doc, df):

@@ -2,11 +2,9 @@ class TimeStatistics():
     def getVerbsPresentAmount(self, doc):
         verbsPresent = []
         for token in doc:
-            print(token.text, token.tag_)
             if token.tag_ == 'VB' or token.tag_ == 'VBP' or token.tag_ == 'VBZ':
                 verbsPresent.append(token.text)
 
-        print(len(verbsPresent))
         return verbsPresent
 
     def getVerbsPastAmount(self, doc):

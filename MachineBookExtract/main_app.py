@@ -104,14 +104,14 @@ class Example(QMainWindow):
         self.label_43.setText(str(self.df1.iat[self.currentVal, 10]))
         self.label_44.setText(str(self.df1.iat[self.currentVal, 11]))
 
-        # # Heroes
-        # self.listWidget_2.clear()
-        # li = self.df1.iat[self.currentVal, 19]
-        # liHeroes = []
-        # for i in self.df1.iat[self.currentVal, 19]:
-        #     liHeroes.append(i[0])
-        #
-        # self.listWidget_2.addItems(liHeroes)
+        # Heroes
+        self.listWidget_2.clear()
+        li = self.df1.iat[self.currentVal, 12]
+        liHeroes = []
+        for i in self.df1.iat[self.currentVal, 12]:
+            liHeroes.append(i)
+
+        self.listWidget_2.addItems(liHeroes)
 
     def openFileNameDialog(self):
         status_ok = True
@@ -155,7 +155,8 @@ class Example(QMainWindow):
         self.w.show()
 
     def saveOutput(self):
-        self.book_output.save_statistics(self.file_name)
+        self.book_output.save_statistics_basic(self.file_name)
+        self.book_output.save_statistics_local(self.file_name, self.df1)
 
     def exitProgram(self):
         sys.exit()

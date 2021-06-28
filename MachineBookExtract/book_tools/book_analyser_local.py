@@ -54,7 +54,7 @@ class book_analyser_local:
     # =========================================================================================================================
     # Start function
     # =========================================================================================================================
-    def start_chapter(self, content, vb_present, vb_past, adjs):
+    def start_chapter(self, content, vb_present, vb_past, adjs, characters):
 
         # create analyse classes
         self.basic_s_tool = basic_statistics_tool()
@@ -96,7 +96,7 @@ class book_analyser_local:
 
         self.total_adj = self.get_adj_amount_l(self.book_words, adjs)
 
-        # # self.characters = self.char_s_tool.getCharactersInBook(self.content_clean, self.content_clean, self.nlp)
+        self.characters = self.get_characters(self.book_words, characters)
 
 
     def get_present_verbs_l(self, words, present):
@@ -123,3 +123,11 @@ class book_analyser_local:
                 counter += 1
 
         return counter
+
+    def get_characters(self, words, characters):
+        heroes_list = []
+        for c in characters:
+            if c in words:
+                heroes_list.append(c)
+
+        return heroes_list

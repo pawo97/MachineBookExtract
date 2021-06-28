@@ -125,9 +125,9 @@ class book_analyser_output():
     # ==================================================================================================================
     # Save functions
     # ==================================================================================================================
-    def save_statistics(self, name):
+    def save_statistics_basic(self, name):
         try:
-            text_file = open(r'output/' + str(name) + "_BASIC.txt", "w")
+            text_file = open(r'output/' + str(name) + "_GLOBAL.txt", "w")
             s_out = self.getBasicStatisticsTotal() \
                     + self.getTimeStatisticsTotal() \
                     + self.getReadabilityTotal() \
@@ -138,5 +138,11 @@ class book_analyser_output():
 
             text_file.write(s_out)
             text_file.close()
+        except Exception as e:
+            print(traceback.format_exc())
+
+    def save_statistics_local(self, name, dat1):
+        try:
+            dat1.to_excel(r'output/' + str(name) + "_LOCAL.xlsx")
         except Exception as e:
             print(traceback.format_exc())
