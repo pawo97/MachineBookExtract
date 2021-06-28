@@ -11,7 +11,7 @@ from book_tools.ChaptersInBookTool import ChaptersInBookTool
 from book_tools.CharactersTool import CharactersTool
 from book_tools.dialogue_tool import dialogue_tool
 from book_tools.readability_tool import readability_tool
-from book_tools.TimeStatistics import TimeStatistics
+from book_tools.time_statistics_tool import time_statistics_tool
 
 class book_analyser_global:
 
@@ -91,7 +91,7 @@ class book_analyser_global:
         # create analyse classes
         self.basic_s_tool = basic_statistics_tool()
         self.read_s_tool = readability_tool()
-        self.time_s_tool = TimeStatistics()
+        self.time_s_tool = time_statistics_tool()
         self.dial_s_tool = dialogue_tool()
         self.adj_s_tool = adjective_tool()
         self.char_s_tool = CharactersTool()
@@ -116,14 +116,14 @@ class book_analyser_global:
         self.fog = round(self.read_s_tool.get_McL_FOG_readability(self.doc, self.book_words_amount, self.book_sentences_amount), 2)
         self.smog = round(self.read_s_tool.get_McL_SMOG_readability(self.doc, self.book_sentences_amount), 2)
 
-        self.present_vb_list = self.time_s_tool.getVerbsPresentAmount(self.doc)
-        self.past_vb_list = self.time_s_tool.getVerbsPastAmount(self.doc)
+        self.present_vb_list = self.time_s_tool.get_present_verbs(self.doc)
+        self.past_vb_list = self.time_s_tool.get_past_verbs(self.doc)
 
         self.present_vb = len(self.present_vb_list)
         self.past_vb = len(self.past_vb_list)
         self.total_vb = int(self.present_vb) + int(self.past_vb)
-        self.present_vb_p = self.time_s_tool.getVerbsNowPercent(self.present_vb, self.past_vb)
-        self.past_vb_p = self.time_s_tool.getVerbsPastPercent(self.present_vb, self.past_vb)
+        self.present_vb_p = self.time_s_tool.get_present_verbs_percent(self.present_vb, self.past_vb)
+        self.past_vb_p = self.time_s_tool.get_past_verbs_percent(self.present_vb, self.past_vb)
 
         self.dialogues = self.dial_s_tool.get_dialogues(self.doc.text)
         self.dialogues_amount = len(self.dialogues)
