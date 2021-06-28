@@ -84,8 +84,14 @@ class book_analyser_local:
         self.dialogues_long_a = self.dial_s_tool.dialoguesLongAmount(self.dialogues, self.dialogues_average_words)
         self.dialogues_short_a = self.dial_s_tool.dialoguesShortAmount(self.dialogues, self.dialogues_average_words)
 
+        # set of verbs present, past and adj
+        vb_present = list(set(vb_present))
+        vb_past = list(set(vb_past))
+        adjs = list(set(adjs))
+
+        # get amounts
         self.present_vb = self.get_present_verbs_l(self.book_words, vb_present)
-        self.past_vb = self.get_present_verbs_l(self.book_words, vb_past)
+        self.past_vb = self.get_past_verbs_l(self.book_words, vb_past)
         self.total_vb = self.present_vb + self.past_vb
 
         self.total_adj = self.get_adj_amount_l(self.book_words, adjs)
@@ -94,25 +100,26 @@ class book_analyser_local:
 
 
     def get_present_verbs_l(self, words, present):
+        present = list(set(present))
         counter = 0
-        for p in present:
-            if p in words:
+        for w in words:
+            if w in present:
                 counter += 1
 
         return counter
 
     def get_past_verbs_l(self, words, past):
         counter = 0
-        for p in past:
-            if p in words:
+        for w in words:
+            if w in past:
                 counter += 1
 
         return counter
 
     def get_adj_amount_l(self, words, adjs):
         counter = 0
-        for p in adjs:
-            if p in words:
+        for w in words:
+            if w in adjs:
                 counter += 1
 
         return counter

@@ -2,15 +2,17 @@ class TimeStatistics():
     def getVerbsPresentAmount(self, doc):
         verbsPresent = []
         for token in doc:
-            if token.tag_ == 'VB':
+            print(token.text, token.tag_)
+            if token.tag_ == 'VB' or token.tag_ == 'VBP' or token.tag_ == 'VBZ':
                 verbsPresent.append(token.text)
 
+        print(len(verbsPresent))
         return verbsPresent
 
     def getVerbsPastAmount(self, doc):
         verbsPast = []
         for token in doc:
-            if token.tag_ == 'VBD':
+            if token.tag_ == 'VBD' or token.tag_ == 'VBN':
                 verbsPast.append(token.text)
 
         return verbsPast
