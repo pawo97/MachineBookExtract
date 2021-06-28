@@ -7,7 +7,7 @@ import time
 
 from book_tools.adjective_tool import adjective_tool
 from book_tools.basic_statistics_tool import basic_statistics_tool
-from book_tools.ChaptersInBookTool import ChaptersInBookTool
+from book_tools.chapters_tool import chapters_tool
 from book_tools.CharactersTool import CharactersTool
 from book_tools.dialogue_tool import dialogue_tool
 from book_tools.readability_tool import readability_tool
@@ -95,7 +95,7 @@ class book_analyser_global:
         self.dial_s_tool = dialogue_tool()
         self.adj_s_tool = adjective_tool()
         self.char_s_tool = CharactersTool()
-        self.chap_s_tool = ChaptersInBookTool()
+        self.chap_s_tool = chapters_tool()
 
         # clean txt
         content_clean = self.basic_s_tool.clean_text(content)
@@ -139,7 +139,7 @@ class book_analyser_global:
 
         self.characters = self.char_s_tool.getCharactersInBook(self.doc.text, self.doc, self.nlp)
 
-        self.fragments = self.chap_s_tool.getAmountOfChaptersByInsideOfContent(self.content)
+        self.fragments = self.chap_s_tool.get_chapters_content(self.content)
         self.chap_value = len(self.fragments)
         if self.chap_value != 0 and self.chap_value != 1:
             self.chap_inside = True
@@ -149,6 +149,6 @@ class book_analyser_global:
         self.end_time = time.time()
         self.analyse_time = round((self.end_time - self.start_time), 2)
 
-        self.fragments_s = self.chap_s_tool.getFragmentsOfStatictis(self.fragments, self.present_vb_list, self.past_vb_list, self.adj_list, self.characters)
+        self.fragments_s = self.chap_s_tool.get_local_statistics(self.fragments, self.present_vb_list, self.past_vb_list, self.adj_list, self.characters)
 
 
