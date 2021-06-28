@@ -2,9 +2,11 @@ import re
 import pandas as pd
 from book_tools_main.book_analyser_local import book_analyser_local
 
+
 class chapters_tool:
 
     def get_chapters_position(self, content):
+        """Get chapters if is divided by chapter, number or roman"""
         lines = content.split('\n')
 
         # dictionary
@@ -85,7 +87,7 @@ class chapters_tool:
                         lastword = lastwordot
                         if self.check_if_roman_numeral(lastword):
                             if dict_chars_roman.get(self.decimal_to_roman_str(lastword)) == None:
-                                print(lines[i], '|', lastword)
+                                # print(lines[i], '|', lastword)
                                 dict_chars_roman[self.decimal_to_roman_str(lastword)] = i
 
         # Create List of chapters and positions
@@ -126,15 +128,17 @@ class chapters_tool:
         return lines, divide_numbers_list
 
     def get_fragments(self, divide_numbers_list, lines):
-        print(divide_numbers_list)
+        """Get fragments from position of chars fragments"""
+
+        if len(divide_numbers_list) > 0:
+            divide_numbers_list[0] = int(divide_numbers_list[0] + 1)
+
         p = divide_numbers_list
         fragments = []
         j = 0
         chapter = ''
 
         for i in range(len(lines)):
-            # if i == 0:
-            #     continue
             if i < p[j]:
                 continue
             if i >= p[j]:
@@ -150,12 +154,14 @@ class chapters_tool:
         return fragments
 
     def get_chapters_content(self, content):
+        """Get list of fragments in book list of chars"""
         lines, chapters_pos_numbers = self.get_chapters_position(content)
         fragments = self.get_fragments(chapters_pos_numbers, lines)
 
         return fragments
 
     def sort_and_order(self, dicts):
+        """Get the biggest value of list"""
         keys = sorted(dicts.items())
         count = 1
         positions_list = []
@@ -170,7 +176,7 @@ class chapters_tool:
         return positions_list
 
     def get_local_statistics(self, fragments, present, past, adjs, characters):
-        # lists
+        """Get local statistics for chapters"""
         words_amount_list = []
         char_amount_list = []
         sentences_amount_list = []
@@ -224,7 +230,7 @@ class chapters_tool:
 
     def check_if_roman_numeral(self, numeral):
         """Check if number is roman or not"""
-        if numeral.isupper() == False:
+        if not numeral.isupper():
             valid = False
             return valid
         validRomanNumerals = ["M", "D", "C", "L", "X", "V", "I", "(", ")"]
@@ -255,30 +261,28 @@ class chapters_tool:
         return -1
 
     def decimal_to_roman_str(self, str):
-            """Long roman numbers in string"""
-            res = 0
-            i = 0
+        """Long roman numbers in string"""
+        res = 0
+        i = 0
 
-            while i < len(str):
-                    s1 = self.decimal_to_roman(str[i])
+        while i < len(str):
+            s1 = self.decimal_to_roman(str[i])
 
-                    if i + 1 < len(str):
-                            s2 = self.decimal_to_roman(str[i + 1])
+            if i + 1 < len(str):
+                s2 = self.decimal_to_roman(str[i + 1])
 
-                            if s1 >= s2:
-                                res = res + s1
-                                i = i + 1
-                            else:
-                                res = res + s2 - s1
-                                i = i + 2
-                    else:
-                        res = res + s1
-                        i = i + 1
-            return res
+                if s1 >= s2:
+                    res = res + s1
+                    i = i + 1
+                else:
+                    res = res + s2 - s1
+                    i = i + 2
+            else:
+                res = res + s1
+                i = i + 1
+        return res
 
-
-
-  # ====================================================================
+    # ====================================================================
 
     # EXPERIMENT - AND VALUES
 
