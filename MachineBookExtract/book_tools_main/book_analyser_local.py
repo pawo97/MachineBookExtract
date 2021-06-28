@@ -10,7 +10,7 @@ from book_tools.basic_statistics_tool import basic_statistics_tool
 # from book_tools.ChaptersInBookTool import ChaptersInBookTool
 from book_tools.CharactersTool import CharactersTool
 from book_tools.dialogue_tool import dialogue_tool
-from book_tools.Redability import Readability
+from book_tools.readability_tool import readability_tool
 from book_tools.TimeStatistics import TimeStatistics
 
 class book_analyser_local:
@@ -58,7 +58,7 @@ class book_analyser_local:
 
         # create analyse classes
         self.basic_s_tool = basic_statistics_tool()
-        self.read_s_tool = Readability()
+        self.read_s_tool = readability_tool()
         self.time_s_tool = TimeStatistics()
         self.dial_s_tool = dialogue_tool()
         self.adj_s_tool = adjective_tool()

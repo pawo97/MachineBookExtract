@@ -10,6 +10,6 @@ class adjective_tool_test(unittest.TestCase):
         nlp = spacy.load("en_core_web_sm")
         nlp.max_length = 2_500_000
         doc = nlp(str_test)
-        adjective_tool_test = adjective_tool()
-        adj = adjective_tool_test.get_amount_of_adjectives(doc)
+        adjective_tool_t = adjective_tool()
+        adj = adjective_tool_t.get_amount_of_adjectives(doc)
         self.assertEqual(adj, ['pretty', 'old'])

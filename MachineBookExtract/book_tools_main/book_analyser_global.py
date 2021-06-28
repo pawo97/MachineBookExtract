@@ -10,7 +10,7 @@ from book_tools.basic_statistics_tool import basic_statistics_tool
 from book_tools.ChaptersInBookTool import ChaptersInBookTool
 from book_tools.CharactersTool import CharactersTool
 from book_tools.dialogue_tool import dialogue_tool
-from book_tools.Redability import Readability
+from book_tools.readability_tool import readability_tool
 from book_tools.TimeStatistics import TimeStatistics
 
 class book_analyser_global:
@@ -90,7 +90,7 @@ class book_analyser_global:
 
         # create analyse classes
         self.basic_s_tool = basic_statistics_tool()
-        self.read_s_tool = Readability()
+        self.read_s_tool = readability_tool()
         self.time_s_tool = TimeStatistics()
         self.dial_s_tool = dialogue_tool()
         self.adj_s_tool = adjective_tool()
@@ -112,9 +112,9 @@ class book_analyser_global:
         self.book_sentences_average_chars = round(self.basic_s_tool.get_average_chars_of_sentence(self.book_sentences), 2)
         self.book_sentences_average_words = round(self.basic_s_tool.get_average_words_in_sentence(self.book_sentences), 2)
 
-        self.fre = round(self.read_s_tool.getMcLaughlinFRERedability(self.doc, self.book_words_amount, self.book_sentences_amount), 2)
-        self.fog = round(self.read_s_tool.getMcLaughlinFOGRedability(self.doc, self.book_words_amount, self.book_sentences_amount), 2)
-        self.smog = round(self.read_s_tool.getMcLaughlinSMOGRedability(self.doc, self.book_sentences_amount), 2)
+        self.fre = round(self.read_s_tool.get_McL_FRE_readability(self.doc, self.book_words_amount, self.book_sentences_amount), 2)
+        self.fog = round(self.read_s_tool.get_McL_FOG_readability(self.doc, self.book_words_amount, self.book_sentences_amount), 2)
+        self.smog = round(self.read_s_tool.get_McL_SMOG_readability(self.doc, self.book_sentences_amount), 2)
 
         self.present_vb_list = self.time_s_tool.getVerbsPresentAmount(self.doc)
         self.past_vb_list = self.time_s_tool.getVerbsPastAmount(self.doc)
