@@ -7,7 +7,7 @@ from book_tools.basic_statistics_tool import basic_statistics_tool
 from book_tools.readability_tool import readability_tool
 
 
-class adjective_tool_test(unittest.TestCase):
+class test_readability_tool(unittest.TestCase):
 
     def test_get_syllables(self):
         str_test = 'I see pretty and old cat in school'

@@ -11,7 +11,7 @@ from book_tools.chapters_tool import chapters_tool
 # For unitpycharmtest use this import
 # from MachineBookExtract.book_tools.AdjectiveTool import AdjectiveTool
 
-class chapters_tool_test(unittest.TestCase):
+class test_chapters_tool(unittest.TestCase):
 
     def test_get_chapters_position_roman_dot(self):
         content = '\n\n\nChapter I.\n\n\n' \

@@ -25,11 +25,17 @@ class time_statistics_tool:
     def get_present_verbs_percent(self, present, past):
         """Get present verbs percentage in text"""
         total = present + past
-        present_verbs_percent = (present * 100) / total
+        if total != 0:
+            present_verbs_percent = (present * 100) / total
+        else:
+            present_verbs_percent = 0
         return present_verbs_percent
 
     def get_past_verbs_percent(self, present, past):
         """Get past verbs percentage in text"""
         total = present + past
-        past_verbs_percent = (past * 100) / total
+        if total != 0:
+            past_verbs_percent = (past * 100) / total
+        else:
+            past_verbs_percent = 0
         return past_verbs_percent

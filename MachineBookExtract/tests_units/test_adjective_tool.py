@@ -3,7 +3,7 @@ import spacy
 from book_tools.adjective_tool import adjective_tool
 
 
-class adjective_tool_test(unittest.TestCase):
+class test_adjective_tool(unittest.TestCase):
 
     def test_adjectives_amount(self):
         str_test = 'I see pretty and old cat in school'

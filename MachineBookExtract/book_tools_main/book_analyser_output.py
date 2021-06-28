@@ -28,7 +28,7 @@ class book_analyser_output():
     # ==================================================================================================================
     # Print functions
     # ==================================================================================================================
-    def getBasicStatisticsTotal(self):
+    def get_basic_statistics_total(self):
         s0 = "|== Basic statistics ==========|" + "\n"
         s1 = "|CHARS AMOUNT         | " + self.add_offset(str(self.b_a.book_chars_amount)) + " |\n"
         s2 = "|WORDS AMOUNT         | " + self.add_offset(str(self.b_a.book_words_amount)) + " |\n"
@@ -40,7 +40,7 @@ class book_analyser_output():
         s_out = s0 + s1 + s2 + s3 + s4 + s5 + s6
         return s_out
 
-    def getTimeStatisticsTotal(self):
+    def get_time_statistics_total(self):
         s0 = "|== Time statistics ===========|" + "\n"
         s1 = "|VERBS AMOUNT         | " + self.add_offset(str(self.b_a.total_vb)) + " |\n"
         s2 = "|PRESENT AMOUNT       | " + self.add_offset(str(self.b_a.present_vb)) + " |\n"
@@ -52,7 +52,7 @@ class book_analyser_output():
         s_out = s0 + s1 + s2 + s3 + s4 + s5 + s6
         return s_out
 
-    def getReadabilityTotal(self):
+    def get_readability_total(self):
         s0 = "|== Readability statistics ====|" + "\n"
         s1 = "|FRE AMOUNT           | " + self.add_offset(str(self.b_a.fre)) + " |\n"
         s2 = "|FOG AMOUNT           | " + self.add_offset(str(self.b_a.fog)) + " |\n"
@@ -62,7 +62,7 @@ class book_analyser_output():
         s_out = s0 + s1 + s2 + s3 + s4
         return s_out
 
-    def getAdjectivesTotal(self):
+    def get_adjectives_total(self):
         s0 = "|== Adjective statistics ======|" + "\n"
         s1 = "|ADJECTIVE AMOUNT     | " + self.add_offset(str(self.b_a.total_adj)) + " |\n"
         s2 = "|==============================|" + "\n"
@@ -70,7 +70,7 @@ class book_analyser_output():
         s_out = s0 + s1 + s2
         return s_out
 
-    def getDialogesTotal(self):
+    def get_dialogues_total(self):
         s0 = "|== Dialogues statistics ======|" + "\n"
         s1 = "|DIALOGUES AMOUNT     | " + self.add_offset(str(self.b_a.dialogues_amount)) + " |\n"
         s2 = "|DIALOGUES AVG CHARS  | " + self.add_offset(str(self.b_a.dialogues_average_chars)) + " |\n"
@@ -84,7 +84,7 @@ class book_analyser_output():
         s_out = s0 + s1 + s2 + s3 + s4 + s5 + s6 + s7 + s8
         return s_out
 
-    def getCharactersTotal(self):
+    def get_characters_total(self):
         s0 = "|== Characters ================|" + "\n"
 
         s_pom = ""
@@ -97,7 +97,7 @@ class book_analyser_output():
 
         return s_out
 
-    def getExecutionTime(self):
+    def get_execution_time(self):
         s0 = "|== Analyse time ==============|" + "\n"
         s1 = "|EXECUTION TIME       | " + self.add_offset(str(self.b_a.analyse_time)) + " |\n"
         s2 = "|==============================|" + "\n"
@@ -107,16 +107,16 @@ class book_analyser_output():
     # =========================================================================================================================
     # Output print function
     # =========================================================================================================================
-    def getStatisticsPrint(self):
+    def get_statistics_print(self):
         try:
             print("|== STATISTICS ================|")
-            print(self.getBasicStatisticsTotal(), end='')
-            print(self.getTimeStatisticsTotal(), end='')
-            print(self.getReadabilityTotal(), end='')
-            print(self.getAdjectivesTotal(), end='')
-            print(self.getDialogesTotal(), end='')
-            print(self.getCharactersTotal(), end='')
-            print(self.getExecutionTime(), end='')
+            print(self.get_basic_statistics_total(), end='')
+            print(self.get_time_statistics_total(), end='')
+            print(self.get_readability_total(), end='')
+            print(self.get_adjectives_total(), end='')
+            print(self.get_dialogues_total(), end='')
+            print(self.get_characters_total(), end='')
+            print(self.get_execution_time(), end='')
 
         except Exception as e:
             print(traceback.format_exc())
@@ -127,13 +127,13 @@ class book_analyser_output():
     def save_statistics_basic(self, name):
         try:
             text_file = open(r'output/' + str(name) + "_GLOBAL.txt", "w")
-            s_out = self.getBasicStatisticsTotal() \
-                    + self.getTimeStatisticsTotal() \
-                    + self.getReadabilityTotal() \
-                    + self.getAdjectivesTotal() \
-                    + self.getDialogesTotal() \
-                    + self.getCharactersTotal() \
-                    + self.getExecutionTime()
+            s_out = self.get_basic_statistics_total() \
+                    + self.get_time_statistics_total() \
+                    + self.get_readability_total() \
+                    + self.get_adjectives_total() \
+                    + self.get_dialogues_total() \
+                    + self.get_characters_total() \
+                    + self.get_execution_time()
 
             text_file.write(s_out)
             text_file.close()

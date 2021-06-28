@@ -3,7 +3,7 @@ import unittest
 from book_tools.dialogue_tool import dialogue_tool
 
 
-class dialogue_tool_test(unittest.TestCase):
+class test_dialogue_tool(unittest.TestCase):
 
     def test_get_dialogues_aps_type(self):
         str_test = '“I see pretty and old cat in school” - said Adam. “Ok nice” - answered Sam.'

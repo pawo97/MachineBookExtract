@@ -5,7 +5,7 @@ import spacy
 from book_tools.basic_statistics_tool import basic_statistics_tool
 
 
-class basic_statistics_tool_test(unittest.TestCase):
+class test_basic_statistics_tool(unittest.TestCase):
 
     def test_get_sentences(self):
         str_test = 'I see pretty and old cat in school. My lessons was very boring today.'

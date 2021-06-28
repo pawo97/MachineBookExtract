@@ -8,7 +8,7 @@ import time
 from book_tools.adjective_tool import adjective_tool
 from book_tools.basic_statistics_tool import basic_statistics_tool
 from book_tools.chapters_tool import chapters_tool
-from book_tools.CharactersTool import CharactersTool
+from book_tools.characters_tool import characters_tool
 from book_tools.dialogue_tool import dialogue_tool
 from book_tools.readability_tool import readability_tool
 from book_tools.time_statistics_tool import time_statistics_tool
@@ -20,6 +20,7 @@ class book_analyser_global:
         # fields other
         self.content_clean = None
         self.content = None
+        self.old_content = content
 
         self.start_time = 0
         self.end_time = 0
@@ -94,7 +95,7 @@ class book_analyser_global:
         self.time_s_tool = time_statistics_tool()
         self.dial_s_tool = dialogue_tool()
         self.adj_s_tool = adjective_tool()
-        self.char_s_tool = CharactersTool()
+        self.char_s_tool = characters_tool()
         self.chap_s_tool = chapters_tool()
 
         # clean txt
