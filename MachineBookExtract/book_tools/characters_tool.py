@@ -1,6 +1,6 @@
 import traceback
 
-from book_tools.person_rate import person_rate
+from book_tools.characters_person_rate import characters_person_rate
 
 
 class characters_tool:
@@ -86,19 +86,19 @@ class characters_tool:
                 doc = nlp(p)
 
                 if 'NN' == doc[0].tag_:
-                    person = person_rate()
+                    person = characters_person_rate()
                     person.rate = 0
                     person.word = p
                     person.tag = doc[0].tag_
                     person_rates.append(person)
                 elif 'NNS' == doc[0].tag_:
-                    person = person_rate()
+                    person = characters_person_rate()
                     person.rate = 0
                     person.word = p[0:len(p) - 1]
                     person.tag = doc[0].tag_
                     person_rates.append(person)
                 elif 'NNP' == doc[0].tag_:
-                    person = person_rate()
+                    person = characters_person_rate()
                     person.rate = 0
                     person.word = p
                     person.tag = doc[0].tag_

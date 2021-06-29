@@ -3,7 +3,7 @@ import unittest
 import spacy
 
 from book_tools.characters_tool import characters_tool
-from book_tools.person_rate import person_rate
+from book_tools.characters_person_rate import characters_person_rate
 from book_tools_main.book_analyser_global import book_analyser_global
 
 
@@ -76,7 +76,7 @@ class test_characters_tool(unittest.TestCase):
 
         words_output = characters_tool_t.check_spacy_tags(nlp, words, persons)
 
-        p = person_rate()
+        p = characters_person_rate()
         p.word = 'Tom'
         p.rate = 2
         p.tag = 'NNP'

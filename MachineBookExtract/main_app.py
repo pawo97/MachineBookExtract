@@ -122,7 +122,9 @@ class Example(QMainWindow):
                 self.label_20.setText(self.file_name)
 
                 try:
-                    self.content = open(fileName, encoding="utf8").read()
+                    file = open(fileName, encoding="utf8")
+                    self.content = file.read()
+                    file.close()
                     if len(self.content) == 0:
                         raise Exception
                 except Exception as e:

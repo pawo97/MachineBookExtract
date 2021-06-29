@@ -129,28 +129,29 @@ class chapters_tool:
 
     def get_fragments(self, divide_numbers_list, lines):
         """Get fragments from position of chars fragments"""
+        try:
+            if len(divide_numbers_list) > 0:
+                divide_numbers_list[0] = int(divide_numbers_list[0] + 1)
 
-        if len(divide_numbers_list) > 0:
-            divide_numbers_list[0] = int(divide_numbers_list[0] + 1)
+            p = divide_numbers_list
+            fragments = []
+            j = 0
+            chapter = ''
 
-        p = divide_numbers_list
-        fragments = []
-        j = 0
-        chapter = ''
-
-        for i in range(len(lines)):
-            if i < p[j]:
-                continue
-            if i >= p[j]:
-                if j + 1 < len(p) and i == p[j + 1]:
-                    j += 1
-                    fragments.append(chapter)
-                    chapter = ''
-                else:
-                    chapter += lines[i] + '\n'
-                if i + 1 >= len(lines):
-                    fragments.append(chapter)
-
+            for i in range(len(lines)):
+                if i < p[j]:
+                    continue
+                if i >= p[j]:
+                    if j + 1 < len(p) and i == p[j + 1]:
+                        j += 1
+                        fragments.append(chapter)
+                        chapter = ''
+                    else:
+                        chapter += lines[i] + '\n'
+                    if i + 1 >= len(lines):
+                        fragments.append(chapter)
+        except Exception as e:
+            fragments = []
         return fragments
 
     def get_chapters_content(self, content):

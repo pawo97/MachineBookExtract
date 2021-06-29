@@ -1,4 +1,4 @@
-class person_rate:
+class characters_person_rate:
     def __init__(self):
         self.rate = 0
         self.word = ''

@@ -38,10 +38,13 @@ class readability_tool:
         # w - amount of words
         # s - amount of sentences
         # 1 - 100, 30 - university, 80 - school
-        y = self.get_syllables(doc)
-        r = 206.835 - 84.6 * (y / words) - 1.015 * words / sentences
-        if r >= 100:
-            r = 100
+        try:
+            y = self.get_syllables(doc)
+            r = 206.835 - 84.6 * (y / words) - 1.015 * words / sentences
+            if r >= 100:
+                r = 100
+        except Exception as e:
+            r = 0
         return round(r, 2)
 
     def get_McL_SMOG_readability(self, doc, sentences):
@@ -51,9 +54,10 @@ class readability_tool:
         # s - amount of sentences
         # r - years in school to read book
         pS = self.get_poli_syllables(doc)
-
-        r = 1.043 * math.sqrt((pS / sentences)) + 3.1291
-
+        try:
+            r = 1.043 * math.sqrt((pS / sentences)) + 3.1291
+        except Exception as e:
+            r = 0
         return round(r, 2)
 
     def get_McL_FOG_readability(self, doc, words, sentences):
@@ -64,5 +68,8 @@ class readability_tool:
         # r - years in school to read book
         # 2 times more
         pSN = self.get_poli_syllables_not_noun(doc)
-        r = 0.4 * (words / sentences + 100 * pSN / words)
+        try:
+            r = 0.4 * (words / sentences + 100 * pSN / words)
+        except Exception as e:
+            r = 0
         return round(r, 2)

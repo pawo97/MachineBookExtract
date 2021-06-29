@@ -27,8 +27,10 @@ class basic_statistics_tool:
         sentences_rate = []
         for w in sentences:
             sentences_rate.append(len(w))
-
-        average = sum(sentences_rate) / len(sentences)
+        try:
+            average = sum(sentences_rate) / len(sentences)
+        except Exception as e:
+            average = 0
         return average
 
     def get_average_words_in_sentence(self, sentences):
@@ -38,7 +40,10 @@ class basic_statistics_tool:
             words = w.split(' ')
             sentences_rate.append(len(words))
 
-        average = sum(sentences_rate) / len(sentences)
+        try:
+            average = sum(sentences_rate) / len(sentences)
+        except Exception as e:
+            average = 0
         return average
 
     def get_book_length_chars(self, content):
