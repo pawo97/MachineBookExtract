@@ -28,6 +28,7 @@ class book_analyser_global:
 
         # fields analyse
         self.book_chars_amount = None
+        self.book_words = None
         self.book_words_amount = None
 
         self.book_sentences = None
@@ -106,6 +107,7 @@ class book_analyser_global:
 
         # fill fields
         self.book_chars_amount = self.basic_s_tool.get_book_length_chars(self.doc.text)
+        self.book_words = self.basic_s_tool.get_book_words(self.doc.text)
         self.book_words_amount = len(self.basic_s_tool.get_book_words(self.doc.text))
 
         self.book_sentences = self.basic_s_tool.get_sentences(self.doc.text)
@@ -138,7 +140,7 @@ class book_analyser_global:
         self.adj_list = self.adj_s_tool.get_amount_of_adjectives(self.doc)
         self.total_adj = len(self.adj_list)
 
-        self.characters = self.char_s_tool.getCharactersInBook(self.doc.text, self.doc, self.nlp)
+        self.characters = self.char_s_tool.get_characters(self.book_words, self.doc, self.nlp)
 
         self.fragments = self.chap_s_tool.get_chapters_content(self.content)
         self.chap_value = len(self.fragments)

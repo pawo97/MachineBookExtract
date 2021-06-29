@@ -3,129 +3,124 @@ from book_tools.PersonRate import PersonRate
 
 class characters_tool:
 
-    def getCharactersInBook(self, content, doc, nlp):
-        # Words in all book
-        blank = ' '
-        words = content.split(' ')
-        # print('compare words in book')
-        # print(words)
-        wordsSelected = []
-
+    def get_list_non_alpha_numeric(self, words):
+        non_alpha_words = []
         for w in words:
             # blank
             if w != '':
-                # Remove nonalphanumeric
                 alphanumeric = ""
                 for character in w:
                     if character.isalnum():
                         alphanumeric += character
-                wordsSelected.append(alphanumeric.lower())
+                non_alpha_words.append(alphanumeric.lower())
 
-        # print('compare words selected in book')
-        # print(wordsSelected)
+        return list(dict.fromkeys(non_alpha_words))
 
-        # Nouns + Persons + Big literal
-        # Nouns
-        liNouns = [chunk.text for chunk in doc.noun_chunks]
-        # z duzej litery
-
-        # zaczyna sie na a, the
-        liPrefix = []
-        for s in liNouns:
-            sFinal = ''
-            if (s.startswith('a ') or s.startswith('A ')) and s[2].isupper() and 'CHAPTER' not in s:
-                sFinal = s[2:]
-                # print("LL", s[2:])
-                liPrefix.append(sFinal)
-            elif (s.startswith('the ') or s.startswith('The ')) and s[4].isupper() and 'CHAPTER' not in s:
-                sFinal = s[4:]
-                # print("LL", s[4:])
-                liPrefix.append(sFinal)
-
-        # druga czesc wyrazu, gdyz nazwisko wazniejsze, albo white rabbit
-        liPrefixNonSpace = []
-        for i in liPrefix:
+    def get_second_word(self, li):
+        li_second_word = []
+        for i in li:
             if ' ' in i:
                 j = i.split(' ')
-                if j.__len__() >= 2:
-                    liPrefixNonSpace.append(j[1])
+                if len(j) >= 2:
+                    li_second_word.append(j[1])
             else:
-                liPrefixNonSpace.append(i)
+                li_second_word.append(i)
 
-        # usuniecie alfanumerycznych znakow
-        liPrefixNonAlphaNumeric = []
-        for w in liPrefixNonSpace:
-            # blank
-            if w != '':
-                # Remove nonalphanumeric
-                alphanumeric = ""
-                for character in w:
-                    if character.isalnum():
-                        alphanumeric += character
-                liPrefixNonAlphaNumeric.append(alphanumeric.lower())
+        return li_second_word
 
-        # delete duplicates
-        liPrefixNonAlphaNumeric = list(dict.fromkeys(liPrefixNonAlphaNumeric))
-        # print(liPrefixNonAlphaNumeric)
+    def get_words_with_prefix(self, nouns):
+        prefix_list = []
+        for s in nouns:
+            s_final = ''
+            if (s.startswith('a ') or s.startswith('A ')) and s[2].isupper() and 'CHAPTER' not in s:
+                s_final = s[2:]
+                # print("LL", s[2:])
+                prefix_list.append(s_final)
+            elif (s.startswith('the ') or s.startswith('The ')) and s[4].isupper() and 'CHAPTER' not in s:
+                s_final = s[4:]
+                # print("LL", s[4:])
+                prefix_list.append(s_final)
 
-        # Get persons
-        liCharacters = []
+        return prefix_list
+
+    def get_persons_no_duplicates(self, doc):
+        persons = []
         for entity in doc.ents:
             if entity.label_ == 'PERSON':
                 if entity.text[0].isupper():
-                    liCharacters.append(entity.text)
+                    persons.append(entity.text)
 
-        # Get persons
-        liCharNotDuplicates = list(dict.fromkeys(liCharacters))
-        # print("PERSONS")
-        # print(liCharNotDuplicates)
+        return list(dict.fromkeys(persons))
 
-        # Remove two words
-        liCharPrefixNonSpace = []
-        for i in liCharNotDuplicates:
+    def get_last_word(self, persons):
+        new_persons = []
+        for i in persons:
             i = i.replace('\n', ' ')
             if ' ' in i:
                 j = i.split(' ')
-                if j.__len__() >= 2:
-                    liCharPrefixNonSpace.append(j[j.__len__() - 1])
+                if len(j) >= 2:
+                    new_persons.append(j[len(j) - 1])
             else:
-                liCharPrefixNonSpace.append(i)
+                new_persons.append(i)
+
+        return new_persons
+
+    def remove_dot_s(self, persons):
+        new_persons = []
+
+        for w in persons:
+            if w.endswith("’s"):
+                w = w[0:len(w) - 2]
+            new_persons.append(w)
+
+        return new_persons
+
+    def create_rating_dict(self):
+        pass
+
+    def count_words(self):
+        pass
+
+    def get_characters(self, words, doc, nlp):
+        # Words in all book
+        words_selected = self.get_list_non_alpha_numeric(words)
+
+        print('compare words selected in book')
+        print(words_selected)
+
+        # nouns + persons + big literal
+        # get nouns
+        nouns = [chunk.text for chunk in doc.noun_chunks]
+
+        # starts with a, the
+        a_the_lists = self.get_words_with_prefix(nouns)
+
+        # second term of word ex. white rabbit
+        second_words_list = self.get_second_word(a_the_lists)
+
+        # delete non alphanumerical
+        liPrefixNonAlphaNumeric = self.get_list_non_alpha_numeric(second_words_list)
+
+        # delete duplicates
+        liPrefixNonAlphaNumeric = list(dict.fromkeys(liPrefixNonAlphaNumeric))
+
+        # Get persons
+        persons = self.get_persons_no_duplicates(doc)
+
+        # Remove two words
+        liCharPrefixNonSpace = self.get_last_word(persons)
 
         # Remove 's
-        liRemoveDotS = []
-        # print(liCharPrefixNonSpace)
-        for w in liCharPrefixNonSpace:
-            # blank
-            if w.endswith("’s"):
-                w = w[0:w.__len__() - 2]
-            liRemoveDotS.append(w)
-        # print(liRemoveDotS)
+        liRemoveDotS = self.remove_dot_s(liCharPrefixNonSpace)
 
         # Remove alphanumeric
-        liCharNotAphaNumeric = []
-        for w in liRemoveDotS:
-            # blank
-            if w != '':
-                # Remove nonalphanumeric
-                alphanumeric = ""
-                for character in w:
-                    if character.isalnum():
-                        alphanumeric += character
-                liCharNotAphaNumeric.append(alphanumeric.lower())
-
-        # Remove duplicates
-        liCharNotAphaNumeric = list(dict.fromkeys(liCharNotAphaNumeric))
-        # print(liCharNotAphaNumeric)
+        liCharNotAphaNumeric = self.get_list_non_alpha_numeric(liRemoveDotS)
 
         # Two list togheter without duplicates
-        liPersons = liCharNotAphaNumeric #+ liPrefixNonAlphaNumeric
+        liPersons = liCharNotAphaNumeric  # + liPrefixNonAlphaNumeric
         liPersons = list(dict.fromkeys(liPersons))
-        # print(liPersons)
-        # Delete verbs, adverbs, adjective
-        # print("Verbs:", [token.lemma_ for token in self.doc if token.pos_ == "VERB"])
 
         # Create rating list
-        # print(liPersons)
         liRatingPersons = []
         for p in liPersons:
             if p != 'the' and p != 'a' and p.__len__() > 1:
@@ -150,7 +145,7 @@ class characters_tool:
         #         print(str(p.word) + ' ' + str(p.rate), end=' ')
 
         # Count in words
-        for w in wordsSelected:
+        for w in words_selected:
             for p in liRatingPersons:
                 if p.word in w or p.word == w:
                     p.rate += 1
@@ -161,8 +156,8 @@ class characters_tool:
         del liRatingPersons[30:]
         liPersons = []
         for p in liRatingPersons:
-                # print(str(p.word) + ' ' + str(p.tag) + ' ' + str(p.rate))
-                liPersons.append(str(p.word))
+            # print(str(p.word) + ' ' + str(p.tag) + ' ' + str(p.rate))
+            liPersons.append(str(p.word))
 
         del liCharNotAphaNumeric[30:]
 

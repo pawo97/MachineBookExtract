@@ -18,7 +18,7 @@ class characters_tool_test:
 
         totalCharacters = len(aliceInWonderlandCharacterList)
         totalFit = 0
-        aliceCheckCharacters = b.getCharactersInBook()
+        aliceCheckCharacters = b.get_characters()
         totalFitCharacters = len(aliceCheckCharacters)
         for i in aliceInWonderlandCharacterList:
             for j in aliceCheckCharacters:
