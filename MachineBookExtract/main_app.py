@@ -204,6 +204,7 @@ class Example(QMainWindow):
 
         # Characters
         entries = self.book.characters
+        self.listWidget.clear()
         self.listWidget.addItems(entries)
 
         # Stop progress bar
