@@ -1,4 +1,6 @@
-from book_tools.PersonRate import PersonRate
+import traceback
+
+from book_tools.person_rate import person_rate
 
 
 class characters_tool:
@@ -75,100 +77,137 @@ class characters_tool:
 
         return new_persons
 
-    def create_rating_dict(self):
-        pass
-
-    def count_words(self):
-        pass
-
-    def get_characters(self, words, doc, nlp):
-        # Words in all book
-        words_selected = self.get_list_non_alpha_numeric(words)
-
-        print('compare words selected in book')
-        print(words_selected)
-
-        # nouns + persons + big literal
-        # get nouns
-        nouns = [chunk.text for chunk in doc.noun_chunks]
-
-        # starts with a, the
-        a_the_lists = self.get_words_with_prefix(nouns)
-
-        # second term of word ex. white rabbit
-        second_words_list = self.get_second_word(a_the_lists)
-
-        # delete non alphanumerical
-        liPrefixNonAlphaNumeric = self.get_list_non_alpha_numeric(second_words_list)
-
-        # delete duplicates
-        liPrefixNonAlphaNumeric = list(dict.fromkeys(liPrefixNonAlphaNumeric))
-
-        # Get persons
-        persons = self.get_persons_no_duplicates(doc)
-
-        # Remove two words
-        liCharPrefixNonSpace = self.get_last_word(persons)
-
-        # Remove 's
-        liRemoveDotS = self.remove_dot_s(liCharPrefixNonSpace)
-
-        # Remove alphanumeric
-        liCharNotAphaNumeric = self.get_list_non_alpha_numeric(liRemoveDotS)
-
-        # Two list togheter without duplicates
-        liPersons = liCharNotAphaNumeric  # + liPrefixNonAlphaNumeric
-        liPersons = list(dict.fromkeys(liPersons))
-
+    def check_spacy_tags(self, nlp, words_selected, persons):
         # Create rating list
-        liRatingPersons = []
-        for p in liPersons:
-            if p != 'the' and p != 'a' and p.__len__() > 1:
+        person_rates = []
+        for p in persons:
+            if p != 'the' and p != 'a' and len(p) > 1:
                 # check spacy tag
                 doc = nlp(p)
-                # print(p, doc[0].tag_, end=" | ")
+
                 if 'NN' == doc[0].tag_:
-                    person = PersonRate()
+                    person = person_rate()
                     person.rate = 0
                     person.word = p
                     person.tag = doc[0].tag_
-                    liRatingPersons.append(person)
+                    person_rates.append(person)
                 elif 'NNS' == doc[0].tag_:
-                    person = PersonRate()
+                    person = person_rate()
                     person.rate = 0
-                    person.word = p[0:p.__len__() - 1]
+                    person.word = p[0:len(p) - 1]
                     person.tag = doc[0].tag_
-                    liRatingPersons.append(person)
-
-        # print(wordsSelected)
-        # for p in liRatingPersons:
-        #         print(str(p.word) + ' ' + str(p.rate), end=' ')
+                    person_rates.append(person)
+                elif 'NNP' == doc[0].tag_:
+                    person = person_rate()
+                    person.rate = 0
+                    person.word = p
+                    person.tag = doc[0].tag_
+                    person_rates.append(person)
 
         # Count in words
         for w in words_selected:
-            for p in liRatingPersons:
+            for p in person_rates:
                 if p.word in w or p.word == w:
                     p.rate += 1
 
-        liRatingPersons.sort(key=lambda x: x.rate, reverse=True)
-        liRatingPersons = list(dict.fromkeys(liRatingPersons))
+        person_rates.sort(key=lambda x: x.rate, reverse=True)
+        person_rates = list(dict.fromkeys(person_rates))
+        return person_rates
 
-        del liRatingPersons[30:]
-        liPersons = []
-        for p in liRatingPersons:
-            # print(str(p.word) + ' ' + str(p.tag) + ' ' + str(p.rate))
-            liPersons.append(str(p.word))
+    def capital_letter_and_not_empty_str_list(self, persons):
+        del persons[30:]
 
-        del liCharNotAphaNumeric[30:]
+        # capital letter
+        for i in range(len(persons)):
+            persons[i] = persons[i].title()
 
-        for i in range(len(liCharNotAphaNumeric)):
-            liCharNotAphaNumeric[i] = liCharNotAphaNumeric[i].title()
+        # delete empty strings
+        final_person = []
+        for i in range(len(persons)):
+            if persons[i] != '' and len(persons[i]) > 2:
+                final_person.append(persons[i])
 
-        index = 0
-        for i in range(len(liCharNotAphaNumeric)):
-            if liCharNotAphaNumeric[i] == '':
-                index = i
+        return final_person
 
-        if index != 0:
-            del liCharNotAphaNumeric[index]
-        return liCharNotAphaNumeric
+    def sum_lists_rates(self, one, two, three):
+        d = {}
+        for i in one:
+            d[i.lower()] = 0
+
+        for i in two:
+            if i not in d.keys():
+                d[i.lower()] = 0
+            else:
+                d[i] += 1
+
+        for i in three:
+            if i not in d.keys():
+                d[i.lower()] = 0
+            else:
+                d[i] += 1
+
+        d = list(dict(sorted(d.items(), key=lambda item: item[1], reverse=True)).keys())
+        return d
+
+    def get_characters(self, words, doc, nlp):
+        try:
+            # Words in all book
+            words_selected = self.get_list_non_alpha_numeric(words)
+
+            # nouns + persons + big literal
+            # get nouns
+            # ==================================================================== GET BY TAGS
+            nouns = [chunk.text for chunk in doc.noun_chunks]
+
+            # starts with a, the
+            a_the_lists = self.get_words_with_prefix(nouns)
+
+            # second term of word ex. white rabbit
+            second_words_list = self.get_second_word(a_the_lists)
+
+            # delete non alphanumerical
+            li_not_alpha = self.get_list_non_alpha_numeric(second_words_list)
+
+            # delete duplicates
+            li_not_alpha_duplicates = list(dict.fromkeys(li_not_alpha))
+
+            # ==================================================================== GET BY WORDS
+            # Get persons
+            persons = self.get_persons_no_duplicates(doc)
+
+            # Remove two words
+            li_not_space = self.get_last_word(persons)
+
+            # Remove 's
+            li_dot_s = self.remove_dot_s(li_not_space)
+
+            # Remove alphanumeric
+            persons_result_list = self.get_list_non_alpha_numeric(li_dot_s)
+
+            # ==================================================================== RATING PERSONS
+            # Two list togheter without duplicates
+            li_persons = list(dict.fromkeys(persons_result_list))
+
+            # Create rating list
+            li_person_rate = self.check_spacy_tags(nlp, words_selected, li_persons)
+
+            del li_person_rate[30:]
+            li_persons = []
+            for p in li_person_rate:
+                li_persons.append(str(p.word))
+
+            # ==================================================================== SUM RESULTS
+
+            persons_result_list = self.capital_letter_and_not_empty_str_list(persons_result_list)
+
+            # sum and the biggest values from three lists
+            d = self.sum_lists_rates(persons_result_list, li_persons, li_not_alpha_duplicates)
+
+            # capitalize first letter
+            final_list = self.capital_letter_and_not_empty_str_list(d)
+
+        except Exception as e:
+            print(traceback.format_exc())
+            final_list = []
+
+        return final_list

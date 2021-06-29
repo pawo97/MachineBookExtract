@@ -1,4 +1,4 @@
-class PersonRate:
+class person_rate:
     def __init__(self):
         self.rate = 0
         self.word = ''

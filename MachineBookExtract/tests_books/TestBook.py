@@ -1,4 +1,4 @@
-from MachineBookExtract.book_tools.PersonRate import PersonRate
+from MachineBookExtract.book_tools.person_rate import person_rate
 from book_tools_main.book_analyser_global import book_analyser_global
 from book_tools_main.book_analyser_output import book_analyser_output
 
@@ -12,7 +12,7 @@ class characters_tool_test:
         #                                   "gryphon"]
         aliceOfficialCharacters = []
         for person in aliceInWonderlandCharacterList:
-            p = PersonRate()
+            p = person_rate()
             p.word = person
             aliceOfficialCharacters.append(p)
 
