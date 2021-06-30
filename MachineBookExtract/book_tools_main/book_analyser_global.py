@@ -1,6 +1,3 @@
-import traceback
-
-import pandas as pd
 import spacy
 from spacy_syllables import SpacySyllables
 import time
@@ -10,7 +7,7 @@ from book_tools.basic_statistics_tool import basic_statistics_tool
 from book_tools.chapters_tool import chapters_tool
 from book_tools.characters_tool import characters_tool
 from book_tools.dialogue_tool import dialogue_tool
-from book_tools.readability_tool import readability_tool
+from book_tools.read_statistics_tool import readability_tool
 from book_tools.time_statistics_tool import time_statistics_tool
 
 class book_analyser_global:

@@ -4,7 +4,6 @@ import spacy
 
 from book_tools.characters_tool import characters_tool
 from book_tools.characters_person_rate import characters_person_rate
-from book_tools_main.book_analyser_global import book_analyser_global
 
 
 class test_characters_tool(unittest.TestCase):
@@ -81,8 +80,7 @@ class test_characters_tool(unittest.TestCase):
         p.rate = 2
         p.tag = 'NNP'
 
-        words_expected = []
-        words_expected.append(p)
+        words_expected = [p]
 
         self.assertEqual(words_expected[0].word, words_output[0].word)
         self.assertEqual(words_expected[0].rate, words_output[0].rate)

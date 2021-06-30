@@ -1,7 +1,5 @@
-import os
 import traceback
 
-from MachineBookExtract.book_tools.characters_person_rate import characters_person_rate
 from book_tools_main.book_analyser_global import book_analyser_global
 from book_tools_main.book_analyser_output import book_analyser_output
 

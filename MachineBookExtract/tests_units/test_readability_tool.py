@@ -2,9 +2,8 @@ import unittest
 import spacy
 from spacy_syllables import SpacySyllables
 
-from book_tools.adjective_tool import adjective_tool
 from book_tools.basic_statistics_tool import basic_statistics_tool
-from book_tools.readability_tool import readability_tool
+from book_tools.read_statistics_tool import readability_tool
 
 
 class test_readability_tool(unittest.TestCase):

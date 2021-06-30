@@ -25,7 +25,7 @@ class Example(QMainWindow):
 
     def initUI(self):
         # load UI
-        uic.loadUi('TestUI.ui', self)
+        uic.loadUi('gui/TestUI.ui', self)
         self.progressBar.setValue(0)
 
         # connect buttons

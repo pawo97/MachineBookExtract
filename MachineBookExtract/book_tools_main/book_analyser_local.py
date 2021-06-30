@@ -1,16 +1,9 @@
-import traceback
-
-import pandas as pd
-import spacy
-from spacy_syllables import SpacySyllables
-import time
-
 from book_tools.adjective_tool import adjective_tool
 from book_tools.basic_statistics_tool import basic_statistics_tool
 # from book_tools.ChaptersInBookTool import ChaptersInBookTool
 from book_tools.characters_tool import characters_tool
 from book_tools.dialogue_tool import dialogue_tool
-from book_tools.readability_tool import readability_tool
+from book_tools import read_statistics_tool
 from book_tools.time_statistics_tool import time_statistics_tool
 
 class book_analyser_local:
@@ -58,7 +51,6 @@ class book_analyser_local:
 
         # create analyse classes
         self.basic_s_tool = basic_statistics_tool()
-        self.read_s_tool = readability_tool()
         self.time_s_tool = time_statistics_tool()
         self.dial_s_tool = dialogue_tool()
         self.adj_s_tool = adjective_tool()

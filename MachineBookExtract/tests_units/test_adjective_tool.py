@@ -1,4 +1,6 @@
 import unittest
+import warnings
+
 import spacy
 from book_tools.adjective_tool import adjective_tool
 
@@ -8,6 +10,7 @@ class test_adjective_tool(unittest.TestCase):
     def test_adjectives_amount(self):
         str_test = 'I see pretty and old cat in school'
         nlp = spacy.load("en_core_web_sm")
+
         nlp.max_length = 2_500_000
         doc = nlp(str_test)
         adjective_tool_t = adjective_tool()
