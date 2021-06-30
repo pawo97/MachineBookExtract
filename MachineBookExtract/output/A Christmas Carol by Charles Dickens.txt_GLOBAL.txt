@@ -22,7 +22,7 @@
 |==============================|
 |== Dialogues statistics ======|
 |DIALOGUES AMOUNT     | 685    |
-|DIALOGUES AVG CHARS  | 99.81  |
+|DIALOGUES AVG CHARS  | 121.98 |
 |DIALOGUES AVG WORDS  | 23.17  |
 |DIALOGUES LONG       | 110    |
 |DIALOGUES SHORT      | 575    |
@@ -30,37 +30,37 @@
 |DIALOGUES SHORT %    | 83.94  |
 |==============================|
 |== Characters ================|
-| 1  | Vaughan                 |
-| 2  | Jones                   |
-| 3  | Dickens                 |
-| 4  | D                       |
-| 5  | Marleys                 |
-| 6  | Marley                  |
-| 7  | Scrooge                 |
-| 8  | Pauls                   |
-| 9  | Uncle                   |
-| 10 | Bedlam                  |
-| 11 | Cornhill                |
-| 12 | Weather                 |
-| 13 | Prophet                 |
-| 14 | Speak                   |
-| 15 | Star                    |
-| 16 | Ebenezer                |
-| 17 | Ii                      |
-| 18 | Ding                    |
-| 19 | Baba                    |
-| 20 | Valentine               |
-| 21 | Orson                   |
-| 22 | Groom                   |
-| 23 | Crusoe                  |
-| 24 | Welch                   |
-| 25 | Wilkins                 |
-| 26 | Dick                    |
-| 27 | Robinson                |
-| 28 | Fezziwig                |
-| 29 | Fezziwigs               |
-| 30 | Boiled                  |
+| 1  | Marley                  |
+| 2  | Weather                 |
+| 3  | Groom                   |
+| 4  | Grocer                  |
+| 5  | Vaughan                 |
+| 6  | Scrooge                 |
+| 7  | Uncle                   |
+| 8  | Bedlam                  |
+| 9  | Cornhill                |
+| 10 | Prophet                 |
+| 11 | Star                    |
+| 12 | Ebenezer                |
+| 13 | Valentine               |
+| 14 | Orson                   |
+| 15 | Fezziwig                |
+| 16 | Cratchit                |
+| 17 | Gale                    |
+| 18 | Jones                   |
+| 19 | Dickens                 |
+| 20 | Marleys                 |
+| 21 | Pauls                   |
+| 22 | Speak                   |
+| 23 | Ding                    |
+| 24 | Baba                    |
+| 25 | Crusoe                  |
+| 26 | Welch                   |
+| 27 | Wilkins                 |
+| 28 | Dick                    |
+| 29 | Robinson                |
+| 30 | Fezziwigs               |
 |==============================|
 |== Analyse time ==============|
-|EXECUTION TIME       | 8.72   |
+|EXECUTION TIME       | 8.69   |
 |==============================|

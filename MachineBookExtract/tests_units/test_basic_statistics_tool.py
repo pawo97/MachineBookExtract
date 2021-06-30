@@ -39,6 +39,17 @@ class test_basic_statistics_tool(unittest.TestCase):
         average_char_sentences_correct = 33.0
         self.assertEqual(average_char_sentences, average_char_sentences_correct)
 
+    def test_get_average_chars_of_sentence_null(self):
+        str_test = 'I see pretty and old cat in school. My lessons was very boring today.'
+        nlp = spacy.load("en_core_web_sm")
+        nlp.max_length = 2_500_000
+        doc = nlp(str_test)
+        basic_statistics = basic_statistics_tool()
+        sentences = []
+        average_char_sentences = basic_statistics.get_average_chars_of_sentence(sentences)
+        average_char_sentences_correct = 0
+        self.assertEqual(average_char_sentences, average_char_sentences_correct)
+
     def test_get_average_words_in_sentence(self):
         str_test = 'I see pretty and old cat in school. My lessons was very boring today.'
         nlp = spacy.load("en_core_web_sm")
@@ -49,6 +60,18 @@ class test_basic_statistics_tool(unittest.TestCase):
         sentences = basic_statistics.get_sentences(doc.text)
         average_word_sentences = basic_statistics.get_average_words_in_sentence(sentences)
         average_word_sentences_correct = 7
+        self.assertEqual(average_word_sentences, average_word_sentences_correct)
+
+    def test_get_average_words_in_sentence_null(self):
+        str_test = 'I see pretty and old cat in school. My lessons was very boring today.'
+        nlp = spacy.load("en_core_web_sm")
+        nlp.max_length = 2_500_000
+        doc = nlp(str_test)
+        basic_statistics = basic_statistics_tool()
+
+        sentences = []
+        average_word_sentences = basic_statistics.get_average_words_in_sentence(sentences)
+        average_word_sentences_correct = 0
         self.assertEqual(average_word_sentences, average_word_sentences_correct)
 
     def test_get_book_length_chars(self):

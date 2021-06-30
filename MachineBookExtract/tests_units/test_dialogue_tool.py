@@ -63,6 +63,6 @@ class test_dialogue_tool(unittest.TestCase):
         dialogue_tool_t = dialogue_tool()
         dial_average_words = dialogue_tool_t.dialogue_average_words(dialogues_expected, len(dialogues_expected))
         dial_short_amount = dialogue_tool_t.dialogues_short_amount(dialogues_expected, dial_average_words)
-        dial_short_percent = dialogue_tool_t.dialogues_long_percent(dial_short_amount, dialogues_expected)
+        dial_short_percent = dialogue_tool_t.dialogues_short_percent(dial_short_amount, dialogues_expected)
 
         self.assertEqual(dial_short_percent, 50)

@@ -46,7 +46,7 @@ class book_analyser_output():
         s2 = "|PRESENT AMOUNT       | " + self.add_offset(str(self.b_a.present_vb)) + " |\n"
         s3 = "|PAST AMOUNT          | " + self.add_offset(str(self.b_a.past_vb)) + " |\n"
         s4 = "|PRESENT %            | " + self.add_offset(str(round(self.b_a.present_vb_p, 2))) + " |\n"
-        s5 = "|PAST %               | " + self.add_offset(str(round(self.b_a.present_vb_p, 2))) + " |\n"
+        s5 = "|PAST %               | " + self.add_offset(str(round(self.b_a.past_vb_p, 2))) + " |\n"
         s6 = "|==============================|" + "\n"
 
         s_out = s0 + s1 + s2 + s3 + s4 + s5 + s6

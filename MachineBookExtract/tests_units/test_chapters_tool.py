@@ -293,10 +293,35 @@ class test_chapters_tool(unittest.TestCase):
         is_roman = chapters_tool_t.check_if_roman_numeral('V123II')
         self.assertEqual(is_roman, False)
 
-    def test_decimal_to_roman(self):
+    def test_decimal_to_roman_V(self):
         chapters_tool_t = chapters_tool()
         decimal_number = chapters_tool_t.decimal_to_roman('V')
         self.assertEqual(decimal_number, 5)
+
+    def test_decimal_to_roman_X(self):
+        chapters_tool_t = chapters_tool()
+        decimal_number = chapters_tool_t.decimal_to_roman('X')
+        self.assertEqual(decimal_number, 10)
+
+    def test_decimal_to_roman_L(self):
+        chapters_tool_t = chapters_tool()
+        decimal_number = chapters_tool_t.decimal_to_roman('L')
+        self.assertEqual(decimal_number, 50)
+
+    def test_decimal_to_roman_C(self):
+        chapters_tool_t = chapters_tool()
+        decimal_number = chapters_tool_t.decimal_to_roman('C')
+        self.assertEqual(decimal_number, 100)
+
+    def test_decimal_to_roman_D(self):
+        chapters_tool_t = chapters_tool()
+        decimal_number = chapters_tool_t.decimal_to_roman('D')
+        self.assertEqual(decimal_number, 500)
+
+    def test_decimal_to_roman_M(self):
+        chapters_tool_t = chapters_tool()
+        decimal_number = chapters_tool_t.decimal_to_roman('M')
+        self.assertEqual(decimal_number, 1000)
 
     def test_decimal_to_roman_str(self):
         chapters_tool_t = chapters_tool()
