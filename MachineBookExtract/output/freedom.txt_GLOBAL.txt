@@ -1,0 +1,66 @@
+|== Basic statistics ==========|
+|CHARS AMOUNT         | 1510075 |
+|WORDS AMOUNT         | 252403 |
+|SENTENCES AMOUNT     | 10205  |
+|AVG CHARS SENTENCES  | 146.0  |
+|AVG WORDS SENTENCES  | 24.81  |
+|==============================|
+|== Time statistics ===========|
+|VERBS AMOUNT         | 32567  |
+|PRESENT AMOUNT       | 14275  |
+|PAST AMOUNT          | 18292  |
+|PRESENT %            | 43.83  |
+|PAST %               | 56.17  |
+|==============================|
+|== Readability statistics ====|
+|FRE AMOUNT           | 55.87  |
+|FOG AMOUNT           | 17.59  |
+|SMOG AMOUNT          | 6.76   |
+|==============================|
+|== Adjective statistics ======|
+|ADJECTIVE AMOUNT     | 19750  |
+|==============================|
+|== Dialogues statistics ======|
+|DIALOGUES AMOUNT     | 772    |
+|DIALOGUES AVG CHARS  | 1186.6 |
+|DIALOGUES AVG WORDS  | 198.05 |
+|DIALOGUES LONG       | 114    |
+|DIALOGUES SHORT      | 658    |
+|DIALOGUES LONG %     | 14.77  |
+|DIALOGUES SHORT %    | 85.23  |
+|==============================|
+|== Characters ================|
+| 1  | Lectures                |
+| 2  | Napoleon                |
+| 3  | Dio                     |
+| 4  | King                    |
+| 5  | Eric                    |
+| 6  | Giacomelli              |
+| 7  | Mackreth                |
+| 8  | London                  |
+| 9  | Bombay                  |
+| 10 | Melbourne               |
+| 11 | Dalbergacton            |
+| 12 | Dcl                     |
+| 13 | Figgis                  |
+| 14 | Litt                    |
+| 15 | Acton                   |
+| 16 | Blennerhasset           |
+| 17 | Jackson                 |
+| 18 | Murray                  |
+| 19 | Longmans                |
+| 20 | Paul                    |
+| 21 | Williams                |
+| 22 | Burd                    |
+| 23 | Simpson                 |
+| 24 | Rvl                     |
+| 25 | Charles                 |
+| 26 | Bryce                   |
+| 27 | Flint                   |
+| 28 | Dalberg                 |
+| 29 | Granville               |
+| 30 | Arcovalley              |
+|==============================|
+|== Analyse time ==============|
+|EXECUTION TIME       | 205.76 |
+|==============================|

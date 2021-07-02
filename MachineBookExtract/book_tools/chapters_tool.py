@@ -287,25 +287,32 @@ class chapters_tool:
 
     # EXPERIMENT - AND VALUES
 
-    def getStatisticsLocationByChapter(self, fragments, doc, df):
-        liLoc = []
-        for ent in filter(lambda e: e.label_ == 'LOC' or e.label_ == 'NORP', doc.ents):
-            liLoc.append(ent.text)
+    def get_statisctis_location(self, doc):
+        gpe = []  # countries, cities, states
+        loc = []  # non gpe locations, mountain ranges, bodies of water
+        for ent in doc.ents:
+            if (ent.label_ == 'GPE'):
+                gpe.append(ent.text)
+            elif (ent.label_ == 'LOC'):
+                loc.append(ent.text)
 
-        myLocList = list(dict.fromkeys(liLoc))
-        listLoc = []
+        gpe.extend(loc)
+        gpe = list(set(gpe))
 
-        for i in range(fragments.__len__()):
-            words = fragments[i].split(' ')
-            fragmentLoc = []
-            for d in myLocList:
-                if d in words:
-                    fragmentLoc.append(d)
+        for g in gpe:
+            print(g)
 
-            listLoc.append(fragmentLoc)
-            # print(fragmentTime)
 
-        df['Locations'] = listLoc
-        df.to_excel("output.xlsx")
+    def get_statisctis_time(self, doc):
+        gpe = []  # countries, cities, states
+        loc = []  # non gpe locations, mountain ranges, bodies of water
+        for ent in doc.ents:
+            if (ent.label_ == 'DATE'):
+                gpe.append(ent.text)
+
+        gpe = list(set(gpe))
+        del gpe[:30]
+        for g in gpe:
+            print(g)
 
     # ====================================================================

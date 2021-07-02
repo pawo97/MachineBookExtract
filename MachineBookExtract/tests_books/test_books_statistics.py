@@ -1,5 +1,6 @@
 import traceback
 
+from book_tools.chapters_tool import chapters_tool
 from book_tools_main.book_analyser_global import book_analyser_global
 from book_tools_main.book_analyser_output import book_analyser_output
 
@@ -21,6 +22,9 @@ class test_books_statistics:
                 b_o = book_analyser_output(book)
                 print(books[i])
                 b_o.get_statistics_print()
+                c = chapters_tool()
+                # c.get_statisctis_location(book.doc)
+                c.get_statisctis_time(book.doc)
             except Exception as e:
                 print('ERROR - ', str(books[i]))
                 print(traceback.format_exc())
@@ -41,11 +45,12 @@ if __name__ == "__main__":
         'test.txt',
         'The Adventures of Sherlock Holmes by Arthur Conan Doyle.txt',
         'The Castle of Otranto by Horace Walpole.txt',
-        'Wuthering Heights by Emily Bronte.txt'
+        'Wuthering Heights by Emily Bronte.txt',
+        'freedom.txt'
     ]
 
-    books_single = ['test.txt']
+    books_single = ['A Christmas Carol by Charles Dickens.txt']
 
     t_b_s = test_books_statistics()
-    t_b_s.get_statistics(books)
+    t_b_s.get_statistics(books_single)
 
