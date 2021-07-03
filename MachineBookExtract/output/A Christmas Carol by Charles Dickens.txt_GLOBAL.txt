@@ -10,7 +10,7 @@
 |PRESENT AMOUNT       | 1874   |
 |PAST AMOUNT          | 3098   |
 |PRESENT %            | 37.69  |
-|PAST %               | 37.69  |
+|PAST %               | 62.31  |
 |==============================|
 |== Readability statistics ====|
 |FRE AMOUNT           | 85.92  |
@@ -62,5 +62,5 @@
 | 30 | Fezziwigs               |
 |==============================|
 |== Analyse time ==============|
-|EXECUTION TIME       | 8.69   |
+|EXECUTION TIME       | 9.46   |
 |==============================|
