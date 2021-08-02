@@ -142,7 +142,7 @@ class Example(QMainWindow):
 
     def showChartsTime(self):
         # print('Charts')
-        self.w = WindowChart(self.book.present_vb_p, self.book.past_vb_p, 'Time Statistics', 'Present', 'Past')
+        self.w = WindowChart(self.book.present_vb_p, self.book.past_vb_p, 'Tense Statistics', 'Present', 'Past')
         self.w.show()
 
     def showChartsDialogue(self):

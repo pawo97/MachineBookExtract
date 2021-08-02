@@ -41,7 +41,7 @@ class book_analyser_output():
         return s_out
 
     def get_time_statistics_total(self):
-        s0 = "|== Time statistics ===========|" + "\n"
+        s0 = "|== Tense statistics ==========|" + "\n"
         s1 = "|VERBS AMOUNT         | " + self.add_offset(str(self.b_a.total_vb)) + " |\n"
         s2 = "|PRESENT AMOUNT       | " + self.add_offset(str(self.b_a.present_vb)) + " |\n"
         s3 = "|PAST AMOUNT          | " + self.add_offset(str(self.b_a.past_vb)) + " |\n"
