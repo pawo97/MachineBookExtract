@@ -141,18 +141,31 @@ class Example(QMainWindow):
             self.pushButton_7.setEnabled(False)
 
     def showChartsTime(self):
-        # print('Charts')
-        self.w = WindowChart(self.book.present_vb_p, self.book.past_vb_p, 'Tense Statistics', 'Present', 'Past')
-        self.w.show()
+        try:
+            self.w = WindowChart(self.book.present_vb_p, self.book.past_vb_p, 'Tense Statistics', 'Present', 'Past')
+            self.w.show()
+        except Exception as e:
+            self.show_error('Data not founded')
 
     def showChartsDialogue(self):
-        # print('Charts')
-        self.w = WindowChart(self.book.dialogues_long_p, self.book.dialogues_short_p, 'Dialogue Statistics', 'Long', 'Short')
-        self.w.show()
+        try:
+            self.w = WindowChart(self.book.dialogues_long_p, self.book.dialogues_short_p, 'Dialogue Statistics', 'Long', 'Short')
+            self.w.show()
+        except Exception as e:
+            self.show_error('Data not founded')
 
     def saveOutput(self):
-        self.book_output.save_statistics_basic(self.file_name)
-        self.book_output.save_statistics_local(self.file_name, self.df1)
+        try:
+            self.book_output.save_statistics_basic(self.file_name)
+        except Exception as e:
+            self.show_error('Book not founded')
+
+        try:
+            self.book_output.save_statistics_local(self.file_name, self.df1)
+        except Exception as e:
+            self.show_error('Chapters not founded')
+
+
 
     def exitProgram(self):
         sys.exit()

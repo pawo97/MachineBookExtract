@@ -1,0 +1,66 @@
+|== Basic statistics ==========|
+|CHARS AMOUNT         | 143509 |
+|WORDS AMOUNT         |  27281 |
+|SENTENCES AMOUNT     |   1632 |
+|AVG CHARS SENTENCES  |  85.78 |
+|AVG WORDS SENTENCES  |  16.84 |
+|==============================|
+|== Tense statistics ==========|
+|VERBS AMOUNT         |   5146 |
+|PRESENT AMOUNT       |   2302 |
+|PAST AMOUNT          |   2844 |
+|PRESENT %            |  44.73 |
+|PAST %               |  55.27 |
+|==============================|
+|== Readability statistics ====|
+|FRE AMOUNT           |   87.9 |
+|FOG AMOUNT           |   9.75 |
+|SMOG AMOUNT          |   4.55 |
+|==============================|
+|== Adjective statistics ======|
+|ADJECTIVE AMOUNT     |   1442 |
+|==============================|
+|== Dialogues statistics ======|
+|DIALOGUES AMOUNT     |   1114 |
+|DIALOGUES AVG CHARS  |  48.53 |
+|DIALOGUES AVG WORDS  |   10.6 |
+|DIALOGUES LONG       |    313 |
+|DIALOGUES SHORT      |    801 |
+|DIALOGUES LONG %     |   28.1 |
+|DIALOGUES SHORT %    |   71.9 |
+|==============================|
+|== Characters ================|
+|  1 |                   Alice |
+|  2 |                   Mouse |
+|  3 |               Conqueror |
+|  4 |                    Bill |
+|  5 |                    Jack |
+|  6 |                  Lizard |
+|  7 |                Dormouse |
+|  8 |                    Hare |
+|  9 |                  Hatter |
+| 10 |                   Queen |
+| 11 |                Dibianca |
+| 12 |                 Carroll |
+| 13 |                   Mabel |
+| 14 |                 Grammar |
+| 15 |                     The |
+| 16 |                  Mercia |
+| 17 |             Northumbria |
+| 18 |                 William |
+| 19 |             Shakespeare |
+| 20 |                     Ann |
+| 21 |                  Brandy |
+| 22 |                  Advice |
+| 23 |                    King |
+| 24 |                 Duchess |
+| 25 |                 Panther |
+| 26 |              Adventures |
+| 27 |                   Edwin |
+| 28 |                Atheling |
+| 29 |                    Said |
+| 30 |                     Pat |
+|==============================|
+|== Analyse time ==============|
+|EXECUTION TIME       |   8.39 |
+|==============================|

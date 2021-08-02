@@ -1,0 +1,40 @@
+|== Basic statistics ==========|
+|CHARS AMOUNT         |   2178 |
+|WORDS AMOUNT         |    995 |
+|SENTENCES AMOUNT     |     13 |
+|AVG CHARS SENTENCES  | 166.54 |
+|AVG WORDS SENTENCES  |  77.38 |
+|==============================|
+|== Tense statistics ==========|
+|VERBS AMOUNT         |      7 |
+|PRESENT AMOUNT       |      7 |
+|PAST AMOUNT          |      0 |
+|PRESENT %            |  100.0 |
+|PAST %               |    0.0 |
+|==============================|
+|== Readability statistics ====|
+|FRE AMOUNT           |    100 |
+|FOG AMOUNT           |  30.74 |
+|SMOG AMOUNT          |   4.74 |
+|==============================|
+|== Adjective statistics ======|
+|ADJECTIVE AMOUNT     |      8 |
+|==============================|
+|== Dialogues statistics ======|
+|DIALOGUES AMOUNT     |      0 |
+|DIALOGUES AVG CHARS  |      0 |
+|DIALOGUES AVG WORDS  |      0 |
+|DIALOGUES LONG       |      0 |
+|DIALOGUES SHORT      |      0 |
+|DIALOGUES LONG %     |      0 |
+|DIALOGUES SHORT %    |      0 |
+|==============================|
+|== Characters ================|
+|  1 |                   Uncle |
+|  2 |                   Groom |
+|  3 |               Dialogues |
+|  4 |                   Speak |
+|==============================|
+|== Analyse time ==============|
+|EXECUTION TIME       |   0.59 |
+|==============================|

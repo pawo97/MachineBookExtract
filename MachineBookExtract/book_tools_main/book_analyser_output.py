@@ -9,20 +9,22 @@ class book_analyser_output():
     # Print tools
     # ==================================================================================================================
     def add_offset(self, value):
-        final_str = value
+        final_str = ''
         n = 7
         for i in range(n):
-            if i > len(value):
+            if i < n - len(value) - 1:
                 final_str += ' '
 
+        final_str += value
         return str(final_str)
 
     def add_offset_n(self, value, n):
-        final_str = value
+        final_str = ''
         for i in range(n):
-            if i > len(value):
+            if i < n - len(value) - 1:
                 final_str += ' '
 
+        final_str += value
         return str(final_str)
 
     # ==================================================================================================================
