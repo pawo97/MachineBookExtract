@@ -108,7 +108,7 @@ class Example(QMainWindow):
         self.listWidget_2.addItems(liHeroes)
 
     def openFileNameDialog(self):
-        status_ok = True
+        status_ok = False
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
         fileName, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", "",
@@ -125,11 +125,13 @@ class Example(QMainWindow):
                     file = open(fileName, encoding="utf8")
                     self.content = file.read()
                     file.close()
+                    status_ok = True
                     if len(self.content) == 0:
+                        status_ok = False
                         raise Exception
                 except Exception as e:
                     print(traceback.format_exc())
-                    status_ok = False
+
                     self.show_error('File is empty')
 
         if status_ok:

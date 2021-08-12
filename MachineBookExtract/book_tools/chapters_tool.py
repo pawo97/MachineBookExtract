@@ -34,61 +34,10 @@ class chapters_tool:
                             continue
                     words = lines[i].lstrip().split(' ')
 
-                    # Check first word
-                    # CHAPTER and NUMBER and .
-                    firstword = words[0]
-                    s = ''
-                    if firstword.lower() == 'chapter':
-                        s = re.sub(r'[^a-zA-Z0-9]', '', words[1])
-                        if not self.check_if_roman_numeral(s):
-                            dict_chars_chap_nr_dot[int(s)] = i
-
-                    # Check first word
-                    # ROMAN NUMBER and .
-                    s = ''
-                    try:
-                        s = re.sub(r'[^a-zA-Z0-9]', '', firstword)
-                    except:
-                        s = ''
-                    lastwordot = ''
-                    try:
-                        lastwordot = s[-1]
-                        # print(s)
-                    except:
-                        lastwordot = ''
-                    if self.check_if_roman_numeral(s):
-                        # print(lines[i], '|', s)
-                        if dict_chars_chap_ro_dot.get(self.decimal_to_roman_str(s)) == None:
-                            dict_chars_chap_ro_dot[int(self.decimal_to_roman_str(s))] = i
-
-                    # Check last word
-                    # ROMAN NUMBER and .
-                    lastwordot = ''
-                    try:
-                        lastwordot = words[len(words) - 1]
-                    except:
-                        lastwordot = ''
-                    if lastwordot != '' and lastwordot[-1] == '.':
-                        lastword = lastwordot[0:len(lastwordot) - 1]
-                        if self.check_if_roman_numeral(lastword):
-                            if dict_chars_roman_dot.get(self.decimal_to_roman_str(lastword)) == None:
-                                # print(lines[i], '|', lastwordot)
-                                dict_chars_roman_dot[self.decimal_to_roman_str(lastword)] = i
-
-                    # Check last word
-                    # ROMAN NUMBER
-                    lastwordot = ''
-                    try:
-                        lastwordot = words[len(lastwordot) - 1]
-                    except:
-                        lastwordot = ''
-                    if lastwordot != '':
-
-                        lastword = lastwordot
-                        if self.check_if_roman_numeral(lastword):
-                            if dict_chars_roman.get(self.decimal_to_roman_str(lastword)) == None:
-                                # print(lines[i], '|', lastword)
-                                dict_chars_roman[self.decimal_to_roman_str(lastword)] = i
+                    firstword = self.check_chapter_number_dot(i, words, dict_chars_chap_nr_dot)
+                    self.check_roman_number_dot(i,firstword, dict_chars_chap_ro_dot)
+                    self.check_last_roman_number_dot(i, words,dict_chars_roman_dot)
+                    self.check_last_roman_number(i, words, dict_chars_roman)
 
         # Create List of chapters and positions
         # chapter Roman and .
@@ -126,6 +75,60 @@ class chapters_tool:
 
         # print(data_index)
         return lines, divide_numbers_list
+
+    def check_chapter_number_dot(self, i, words, dict_chars_chap_nr_dot):
+        firstword = words[0]
+        s = ''
+        if firstword.lower() == 'chapter':
+            s = re.sub(r'[^a-zA-Z0-9]', '', words[1])
+            if not self.check_if_roman_numeral(s):
+                dict_chars_chap_nr_dot[int(s)] = i
+
+        return firstword
+
+    def check_roman_number_dot(self, i, firstword, dict_chars_chap_ro_dot):
+        s = ''
+        try:
+            s = re.sub(r'[^a-zA-Z0-9]', '', firstword)
+        except:
+            s = ''
+        lastwordot = ''
+        try:
+            lastwordot = s[-1]
+            # print(s)
+        except:
+            lastwordot = ''
+        if self.check_if_roman_numeral(s):
+            # print(lines[i], '|', s)
+            if dict_chars_chap_ro_dot.get(self.decimal_to_roman_str(s)) == None:
+                dict_chars_chap_ro_dot[int(self.decimal_to_roman_str(s))] = i
+
+    def check_last_roman_number_dot(self, i, words, dict_chars_roman_dot):
+        lastwordot = ''
+        try:
+            lastwordot = words[len(words) - 1]
+        except:
+            lastwordot = ''
+        if lastwordot != '' and lastwordot[-1] == '.':
+            lastword = lastwordot[0:len(lastwordot) - 1]
+            if self.check_if_roman_numeral(lastword):
+                if dict_chars_roman_dot.get(self.decimal_to_roman_str(lastword)) == None:
+                    # print(lines[i], '|', lastwordot)
+                    dict_chars_roman_dot[self.decimal_to_roman_str(lastword)] = i
+
+    def check_last_roman_number(self, i, words, dict_chars_roman):
+        lastwordot = ''
+        try:
+            lastwordot = words[len(lastwordot) - 1]
+        except:
+            lastwordot = ''
+        if lastwordot != '':
+
+            lastword = lastwordot
+            if self.check_if_roman_numeral(lastword):
+                if dict_chars_roman.get(self.decimal_to_roman_str(lastword)) == None:
+                    # print(lines[i], '|', lastword)
+                    dict_chars_roman[self.decimal_to_roman_str(lastword)] = i
 
     def get_fragments(self, divide_numbers_list, lines):
         """Get fragments from position of chars fragments"""

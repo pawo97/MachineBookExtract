@@ -151,41 +151,29 @@ class characters_tool:
 
     def get_characters(self, words, doc, nlp):
         try:
-            # Words in all book
             words_selected = self.get_list_non_alpha_numeric(words)
 
-            # nouns + persons + big literal
-            # get nouns
             # ==================================================================== GET BY TAGS
             nouns = [chunk.text for chunk in doc.noun_chunks]
 
-            # starts with a, the
             a_the_lists = self.get_words_with_prefix(nouns)
 
-            # second term of word ex. white rabbit
             second_words_list = self.get_second_word(a_the_lists)
 
-            # delete non alphanumerical
             li_not_alpha = self.get_list_non_alpha_numeric(second_words_list)
 
-            # delete duplicates
             li_not_alpha_duplicates = list(dict.fromkeys(li_not_alpha))
 
             # ==================================================================== GET BY WORDS
-            # Get persons
             persons = self.get_persons_no_duplicates(doc)
 
-            # Remove two words
             li_not_space = self.get_last_word(persons)
 
-            # Remove 's
             li_dot_s = self.remove_dot_s(li_not_space)
 
-            # Remove alphanumeric
             persons_result_list = self.get_list_non_alpha_numeric(li_dot_s)
 
             # ==================================================================== RATING PERSONS
-            # Two list togheter without duplicates
             li_persons = list(dict.fromkeys(persons_result_list))
 
             # Create rating list
