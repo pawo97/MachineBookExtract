@@ -1,1 +1,12 @@
+spacy
 html2text==2020.1.16
+pip install unittest
+
+pip install coverage
+
+pip install spacy
+
+spacy download en
+
+pip install spacy-syllables
+
