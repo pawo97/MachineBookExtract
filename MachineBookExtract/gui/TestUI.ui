@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>923</width>
-    <height>691</height>
+    <height>722</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -54,7 +54,7 @@
         <item>
          <widget class="QLabel" name="label">
           <property name="text">
-           <string>Analise book status:</string>
+           <string>Analyze book status:</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -116,7 +116,7 @@
         <item>
          <widget class="QPushButton" name="pushButton_9">
           <property name="text">
-           <string>Dialouge chart</string>
+           <string>Dialogue chart</string>
           </property>
          </widget>
         </item>
